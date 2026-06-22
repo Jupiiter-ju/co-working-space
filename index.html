@@ -131,13 +131,10 @@
     </div>
     <div class="flex flex-wrap gap-1.5 sm:gap-2">
       <div class="bg-white bg-opacity-20 rounded-lg px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
-        📅 จองคิวล่วงหน้าไม่เกิน <strong>14 วัน</strong>
+        📅 จองคิวล่วงหน้าได้ <strong>1 เดือน</strong>
       </div>
       <div class="bg-white bg-opacity-20 rounded-lg px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
-        🗓️ จองคิวสูงสุด <strong>3 คิว/คน</strong>
-      </div>
-      <div class="bg-white bg-opacity-20 rounded-lg px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
-        ❌ ยกเลิกคิวได้ก่อนถึงวันนัดหมาย <strong>2 วัน</strong>
+        👥 จองคิวสูงสุด 15 คน/วัน
       </div>
     </div>
   </div>
@@ -207,15 +204,9 @@
           <div class="flex gap-2 items-center">
             <input type="date" id="book-date"
               class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all w-full"
-              onchange="updateSlotCounter(); updateFullCalendar(); initFormSlotButtons()" />
+              onchange="updateSlotCounter(); updateFullCalendar()" />
           </div>
         </div>
-      </div>
-
-      <!-- Row 2: เลือกช่วงเวลา -->
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">เลือกช่วงเวลา <span class="text-red-500">*</span></label>
-        <div class="grid grid-cols-3 gap-2" id="form-slot-btns"></div>
       </div>
 
       <!-- Row 2: เลือกสถานที่ Zone Tabs -->
@@ -242,7 +233,7 @@
       <div class="flex items-center justify-between mb-1">
         <div>
           <h2 class="text-lg font-semibold text-gray-800" id="full-cal-title"></h2>
-          <p class="text-xs text-gray-400 mt-0.5">จองคิวสูงสุด 3 คิว/คน · รับคิวสูงสุด 30 คิว/วัน · จองล่วงหน้าไม่เกิน 14 วัน · ยกเลิกคิวได้ก่อนถึงวันนัดหมาย 2 วัน</p>
+          <p class="text-xs text-gray-400 mt-0.5">จองคิวสูงสุด 15 คน/วัน · จองคิวล่วงหน้าได้ 1 เดือน</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="calNavMonth(-1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all text-gray-600 text-lg">‹</button>
@@ -326,22 +317,17 @@
     <!-- Step Indicator -->
     <div class="flex items-center gap-2 mb-6">
       <div id="step-ind-1" class="flex items-center gap-1.5">
-        <div class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center gradient-btn text-white">1</div>
+        <div id="step-dot-1" class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center gradient-btn text-white">1</div>
         <span class="text-xs font-medium text-gray-600">ข้อมูล</span>
       </div>
       <div class="flex-1 h-px bg-gray-200"></div>
       <div id="step-ind-2" class="flex items-center gap-1.5">
         <div id="step-dot-2" class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center bg-gray-200 text-gray-500">2</div>
-        <span class="text-xs font-medium text-gray-400">ช่วงเวลา</span>
+        <span class="text-xs font-medium text-gray-400">สาขา</span>
       </div>
       <div class="flex-1 h-px bg-gray-200"></div>
       <div id="step-ind-3" class="flex items-center gap-1.5">
         <div id="step-dot-3" class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center bg-gray-200 text-gray-500">3</div>
-        <span class="text-xs font-medium text-gray-400">สาขา</span>
-      </div>
-      <div class="flex-1 h-px bg-gray-200"></div>
-      <div id="step-ind-4" class="flex items-center gap-1.5">
-        <div id="step-dot-4" class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center bg-gray-200 text-gray-500">4</div>
         <span class="text-xs font-medium text-gray-400">ยืนยัน</span>
       </div>
     </div>
@@ -371,16 +357,24 @@
 <!-- Booking Success Modal -->
 <div id="modal-success" class="modal-overlay hidden">
   <div class="modal-box">
-    <div class="text-center mb-4">
-      <div class="text-5xl mb-2">🎉</div>
-      <h2 class="text-2xl font-bold text-gray-800">จองสำเร็จแล้ว!</h2>
-    </div>
     <div id="ticket-content" class="success-bg rounded-2xl p-6 text-white mb-4">
       <!-- Ticket content here -->
     </div>
-    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 text-center">
+    <div id="ticket-warning" class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 text-center">
       <p class="text-yellow-800 text-sm font-medium">⚠️ กรุณาบันทึก Account Number เพื่อ Check in</p>
       <p class="text-yellow-700 text-sm mt-1">ข้อมูลนี้จะแสดงเพียงครั้งเดียว</p>
+    </div>
+    <div id="email-section" class="mb-4">
+      <p class="text-sm text-gray-600 mb-2 font-medium">📧 ส่ง Account Number ไปยังอีเมล <span class="text-gray-400 font-normal">(ไม่บังคับ)</span></p>
+      <div class="flex gap-2">
+        <input id="email-input" type="email" placeholder="กรอกอีเมลของคุณ"
+          class="flex-1 border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-300" />
+        <button onclick="sendBookingEmail()"
+          class="shrink-0 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all">
+          ส่ง
+        </button>
+      </div>
+      <p id="email-status" class="text-xs mt-1.5 hidden"></p>
     </div>
     <button onclick="closeModal('modal-success')"
       class="w-full gradient-bg text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all">
@@ -412,7 +406,12 @@
       <p id="wl-confirm-msg" class="text-gray-600 text-sm leading-relaxed"></p>
     </div>
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-700">
-      📌 คิวสำรองไม่มี User/Password — ระบบจะแจ้งให้ทราบเมื่อได้รับการยืนยัน
+      📌 ระบบจะส่งอีเมลแจ้งให้ทราบ พร้อม Account Number เมื่อได้รับการยืนยัน
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">อีเมล <span class="text-gray-400 font-normal text-xs">(ไม่บังคับ — สำหรับแจ้งเตือนเมื่อถึงคิว)</span></label>
+      <input type="email" id="wl-email-input" placeholder="เช่น name@email.com"
+        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-300 focus:border-transparent transition-all" />
     </div>
     <div class="flex gap-3">
       <button onclick="closeModal('modal-waitlist-confirm')"
@@ -667,18 +666,23 @@
 <div id="modal-cancel" class="modal-overlay hidden">
   <div class="modal-box max-w-sm">
     <div class="text-center">
-      <div class="text-5xl mb-3">📋</div>
-      <h2 class="text-xl font-bold text-gray-800 mb-2">ส่งคำขอยกเลิก?</h2>
-      <p id="cancel-detail" class="text-gray-600 text-sm mb-3" style="white-space: pre-line"></p>
-      <p class="text-orange-600 text-xs bg-orange-50 rounded-lg px-3 py-2 mb-6">⚠️ ระบบจะยกเลิกเมื่อ Admin ยืนยันแล้ว</p>
+      <div class="text-5xl mb-3">🔐</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">ยืนยันการยกเลิก</h2>
+      <p id="cancel-detail" class="text-gray-600 text-sm mb-4" style="white-space: pre-line"></p>
+      <div class="text-left mb-4">
+        <label class="text-sm font-medium text-gray-700 mb-1 block text-center">กรอก Account Number ที่ได้รับ</label>
+        <input id="cancel-code-input" type="text" placeholder="กรอก Account Number"
+          class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-300 tracking-widest text-center font-bold text-lg" />
+        <p id="cancel-code-error" class="text-red-500 text-xs mt-1.5 hidden"></p>
+      </div>
       <div class="flex gap-3">
         <button onclick="closeModal('modal-cancel')"
           class="flex-1 bg-gray-100 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-200 transition-all">
           กลับ
         </button>
         <button id="confirm-cancel-btn"
-          class="flex-1 bg-orange-500 text-white font-semibold py-3 rounded-xl hover:bg-orange-600 transition-all">
-          ส่งคำขอยกเลิก
+          class="flex-1 bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition-all">
+          ยกเลิกการจอง
         </button>
       </div>
     </div>
@@ -711,16 +715,7 @@ const MAX_SLOTS = 15; // สูงสุดต่อ 1 ช่วงเวลา
 // ============================================================
 // DATA: TIME SLOTS
 // ============================================================
-const TIME_SLOTS = {
-  fullday:  { id: 'fullday',  label: 'เต็มวัน',       time: '8.30–18.00',  icon: '☀️' },
-  morning:  { id: 'morning',  label: 'ครึ่งวันเช้า',  time: '8.30–13.00',  icon: '🌅' },
-  afternoon:{ id: 'afternoon',label: 'ครึ่งวันบ่าย', time: '13.00–18.00', icon: '🌇' },
-};
-// fullday = lock ทั้ง morning และ afternoon
-function getSlotSessions(slotId) {
-  if (slotId === 'fullday') return ['morning', 'afternoon'];
-  return [slotId];
-}
+const SLOT_LABEL = 'เต็มวัน (8.30 - 18.00 น.)';
 
 // ============================================================
 // DATA: BRANCHES (53 สาขา — ข้อมูลจริง)
@@ -865,18 +860,6 @@ async function syncBookingToSheet(booking) {
   }
 }
 
-async function syncCancelRequestToSheet(bookingId) {
-  if (!APPS_SCRIPT_URL) return;
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      redirect: 'follow',
-      body: JSON.stringify({ action: 'cancel_request', id: bookingId })
-    });
-  } catch (e) {
-    console.warn('บันทึกคำขอยกเลิกไปยัง Google Sheet ไม่ได้:', e.message);
-  }
-}
 
 // ============================================================
 // TAB NAVIGATION
@@ -949,7 +932,7 @@ function todayStr() {
 }
 function maxDateStr() {
   const d = new Date();
-  d.setDate(d.getDate() + 14);
+  d.setMonth(d.getMonth() + 1);
   return d.toISOString().slice(0,10);
 }
 function formatDateTH(dateStr) {
@@ -974,106 +957,50 @@ function getWaitlistForDate(date) {
   return getBookings().filter(b => b.date === date && b.status === 'waitlist');
 }
 
-// นับ confirmed ที่ครอง session นี้ (morning/afternoon)
-function getSessionCount(date, session) {
-  // cancel_requested ยังนับเป็น occupied จนกว่า admin จะยืนยัน cancelled
-  return getBookings().filter(b =>
-    b.date === date && (b.status === 'confirmed' || b.status === 'cancel_requested') &&
-    getSlotSessions(b.slot).includes(session)
-  ).length;
-}
-function getSessionWaitlistCount(date, session) {
-  return getBookings().filter(b =>
-    b.date === date && b.status === 'waitlist' &&
-    getSlotSessions(b.slot).includes(session)
-  ).length;
-}
-function isSessionFull(date, session) {
-  return getSessionCount(date, session) >= MAX_SLOTS;
-}
-function isSlotFull(date, slotId) {
-  return getSlotSessions(slotId).some(s => isSessionFull(date, s));
-}
 function getSlotCount(date) {
-  return getBookings().filter(b => b.date === date && (b.status === 'confirmed' || b.status === 'cancel_requested')).length;
+  return getBookings().filter(b => b.date === date && b.status === 'confirmed').length;
 }
 function getWaitlistCount(date) {
   return getBookings().filter(b => b.date === date && b.status === 'waitlist').length;
 }
+function isSlotFull(date) {
+  return getSlotCount(date) >= MAX_SLOTS;
+}
 function isFull(date) {
-  // วันเต็ม = ทั้งเช้าและบ่ายเต็มหมด
-  return isSessionFull(date, 'morning') && isSessionFull(date, 'afternoon');
+  return isSlotFull(date);
 }
 
 // Assign user สำหรับ slot นี้ — ห้ามซ้ำในช่วงเดียวกัน, prefer ที่ยังไม่ใช้วันนี้
-function assignUser(date, slotId) {
-  const sessions = getSlotSessions(slotId);
-  const bookings = getBookings();
-
-  // accounts ที่ถูกใช้ใน sessions ที่ต้องการ
-  const usedInSessions = new Set(
-    bookings.filter(b =>
-      b.date === date && b.status === 'confirmed' &&
-      sessions.some(s => getSlotSessions(b.slot).includes(s))
-    ).map(b => b.accountNumber)
-  );
-
-  // accounts ที่ถูกใช้วันนี้แล้ว (ทุก session)
+function assignUser(date) {
+  return assignUserFromBookings(getBookings(), date);
+}
+function assignUserFromBookings(bookings, date) {
   const usedToday = new Set(
-    bookings.filter(b => b.date === date && b.status === 'confirmed').map(b => b.accountNumber)
+    bookings.filter(b => b.date === date && b.status === 'confirmed').map(b => String(b.accountNumber))
   );
-
-  // หา user ที่ไม่ซ้ำใน session นี้ — prefer ที่ยังไม่ใช้วันนี้เลย
-  const fresh = USER_KEYS.find(u => !usedInSessions.has(u) && !usedToday.has(u));
-  if (fresh) return fresh;
-  // fallback: ใช้ที่ไม่ซ้ำ session แต่อาจ reuse จาก session อื่น
-  return USER_KEYS.find(u => !usedInSessions.has(u)) || null;
+  return USER_KEYS.find(u => !usedToday.has(String(u))) || null;
 }
 
 // ── Shared validation ──
-function validateBookingRules(name, date, slotId) {
+function validateBookingRules(name, date) {
   if (!name) return 'กรุณากรอกชื่อเล่น';
   if (!date) return 'กรุณาเลือกวันที่จอง';
-  if (!slotId) return 'กรุณาเลือกช่วงเวลา';
 
   const today = todayStr();
   if (date < today) return 'ไม่สามารถจองวันที่ผ่านมาแล้วได้';
-  if (date > maxDateStr()) return 'ไม่สามารถจองล่วงหน้าเกิน 14 วันได้';
+  if (date > maxDateStr()) return 'ไม่สามารถจองล่วงหน้าเกิน 1 เดือนได้';
 
-  const allBookings = getBookings();
   const nameLower = name.trim().toLowerCase();
-
-  // ห้ามจองวันเดียวกัน+ช่วงเดียวกันซ้ำ
-  const dup = allBookings.find(b =>
+  const dup = getBookings().find(b =>
     b.name.trim().toLowerCase() === nameLower &&
     b.date === date &&
-    (b.status === 'confirmed' || b.status === 'waitlist') &&
-    getSlotSessions(b.slot).some(s => getSlotSessions(slotId).includes(s))
+    (b.status === 'confirmed' || b.status === 'waitlist')
   );
   if (dup) {
     const typeLabel = dup.status === 'waitlist' ? 'คิวสำรอง' : 'คิว';
-    const dupSlotInfo = TIME_SLOTS[dup.slot];
-    const slotText = dupSlotInfo ? `${dupSlotInfo.label} (${dupSlotInfo.time})` : escapeHtml(dup.slot || '');
     return {
       title: `"${name}" จอง${typeLabel}`,
-      msg: `<div class="text-center">วันที่ ${formatDateTH(date)} เวลา ${slotText} ไปแล้ว</div>`
-    };
-  }
-
-  // เช็ก 3 คิว/คน
-  const MAX_BOOKINGS = 3;
-  const personActive = allBookings.filter(b =>
-    b.name.trim().toLowerCase() === nameLower &&
-    (b.status === 'confirmed' || b.status === 'waitlist') &&
-    b.date >= today
-  );
-  if (personActive.length >= MAX_BOOKINGS) {
-    const lines = personActive.map(b =>
-      `<div class="py-1 border-b border-gray-100 last:border-0">(${formatDateTH(b.date)} ${escapeHtml(TIME_SLOTS[b.slot]?.label || b.slot)}${b.status === 'waitlist' ? ' — คิวสำรอง' : ''})</div>`
-    ).join('');
-    return {
-      title: 'จองครบ 3 คิวแล้ว',
-      msg: `<div class="mb-2 font-medium text-gray-700">คุณลงทะเบียนครบ 3 คิวแล้ว</div>${lines}`
+      msg: `<div class="text-center">วันที่ ${formatDateTH(date)} จองไปแล้ว</div>`
     };
   }
 
@@ -1085,14 +1012,10 @@ function updateSlotCounter() {
   const el = document.getElementById('slot-info');
   if (!el) return;
   if (!date) { el.classList.add('hidden'); return; }
-  // แสดง summary เช้า/บ่าย
-  const mCount = getSessionCount(date, 'morning');
-  const aCount = getSessionCount(date, 'afternoon');
-  const mRemain = MAX_SLOTS - mCount;
-  const aRemain = MAX_SLOTS - aCount;
+  const remain = MAX_SLOTS - getSlotCount(date);
   el.classList.remove('hidden', 'slot-full', 'slot-available', 'slot-limited');
-  el.innerHTML = `เช้า ${mRemain > 0 ? `✅ ${mRemain}` : '❌ เต็ม'} · บ่าย ${aRemain > 0 ? `✅ ${aRemain}` : '❌ เต็ม'}`;
-  el.classList.add(mRemain === 0 && aRemain === 0 ? 'slot-full' : mRemain <= 3 || aRemain <= 3 ? 'slot-limited' : 'slot-available');
+  el.innerHTML = remain <= 0 ? '❌ เต็มแล้ว' : `✅ ว่าง ${remain}/${MAX_SLOTS} คน`;
+  el.classList.add(remain <= 0 ? 'slot-full' : remain <= 3 ? 'slot-limited' : 'slot-available');
 }
 
 function submitBooking() {
@@ -1102,56 +1025,52 @@ function submitBooking() {
   const company = escapeHtml(document.getElementById('emp-company').value);
   const team = escapeHtml(document.getElementById('emp-team').value);
   const date = document.getElementById('book-date').value;
-  const slotId = formSelectedSlot;
   const branchId = formSelectedBranchId;
 
   if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
   if (!company) { showError('กรุณาเลือกบริษัท'); return; }
   if (!team) { showError('กรุณาเลือกทีม'); return; }
   if (!date) { showError('กรุณาเลือกวันที่จอง'); return; }
-  if (!slotId) { showError('กรุณาเลือกช่วงเวลา'); return; }
   if (!branchId) { showError('กรุณาเลือกสาขา'); return; }
 
-  const validErr = validateBookingRules(name, date, slotId);
+  const validErr = validateBookingRules(name, date);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
 
-  if (isSlotFull(date, slotId)) {
-    const sessions = getSlotSessions(slotId);
-    const wCount = Math.max(...sessions.map(s => getSessionWaitlistCount(date, s)));
-    showWaitlistConfirm(name, date, slotId, branchId, wCount, 'form', team, company);
+  if (isSlotFull(date)) {
+    const wCount = getWaitlistCount(date);
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company);
     return;
   }
-  doCreateBooking(name, date, slotId, branchId, 'form', team, company);
+  doCreateBooking(name, date, branchId, 'form', team, company);
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
-function doCreateBooking(name, date, slotId, branchId, source, team = '', company = '') {
+function doCreateBooking(name, date, branchId, source, team = '', company = '', email = '') {
   bookingLock = true;
   const lockTimestamp = Date.now();
 
   setTimeout(() => {
-    const recheck = validateBookingRules(name, date, slotId);
+    const recheck = validateBookingRules(name, date);
     if (recheck) {
       bookingLock = false;
       typeof recheck === 'object' ? showError(recheck.msg, recheck.title) : showError(recheck);
       updateSlotCounter(); updateFullCalendar(); return;
     }
 
-    const full = isSlotFull(date, slotId);
+    const full = isSlotFull(date);
     let assignedUser = null, bookingStatus = 'confirmed';
 
     if (!full) {
-      assignedUser = assignUser(date, slotId);
-      if (!assignedUser) { bookingLock = false; showError('ไม่มี User ว่างสำหรับช่วงเวลานี้'); return; }
+      assignedUser = assignUser(date);
+      if (!assignedUser) { bookingLock = false; showError('ไม่มี User ว่างสำหรับวันนี้'); return; }
     } else {
       bookingStatus = 'waitlist';
     }
 
     const branch = BRANCHES.find(b => b.id === branchId);
-    const slotInfo = TIME_SLOTS[slotId];
     const newBooking = {
-      id: generateId(), name, team, company, date, slot: slotId,
-      slotLabel: slotInfo ? `${slotInfo.label} (${slotInfo.time})` : slotId,
+      id: generateId(), name, team, company, email, date, slot: 'fullday',
+      slotLabel: SLOT_LABEL,
       timestamp: lockTimestamp,
       branch: branch ? branch.name : branchId, branchId,
       accountNumber: assignedUser,
@@ -1170,13 +1089,11 @@ function doCreateBooking(name, date, slotId, branchId, source, team = '', compan
       document.getElementById('emp-team').value = '';
       document.getElementById('book-date').value = '';
       document.getElementById('slot-info')?.classList.add('hidden');
-      formSelectedBranchId = null; formZoneOpen = false; formSelectedSlot = null;
+      formSelectedBranchId = null; formZoneOpen = false;
       const label = document.getElementById('form-selected-label');
       if (label) { label.textContent = ''; label.classList.add('hidden'); }
       const btn = document.getElementById('form-confirm-btn');
       if (btn) btn.classList.add('opacity-50', 'cursor-not-allowed');
-      // reset slot buttons
-      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active-slot'));
       initFormBranchTabs();
     } else {
       closeModal('modal-quick-book');
@@ -1190,17 +1107,18 @@ function doCreateBooking(name, date, slotId, branchId, source, team = '', compan
 // ============================================================
 // WAITLIST CONFIRM DIALOG
 // ============================================================
-function showWaitlistConfirm(name, date, slotId, branchId, wCount, source, team = '', company = '') {
+function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', company = '') {
   const wNum = wCount + 1;
-  const slotInfo = TIME_SLOTS[slotId];
   document.getElementById('wl-confirm-msg').innerHTML =
-    `ช่วง <strong>${slotInfo?.label} (${slotInfo?.time})</strong> วันที่ <strong>${formatDateTH(date)}</strong><br>` +
+    `วันที่ <strong>${formatDateTH(date)}</strong><br>` +
     `มีผู้จองครบ ${MAX_SLOTS} คนแล้ว · คิวสำรองอยู่แล้ว <strong>${wCount} คน</strong><br><br>` +
     `คุณจะได้เป็น <strong>คิวสำรองลำดับที่ ${wNum}</strong><br>` +
     `ต้องการลงทะเบียนคิวสำรองหรือไม่?`;
+  document.getElementById('wl-email-input').value = '';
   document.getElementById('wl-confirm-btn').onclick = () => {
+    const email = document.getElementById('wl-email-input').value.trim();
     closeModal('modal-waitlist-confirm');
-    doCreateBooking(name, date, slotId, branchId, source, team, company);
+    doCreateBooking(name, date, branchId, source, team, company, email);
   };
   showModal('modal-waitlist-confirm');
 }
@@ -1208,7 +1126,71 @@ function showWaitlistConfirm(name, date, slotId, branchId, wCount, source, team 
 // ============================================================
 // TICKET DISPLAY
 // ============================================================
+let currentTicketBooking = null;
+
+function copyAccountNumber(number, btn) {
+  const str = String(number);
+  const svgCopy = btn.querySelector('svg').outerHTML;
+  const svgCheck = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  function showCheck() {
+    btn.innerHTML = svgCheck;
+    setTimeout(() => { btn.innerHTML = svgCopy; }, 1800);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(str).then(showCheck).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = str;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showCheck(); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+}
+
+function sendBookingEmail() {
+  const email = document.getElementById('email-input').value.trim();
+  const statusEl = document.getElementById('email-status');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    statusEl.textContent = '❌ กรุณากรอกอีเมลให้ถูกต้อง';
+    statusEl.className = 'text-xs mt-1.5 text-red-500';
+    statusEl.classList.remove('hidden');
+    return;
+  }
+  const b = currentTicketBooking;
+  if (!b) return;
+  const subject = encodeURIComponent(`[Co-Working Booking] Account Number สำหรับวันที่ ${b.date}`);
+  const body = encodeURIComponent(
+    `สวัสดีครับ/ค่ะ ${b.name}\n\n` +
+    `นี่คือรายละเอียดการจอง Co-Working Space ของคุณ\n\n` +
+    `Booking ID : ${b.id}\n` +
+    `ชื่อเล่น   : ${b.name}\n` +
+    (b.company ? `บริษัท     : ${b.company}\n` : '') +
+    (b.team ? `ทีม        : ${b.team}\n` : '') +
+    `วันที่      : ${b.date}\n` +
+    `ช่วงเวลา   : ${b.slotLabel || ''}\n` +
+    `สาขา       : ${b.branch}\n` +
+    `สถานะ      : ${b.status === 'waitlist' ? 'คิวสำรอง' : 'ยืนยันแล้ว'}\n` +
+    (b.accountNumber ? `\nAccount Number : ${b.accountNumber}\n` : '') +
+    `\nกรุณานำ Account Number ไปใช้ Check-in ผ่านแอปพลิเคชัน Regus\n`
+  );
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  statusEl.textContent = '✅ เปิด email client แล้ว กรุณากด Send ในโปรแกรมอีเมลของคุณ';
+  statusEl.className = 'text-xs mt-1.5 text-green-600';
+  statusEl.classList.remove('hidden');
+}
+
 function showTicket(booking) {
+  currentTicketBooking = booking;
+  document.getElementById('email-input').value = '';
+  const statusEl = document.getElementById('email-status');
+  statusEl.textContent = '';
+  statusEl.classList.add('hidden');
+
   const isWaitlist = booking.status === 'waitlist';
 
   // หาลำดับคิวสำรอง
@@ -1221,30 +1203,36 @@ function showTicket(booking) {
   }
 
   const ticketBg = isWaitlist
-    ? 'background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+    ? 'background: #ffffff; border: 1px solid #e5e7eb'
     : 'background: linear-gradient(135deg, #DB2777 0%, #9333EA 100%)';
 
   const loginSection = isWaitlist
-    ? `<div class="bg-white bg-opacity-20 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">⏳</div>
-        <div class="font-semibold text-sm">คิวสำรองลำดับที่ ${waitlistPos}</div>
-        <div class="text-xs text-yellow-100 mt-1">หมายเลขบัญชีจะได้รับเมื่อได้รับการยืนยันคิวจริง</div>
+    ? `<div class="bg-purple-50 border border-purple-100 rounded-xl p-4 text-center">
+        <div class="font-semibold text-base text-purple-700">จะได้รับ Account Number เมื่อคิวได้รับการยืนยัน</div>
        </div>`
     : `<div class="bg-white bg-opacity-30 rounded-xl p-4 border-2 border-white border-opacity-50">
-        
         <div class="flex justify-between items-center">
-          <span class="text-sm text-blue-100">Account Number</span>
-          <span class="font-bold text-2xl tracking-widest">${booking.accountNumber}</span>
+          <span class="text-lg text-blue-100 font-bold">Account Number</span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-2xl tracking-widest">${booking.accountNumber}</span>
+            <button onclick="copyAccountNumber('${booking.accountNumber}', this)"
+              title="คัดลอก"
+              class="flex items-center justify-center w-7 h-7 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-40 transition-all text-white shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
         </div>
        </div>`;
 
   const warningBox = isWaitlist
-    ? `<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4">
-        <p class="text-yellow-800 text-sm font-medium">⏳ นี่คือคิวสำรอง ไม่ใช่คิวหลัก</p>
-        <p class="text-yellow-700 text-xs mt-1">ระบบจะแจ้งให้ทราบหากได้รับการยืนยันเป็นคิวจริง</p>
+    ? `<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 text-center">
+        <p class="text-yellow-800 text-sm font-medium">คิวสำรอง : ระบบจะแจ้งอีเมลให้ทราบพร้อม Account Number</p>
+        <p class="text-yellow-700 text-sm mt-1">เมื่อคิวได้รับการยืนยัน</p>
        </div>`
-    : `<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4">
-        <p class="text-yellow-800 text-sm font-medium">⚠️ กรุณาจดจำหมายเลขบัญชีไว้</p>
+    : `<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 text-center">
+        <p class="text-yellow-800 text-base font-medium">⚠️ กรุณาบันทึก Account Number เพื่อใช้ Check in</p>
         <p class="text-yellow-700 text-sm mt-1">ข้อมูลนี้จะแสดงเพียงครั้งเดียว</p>
        </div>`;
 
@@ -1254,55 +1242,49 @@ function showTicket(booking) {
   const html = `
     <div class="space-y-3">
       <div class="text-center mb-4">
-        <div class="text-3xl mb-1">🎫</div>
-        <div class="text-lg font-bold">${isWaitlist ? 'Waitlist Ticket' : 'Booking Ticket'}</div>
-        <div class="text-blue-100 text-xs">${booking.id}</div>
+        <div class="${isWaitlist ? 'text-amber-500' : ''} text-lg font-bold">${isWaitlist ? 'Waitlist Ticket' : 'Booking Ticket'}</div>
+        <div class="${isWaitlist ? 'text-gray-400' : 'text-blue-100'} text-xs">${booking.id}</div>
       </div>
-      <div class="bg-white bg-opacity-20 rounded-xl p-4 space-y-2">
+      ${loginSection}
+      <div class="${isWaitlist ? 'bg-gray-50 border border-gray-100' : 'bg-white bg-opacity-20'} rounded-xl p-4 space-y-2">
         <div class="flex justify-between text-sm">
-          <span class="text-blue-100">ชื่อเล่น</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อเล่น</span>
           <span class="font-semibold">${escapeHtml(booking.name)}</span>
         </div>
-        ${booking.company ? `<div class="flex justify-between text-sm">
-          <span class="text-blue-100">บริษัท</span>
-          <span class="font-semibold">${escapeHtml(booking.company)}</span>
-        </div>` : ''}
-        ${booking.team ? `<div class="flex justify-between text-sm">
-          <span class="text-blue-100">ทีม</span>
-          <span class="font-semibold">${escapeHtml(booking.team)}</span>
-        </div>` : ''}
         <div class="flex justify-between text-sm">
-          <span class="text-blue-100">วันที่</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">วันที่</span>
           <span class="font-semibold">${formatDateTH(booking.date)}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-blue-100">ช่วงเวลา</span>
-          <span class="font-semibold">${booking.slotLabel || '—'}</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ช่วงเวลา</span>
+          <span class="font-semibold">${(booking.slotLabel || '—').replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-blue-100">สาขา</span>
-          <span class="font-semibold text-right max-w-[60%]">${escapeHtml(booking.branch)}</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สาขา</span>
+          <span class="font-semibold text-right text-xs whitespace-nowrap">${escapeHtml(booking.branch)}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-blue-100">สถานะ</span>
-          <span class="font-bold ${isWaitlist ? 'text-yellow-200' : 'text-green-200'}">
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สถานะ</span>
+          <span class="font-bold ${isWaitlist ? 'text-amber-500' : 'text-green-200'}">
             ${isWaitlist ? `⏳ คิวสำรอง #${waitlistPos}` : '✅ ยืนยันแล้ว'}
           </span>
         </div>
       </div>
-      ${loginSection}
-      <div class="text-center text-xs text-blue-200">จองเมื่อ: ${new Date(booking.timestamp).toLocaleString('th-TH')}</div>
+      <div class="text-center text-xs ${isWaitlist ? 'text-gray-400' : 'text-blue-200'}">จองเมื่อ: ${new Date(booking.timestamp).toLocaleString('th-TH')}</div>
     </div>
   `;
 
-  document.getElementById('modal-success').querySelector('h2').textContent = successTitle;
-  document.getElementById('modal-success').querySelector('.text-5xl').textContent = successIcon;
-  document.getElementById('ticket-content').style.cssText = ticketBg + '; border-radius: 1rem; padding: 1.5rem; color: white; margin-bottom: 1rem;';
+  const ticketColor = isWaitlist ? '#111827' : 'white';
+  document.getElementById('ticket-content').style.cssText = ticketBg + `; border-radius: 1rem; padding: 1.5rem; color: ${ticketColor}; margin-bottom: 1rem;`;
   document.getElementById('ticket-content').innerHTML = html;
 
   // swap warning box
   const oldWarning = document.getElementById('ticket-warning');
   if (oldWarning) oldWarning.outerHTML = warningBox.replace('<div', `<div id="ticket-warning"`);
+
+  // hide email section for waitlist tickets
+  const emailSection = document.getElementById('email-section');
+  if (emailSection) emailSection.classList.toggle('hidden', isWaitlist);
 
   showModal('modal-success');
 }
@@ -1313,23 +1295,67 @@ function showTicket(booking) {
 function confirmCancel(bookingId) {
   const b = getBookings().find(x => x.id === bookingId);
   if (!b) return;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const bookDate = new Date(b.date); bookDate.setHours(0,0,0,0);
-  const diffDays = Math.ceil((bookDate - today) / (1000*60*60*24));
-  if (diffDays < 2) { showError('ไม่สามารถยกเลิกได้ — ต้องยกเลิกก่อนวันนัดหมายอย่างน้อย 2 วัน'); return; }
   document.getElementById('cancel-detail').textContent =
-    `"${b.name}" ส่งคำขอยกเลิก\nวันที่ ${formatDateTH(b.date)} สาขา ${b.branch}`;
-  document.getElementById('confirm-cancel-btn').onclick = () => doRequestCancel(bookingId);
+    `"${b.name}" · วันที่ ${formatDateTH(b.date)}\nสาขา ${b.branch}`;
+  document.getElementById('cancel-code-input').value = '';
+  document.getElementById('cancel-code-error').classList.add('hidden');
+  document.getElementById('confirm-cancel-btn').onclick = () => doCancel(bookingId);
   showModal('modal-cancel');
 }
 
-function doRequestCancel(bookingId) {
-  const bookings = getBookings().map(b => {
-    if (b.id === bookingId) return { ...b, status: 'cancel_requested' };
-    return b;
+function doCancel(bookingId) {
+  const b = getBookings().find(x => x.id === bookingId);
+  if (!b) return;
+  const input = document.getElementById('cancel-code-input').value.trim();
+  const errEl = document.getElementById('cancel-code-error');
+  if (!input) {
+    errEl.textContent = 'กรุณากรอก Account Number';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  if (String(input) !== String(b.accountNumber)) {
+    errEl.textContent = '❌ Account Number ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  let bookings = getBookings().map(x => {
+    if (x.id === bookingId) return { ...x, status: 'cancelled' };
+    return x;
   });
+
+  // auto-promote first waitlist booking for this date
+  const cancelledDate = b.date;
+  const firstWaitlist = bookings.find(x => x.date === cancelledDate && x.status === 'waitlist');
+  if (firstWaitlist) {
+    const newAccountNumber = assignUserFromBookings(bookings, cancelledDate);
+    bookings = bookings.map(x => {
+      if (x.id !== firstWaitlist.id) return x;
+      return { ...x, status: 'confirmed', accountNumber: newAccountNumber };
+    });
+    if (firstWaitlist.email) {
+      const subject = encodeURIComponent('✅ คิวของคุณได้รับการยืนยันแล้ว — Co-Working Space');
+      const body = encodeURIComponent(
+        `สวัสดีคุณ ${firstWaitlist.name},\n\n` +
+        `คิวสำรองของคุณได้รับการยืนยันแล้ว!\n\n` +
+        `วันที่: ${formatDateTH(firstWaitlist.date)}\n` +
+        `เวลา: ${SLOT_LABEL.replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}\n` +
+        `สาขา: ${firstWaitlist.branch}\n` +
+        `Account Number: ${newAccountNumber}\n\n` +
+        `กรุณาบันทึก Account Number เพื่อใช้ Check in\n\nขอบคุณครับ`
+      );
+      window.open(`mailto:${firstWaitlist.email}?subject=${subject}&body=${body}`, '_blank');
+    }
+  }
+
   saveBookings(bookings);
-  syncCancelRequestToSheet(bookingId);
+
+  fetch('https://script.google.com/macros/s/AKfycbyBSJDDPrHqxiRtwRQmdxwWdc38-lGOC0ggmDlsjkWg3T9z-n4tvdjXAlAnJrfQVOFU/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'cancel_request', id: b.id }),
+  }).catch(() => {});
+
   closeModal('modal-cancel');
   updateFullCalendar();
   renderScheduleCalendar();
@@ -1378,11 +1404,7 @@ function updateFullCalendar() {
     const m = String(empCalMonth + 1).padStart(2,'0');
     const d = String(day).padStart(2,'0');
     const dateStr = `${empCalYear}-${m}-${d}`;
-    // คิวว่างรวมทั้งวัน = (เช้าที่เหลือ) + (บ่ายที่เหลือ) สูงสุด 15+15 = 30
-    // จองครึ่งวัน กินคิวฝั่งเดียว / จองเต็มวัน กินคิวทั้งสองฝั่ง
-    const mRemain = MAX_SLOTS - getSessionCount(dateStr, 'morning');
-    const aRemain = MAX_SLOTS - getSessionCount(dateStr, 'afternoon');
-    const totalRemain = mRemain + aRemain;
+    const totalRemain = MAX_SLOTS - getSlotCount(dateStr);
     const isToday = dateStr === today;
     const isPast = dateStr < today;
     const isFuture = dateStr > maxDate;
@@ -1397,16 +1419,16 @@ function updateFullCalendar() {
       statusText = ''; statusColor = '';
     } else if (totalRemain <= 0 && wCount > 0) {
       cellBg = 'bg-amber-100 border border-amber-200 cursor-pointer hover:bg-amber-200'; textColor = 'text-amber-700';
-      statusText = `เต็ม+${wCount}สำรอง`; statusColor = 'text-amber-600';
+      statusText = 'เต็ม+คิวสำรอง'; statusColor = 'text-amber-600';
     } else if (totalRemain <= 0) {
       cellBg = 'bg-red-100 border border-red-200 cursor-pointer hover:bg-red-200'; textColor = 'text-red-500';
       statusText = 'เต็มแล้ว'; statusColor = 'text-red-400';
     } else if (totalRemain <= 6) {
       cellBg = 'bg-yellow-50 border border-yellow-200 cursor-pointer hover:bg-yellow-100'; textColor = 'text-yellow-700';
-      statusText = `ว่าง ${totalRemain}`; statusColor = 'text-yellow-500';
+      statusText = `ว่าง ${totalRemain}/${MAX_SLOTS}`; statusColor = 'text-yellow-500';
     } else {
       cellBg = 'bg-green-50 border border-green-200 cursor-pointer hover:bg-green-100'; textColor = 'text-green-700';
-      statusText = `ว่าง ${totalRemain}`; statusColor = 'text-green-600';
+      statusText = `ว่าง ${totalRemain}/${MAX_SLOTS}`; statusColor = 'text-green-600';
     }
 
     let ring = '';
@@ -1438,7 +1460,6 @@ let scheduleCalMonth = new Date().getMonth();
 let scheduleCalYear = new Date().getFullYear();
 let scheduleSelectedDate = todayStr();
 
-const SLOT_ORDER = { fullday: 0, morning: 1, afternoon: 2 };
 
 function calNavScheduleMonth(delta) {
   scheduleCalMonth += delta;
@@ -1474,9 +1495,7 @@ function renderScheduleCalendar() {
     const m = String(scheduleCalMonth + 1).padStart(2,'0');
     const d = String(day).padStart(2,'0');
     const dateStr = `${scheduleCalYear}-${m}-${d}`;
-    const mRemain = MAX_SLOTS - getSessionCount(dateStr, 'morning');
-    const aRemain = MAX_SLOTS - getSessionCount(dateStr, 'afternoon');
-    const totalRemain = mRemain + aRemain;
+    const totalRemain = MAX_SLOTS - getSlotCount(dateStr);
     const isToday = dateStr === today;
     const isPast = dateStr < today;
     const isFuture = dateStr > maxDate;
@@ -1537,10 +1556,9 @@ function showScheduleDayDetail(dateStr) {
 
 // สถานะที่แสดงในรายการ — ตรงกับค่าที่ระบบเก็บจริง
 const STATUS_CONFIG = {
-  confirmed:        { label: '✅ ยืนยันแล้ว',     cls: 'bg-green-100 text-green-700',  border: 'border-l-green-400' },
-  cancelled:        { label: '🚫 ยกเลิกแล้ว',     cls: 'bg-gray-100 text-gray-400',   border: 'border-l-gray-300' },
-  waitlist:         { label: '⏳ รายการรอ',        cls: 'bg-amber-100 text-amber-700', border: 'border-l-amber-400' },
-  cancel_requested: { label: '🔄 รอยืนยันยกเลิก', cls: 'bg-orange-100 text-orange-600', border: 'border-l-orange-400' },
+  confirmed: { label: '✅ ยืนยันแล้ว', cls: 'bg-green-100 text-green-700',  border: 'border-l-green-400' },
+  cancelled: { label: '🚫 ยกเลิกแล้ว', cls: 'bg-gray-100 text-gray-400',   border: 'border-l-gray-300' },
+  waitlist:  { label: '⏳ รายการรอ',   cls: 'bg-amber-100 text-amber-700', border: 'border-l-amber-400' },
 };
 
 // แถวเดียวของรายการจอง — ใช้ร่วมกันทั้งโหมด "ตามวันที่เลือก" และโหมด "ค้นหา"
@@ -1549,17 +1567,8 @@ function renderBookingRow(b, showDate, borderCls = 'border-l-green-400') {
   const st = STATUS_CONFIG[b.status] || STATUS_CONFIG.confirmed;
 
   let btnHtml = '';
-  if (b.status === 'cancel_requested') {
-    btnHtml = `<span class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium bg-orange-50 text-orange-500 whitespace-nowrap">⏳ รอยืนยันยกเลิก</span>`;
-  } else if (b.status !== 'cancelled') {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const bookDate = new Date(b.date); bookDate.setHours(0,0,0,0);
-    const diffDays = Math.ceil((bookDate - today) / (1000*60*60*24));
-    if (diffDays < 2) {
-      btnHtml = `<button disabled title="ยกเลิกได้ก่อนวันนัดอย่างน้อย 2 วัน" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 border border-gray-200 cursor-not-allowed whitespace-nowrap">ยกเลิกไม่ได้</button>`;
-    } else {
-      btnHtml = `<button onclick="confirmCancel('${b.id}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 border border-red-200 hover:bg-red-50 transition-all whitespace-nowrap">ยกเลิก</button>`;
-    }
+  if (b.status !== 'cancelled') {
+    btnHtml = `<button onclick="confirmCancel('${b.id}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 border border-red-200 hover:bg-red-50 transition-all whitespace-nowrap">ยกเลิก</button>`;
   }
 
   return `
@@ -1591,20 +1600,19 @@ function renderScheduleDayPanel() {
   } else {
     // จัดกลุ่มตามลำดับ: เต็มวัน -> เช้า -> บ่าย -> ยกเลิกแล้ว (ไม่ว่า slot เดิมจะเป็นอะไร)
     const groups = [
-      { key: 'fullday',   label: TIME_SLOTS.fullday.label,   items: [], cls: 'bg-pink-100 text-pink-700', borderCls: 'border-l-pink-400' },
-      { key: 'morning',   label: TIME_SLOTS.morning.label,   items: [], cls: 'bg-fuchsia-100 text-fuchsia-700', borderCls: 'border-l-fuchsia-500' },
-      { key: 'afternoon', label: TIME_SLOTS.afternoon.label, items: [], cls: 'bg-rose-100 text-rose-700',   borderCls: 'border-l-rose-400' },
-      { key: 'cancelled', label: 'ยกเลิกแล้ว',                items: [], cls: 'bg-yellow-100 text-yellow-700', borderCls: 'border-l-yellow-300' },
+      { key: 'fullday',   label: 'เต็มวัน',    items: [], cls: 'bg-pink-100 text-pink-700', borderCls: 'border-l-pink-400' },
+      { key: 'waitlist',  label: 'คิวสำรอง',   items: [], cls: 'bg-purple-100 text-purple-700', borderCls: 'border-l-purple-400' },
+      { key: 'cancelled', label: 'ยกเลิกแล้ว', items: [], cls: 'bg-yellow-100 text-yellow-700', borderCls: 'border-l-yellow-300' },
     ];
     all.forEach(b => {
-      const group = (b.status === 'cancelled' || b.status === 'cancel_requested') ? groups[3] : (groups.find(g => g.key === b.slot) || groups[3]);
+      const group = b.status === 'cancelled' ? groups[2] : b.status === 'waitlist' ? groups[1] : groups[0];
       group.items.push(b);
     });
     groups.forEach(g => g.items.sort((a, b) => a.timestamp - b.timestamp));
 
     html += groups.filter(g => g.items.length > 0).map((g, idx) => `
       <div class="${idx === 0 ? '' : 'mt-4'}">
-        <div class="${g.cls} font-bold text-sm px-3 py-1.5 rounded-lg mb-2">${g.label} (${g.items.length})</div>
+        ${g.key !== 'fullday' ? `<div class="${g.cls} font-bold text-sm px-3 py-1.5 rounded-lg mb-2">${g.label} (${g.items.length})</div>` : ''}
         <div class="space-y-2">${g.items.map(b => renderBookingRow(b, false, g.borderCls)).join('')}</div>
       </div>`).join('');
   }
@@ -1668,16 +1676,13 @@ function refreshSchedulePanel() {
 // QUICK BOOK WIZARD — Step-by-Step
 // ============================================================
 let qbStep = 1;
-let qbData = { name: '', team: '', company: '', slot: null, branchId: null, date: '' };
+let qbData = { name: '', team: '', company: '', email: '', slot: null, branchId: null, date: '' };
 let qbCurrentZone = null;
 let qbSelectedBranchId = null;
-let qbSelectedSlot = null;
-let formSelectedSlot = null;
 
 function selectCalDate(dateStr) {
   qbData = { name: '', team: '', slot: null, branchId: null, date: dateStr };
   qbSelectedBranchId = null;
-  qbSelectedSlot = null;
   qbCurrentZone = null;
   qbStep = 1;
   document.getElementById('qb-date-label').textContent = '📆 ' + formatDateTH(dateStr);
@@ -1687,7 +1692,7 @@ function selectCalDate(dateStr) {
 }
 
 function qbRenderStep() {
-  [1,2,3,4].forEach(i => {
+  [1,2,3].forEach(i => {
     const dot = document.getElementById('step-dot-' + i);
     if (!dot) return;
     if (i < qbStep) {
@@ -1707,7 +1712,7 @@ function qbRenderStep() {
   const nextBtn = document.getElementById('qb-next-btn');
   if (qbStep > 1) { backBtn.classList.remove('hidden'); cancelBtn.classList.add('hidden'); }
   else { backBtn.classList.add('hidden'); cancelBtn.classList.remove('hidden'); }
-  nextBtn.textContent = qbStep === 4 ? '✅ ยืนยันจอง' : 'ถัดไป →';
+  nextBtn.textContent = qbStep === 3 ? '✅ ยืนยันจอง' : 'ถัดไป →';
 
   const content = document.getElementById('qb-step-content');
   if (qbStep === 1) {
@@ -1748,21 +1753,14 @@ function qbRenderStep() {
     setTimeout(() => document.getElementById('qb-name')?.focus(), 50);
 
   } else if (qbStep === 2) {
-    content.innerHTML = `
-      <p class="text-sm font-semibold text-gray-400 mb-4">ขั้นที่ 2 — เลือกช่วงเวลา</p>
-      <div class="grid grid-cols-1 gap-3" id="qb-slot-btns"></div>`;
-    renderSlotButtons('qb-slot-btns', qbData.date);
-
-  } else if (qbStep === 3) {
     const zones = getZones();
     if (!qbCurrentZone) qbCurrentZone = zones[0];
 
-    // Clear and build DOM directly
     content.innerHTML = '';
 
     const title = document.createElement('p');
     title.className = 'text-sm font-semibold text-gray-400 mb-3';
-    title.textContent = 'ขั้นที่ 3 — เลือกสถานที่';
+    title.textContent = 'ขั้นที่ 2 — เลือกสถานที่';
     content.appendChild(title);
 
     // Zone tabs
@@ -1788,18 +1786,16 @@ function qbRenderStep() {
     // Populate cards immediately - container exists in DOM now
     renderQbBranchCards(qbCurrentZone);
 
-  } else if (qbStep === 4) {
+  } else if (qbStep === 3) {
     const branch = BRANCHES.find(b => b.id === qbSelectedBranchId);
-    const slot = TIME_SLOTS[qbSelectedSlot];
     content.innerHTML = `
-      <p class="text-sm font-semibold text-gray-400 mb-4">ขั้นที่ 4 — ตรวจสอบและยืนยัน</p>
+      <p class="text-sm font-semibold text-gray-400 mb-4">ขั้นที่ 3 — ตรวจสอบและยืนยัน</p>
       <div class="bg-gray-50 rounded-xl p-4 space-y-3">
         <div class="flex justify-between text-sm"><span class="text-gray-500">ชื่อเล่น</span><span class="font-semibold">${escapeHtml(qbData.name)}</span></div>
-        <div class="flex justify-between text-sm"><span class="text-gray-500">บริษัท</span><span class="font-semibold">${escapeHtml(qbData.company)}</span></div>
-        <div class="flex justify-between text-sm"><span class="text-gray-500">ทีม</span><span class="font-semibold">${escapeHtml(qbData.team)}</span></div>
+        ${qbData.email ? `<div class="flex justify-between text-sm"><span class="text-gray-500">อีเมล</span><span class="font-semibold text-xs">${escapeHtml(qbData.email)}</span></div>` : ''}
         <div class="flex justify-between text-sm"><span class="text-gray-500">วันที่</span><span class="font-semibold">${formatDateTH(qbData.date)}</span></div>
-        <div class="flex justify-between text-sm"><span class="text-gray-500">ช่วงเวลา</span><span class="font-semibold">${slot?.icon} ${slot?.label} (${slot?.time})</span></div>
-        <div class="flex justify-between text-sm"><span class="text-gray-500">สาขา</span><span class="font-semibold text-right max-w-[60%]">${branch?.name}</span></div>
+        <div class="flex justify-between text-sm"><span class="text-gray-500">ช่วงเวลา</span><span class="font-semibold">${SLOT_LABEL.replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span></div>
+        <div class="flex justify-between text-sm"><span class="text-gray-500">สาขา</span><span class="font-semibold text-right text-xs whitespace-nowrap">${branch?.name}</span></div>
       </div>`;
   }
 }
@@ -1809,17 +1805,15 @@ function qbNextStep() {
     const name = escapeHtml(document.getElementById('qb-name')?.value.trim());
     const company = escapeHtml(document.getElementById('qb-company')?.value);
     const team = escapeHtml(document.getElementById('qb-team')?.value);
+    const email = document.getElementById('qb-email')?.value.trim() || '';
     if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
     if (!company) { showError('กรุณาเลือกบริษัท'); return; }
     if (!team) { showError('กรุณาเลือกทีม'); return; }
-    qbData.name = name; qbData.company = company; qbData.team = team; qbStep = 2;
+    qbData.name = name; qbData.company = company; qbData.team = team; qbData.email = email; qbStep = 2;
   } else if (qbStep === 2) {
-    if (!qbSelectedSlot) { showError('กรุณาเลือกช่วงเวลา'); return; }
-    qbData.slot = qbSelectedSlot; qbStep = 3;
-  } else if (qbStep === 3) {
     if (!qbSelectedBranchId) { showError('กรุณาเลือกสาขา'); return; }
-    qbData.branchId = qbSelectedBranchId; qbStep = 4;
-  } else if (qbStep === 4) {
+    qbData.branchId = qbSelectedBranchId; qbStep = 3;
+  } else if (qbStep === 3) {
     submitQuickBooking(); return;
   }
   qbRenderStep();
@@ -1829,36 +1823,6 @@ function qbPrevStep() {
   if (qbStep > 1) { qbStep--; qbRenderStep(); }
 }
 
-function renderSlotButtons(containerId, date) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const selectedSlotId = containerId === 'qb-slot-btns' ? qbSelectedSlot : formSelectedSlot;
-  container.innerHTML = Object.values(TIME_SLOTS).map(s => {
-    const isSelected = selectedSlotId === s.id;
-    return `<button onclick="selectSlot('${containerId}','${s.id}','${date}')"
-      class="slot-btn rounded-xl px-3 py-2.5 border-2 transition-all flex items-center gap-2
-        ${isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
-      <span class="text-base shrink-0">${s.icon}</span>
-      <div class="flex flex-row items-center gap-1.5 min-w-0 flex-wrap">
-        <span class="text-xs font-medium ${isSelected ? 'text-purple-700' : 'text-gray-800'} leading-tight">${s.label}</span>
-        <span class="hidden sm:inline text-xs text-gray-400 leading-tight">${s.time}</span>
-      </div>
-      ${isSelected ? '<span class="ml-auto text-purple-500 text-sm shrink-0">✓</span>' : ''}
-    </button>`;
-  }).join('');
-}
-
-function selectSlot(containerId, slotId, date) {
-  if (containerId === 'qb-slot-btns') {
-    qbSelectedSlot = slotId;
-    renderSlotButtons('qb-slot-btns', date);
-  } else {
-    formSelectedSlot = slotId;
-    const d = document.getElementById('book-date')?.value || date;
-    renderSlotButtons('form-slot-btns', d);
-    checkFormConfirmBtn();
-  }
-}
 
 function getZones() {
   return [...new Set(BRANCHES.map(b => b.zone))];
@@ -1904,17 +1868,16 @@ function selectQbBranch(branchId) {
 
 function submitQuickBooking() {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
-  const { name, team, company, date, slot: slotId, branchId } = qbData;
-  const validErr = validateBookingRules(name, date, slotId);
+  const { name, team, company, email, date, branchId } = qbData;
+  const validErr = validateBookingRules(name, date);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
-  if (isSlotFull(date, slotId)) {
-    const sessions = getSlotSessions(slotId);
-    const wCount = Math.max(...sessions.map(s => getSessionWaitlistCount(date, s)));
+  if (isSlotFull(date)) {
+    const wCount = getWaitlistCount(date);
     closeModal('modal-quick-book');
-    showWaitlistConfirm(name, date, slotId, branchId, wCount, 'modal', team, company);
+    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team, company);
     return;
   }
-  doCreateBooking(name, date, slotId, branchId, 'modal', team, company);
+  doCreateBooking(name, date, branchId, 'modal', team, company, email);
 }
 
 function updateQbConfirmBtn() {}
@@ -2182,19 +2145,13 @@ function selectFormBranch(branchId) {
 }
 
 function populateBranchSelect() {
-  initFormSlotButtons();
   initFormBranchTabs();
-}
-
-function initFormSlotButtons() {
-  const date = document.getElementById('book-date')?.value || todayStr();
-  renderSlotButtons('form-slot-btns', date);
 }
 
 function checkFormConfirmBtn() {
   const btn = document.getElementById('form-confirm-btn');
   if (!btn) return;
-  if (formSelectedBranchId && formSelectedSlot) {
+  if (formSelectedBranchId) {
     btn.classList.remove('opacity-50', 'cursor-not-allowed');
   } else {
     btn.classList.add('opacity-50', 'cursor-not-allowed');
