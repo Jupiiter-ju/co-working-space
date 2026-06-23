@@ -1108,6 +1108,21 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
     bookingLock = false;
     syncBookingToSheet(newBooking);
 
+    if (newBooking.status === 'waitlist') {
+      fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'new_waitlist',
+          id: newBooking.id,
+          name: newBooking.name,
+          email: newBooking.email || '',
+          date: newBooking.date,
+          branch: newBooking.branch,
+        }),
+      }).catch(() => {});
+    }
+
     if (source === 'form') {
       document.getElementById('emp-name').value = '';
       document.getElementById('emp-company').value = '';
@@ -1177,7 +1192,9 @@ function copyAccountNumber(number, btn) {
   }
 }
 
-function sendBookingEmail() {
+const N8N_WEBHOOK_URL = 'https://regionalteam.bifrostconnect.co.th/webhook/cowork-email';
+
+async function sendBookingEmail() {
   const email = document.getElementById('email-input').value.trim();
   const statusEl = document.getElementById('email-status');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -1188,25 +1205,32 @@ function sendBookingEmail() {
   }
   const b = currentTicketBooking;
   if (!b) return;
-  const subject = encodeURIComponent(`[Co-Working Booking] Account Number สำหรับวันที่ ${b.date}`);
-  const body = encodeURIComponent(
-    `สวัสดีครับ/ค่ะ ${b.name}\n\n` +
-    `นี่คือรายละเอียดการจอง Co-Working Space ของคุณ\n\n` +
-    `Booking ID : ${b.id}\n` +
-    `ชื่อเล่น   : ${b.name}\n` +
-    (b.company ? `บริษัท     : ${b.company}\n` : '') +
-    (b.team ? `ทีม        : ${b.team}\n` : '') +
-    `วันที่      : ${b.date}\n` +
-    `ช่วงเวลา   : ${b.slotLabel || ''}\n` +
-    `สาขา       : ${b.branch}\n` +
-    `สถานะ      : ${b.status === 'waitlist' ? 'คิวสำรอง' : 'ยืนยันแล้ว'}\n` +
-    (b.accountNumber ? `\nAccount Number : ${b.accountNumber}\n` : '') +
-    `\nกรุณานำ Account Number ไปใช้ Check-in ผ่านแอปพลิเคชัน Regus\n`
-  );
-  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-  statusEl.textContent = '✅ เปิด email client แล้ว กรุณากด Send ในโปรแกรมอีเมลของคุณ';
-  statusEl.className = 'text-xs mt-1.5 text-green-600';
+
+  statusEl.textContent = '⏳ กำลังส่ง...';
+  statusEl.className = 'text-xs mt-1.5 text-gray-500';
   statusEl.classList.remove('hidden');
+
+  try {
+    const res = await fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'send_email',
+        id: b.id,
+        name: b.name,
+        email: email,
+        accountNumber: b.accountNumber,
+        date: b.date,
+        branch: b.branch,
+      }),
+    });
+    if (!res.ok) throw new Error('server error');
+    statusEl.textContent = '✅ ส่งอีเมลแล้ว กรุณาตรวจสอบกล่องจดหมาย';
+    statusEl.className = 'text-xs mt-1.5 text-green-600';
+  } catch {
+    statusEl.textContent = '❌ ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
+    statusEl.className = 'text-xs mt-1.5 text-red-500';
+  }
 }
 
 function showTicket(booking) {
@@ -1357,19 +1381,19 @@ function doCancel(bookingId) {
       if (x.id !== firstWaitlist.id) return x;
       return { ...x, status: 'confirmed', accountNumber: newAccountNumber };
     });
-    if (firstWaitlist.email) {
-      const subject = encodeURIComponent('✅ คิวของคุณได้รับการยืนยันแล้ว — Co-Working Space');
-      const body = encodeURIComponent(
-        `สวัสดีคุณ ${firstWaitlist.name},\n\n` +
-        `คิวสำรองของคุณได้รับการยืนยันแล้ว!\n\n` +
-        `วันที่: ${formatDateTH(firstWaitlist.date)}\n` +
-        `เวลา: ${SLOT_LABEL.replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}\n` +
-        `สาขา: ${firstWaitlist.branch}\n` +
-        `Account Number: ${newAccountNumber}\n\n` +
-        `กรุณาบันทึก Account Number เพื่อใช้ Check in\n\nขอบคุณครับ`
-      );
-      window.open(`mailto:${firstWaitlist.email}?subject=${subject}&body=${body}`, '_blank');
-    }
+    fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'waitlist_confirmed',
+        id: firstWaitlist.id,
+        name: firstWaitlist.name,
+        email: firstWaitlist.email || '',
+        accountNumber: newAccountNumber,
+        date: firstWaitlist.date,
+        branch: firstWaitlist.branch,
+      }),
+    }).catch(() => {});
   }
 
   saveBookings(bookings);
