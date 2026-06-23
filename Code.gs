@@ -1,7 +1,7 @@
 const HEADERS = [
   'id', 'name', 'team', 'company', 'date', 'slot',
   'slotLabel', 'timestamp', 'branch', 'branchId',
-  'accountNumber', 'status'
+  'accountNumber', 'status', 'email'
 ];
 
 function migrateHeaders() {

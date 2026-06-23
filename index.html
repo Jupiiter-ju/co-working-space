@@ -805,7 +805,7 @@ let bookingLock = false; // Anti-race condition
 // ============================================================
 // CONFIG — วาง URL ของ Google Apps Script Web App ที่นี่
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzft5c5k_ELD6kCsa_ZEO-pXelRR8Pfc0kMaHdGTWjN4Y8sz9EzUZsENYVNuoZEqz2s/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvKbfc0HCgqCnMTS7YCFoWc6_7qYyOZ2O37KXJlRBOvFYuz-cmLRtZNkVTnxJ3EpDB/exec';
 
 // ============================================================
 // LOCALSTORAGE HELPERS
@@ -1256,6 +1256,7 @@ async function sendBookingEmail() {
     if (!res.ok) throw new Error('server error');
     statusEl.textContent = '✅ ส่งอีเมลแล้ว กรุณาตรวจสอบกล่องจดหมาย';
     statusEl.className = 'text-xs mt-1.5 text-green-600';
+    updateBookingInSheet(b.id, { email });
   } catch {
     statusEl.textContent = '❌ ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
     statusEl.className = 'text-xs mt-1.5 text-red-500';
