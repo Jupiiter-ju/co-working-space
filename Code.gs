@@ -37,10 +37,13 @@ function doPost(e) {
 
     if (payload.action === 'add') {
       const b = payload.booking;
-      const row = HEADERS.map(h => {
-        if (b[h] === undefined) return '';
-        if (h === 'timestamp') return Number(b[h]);
-        return String(b[h]);
+      // Use actual sheet headers so new columns (e.g. email_status added by n8n) don't shift our data
+      const sheetHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+      const row = sheetHeaders.map(h => {
+        const val = b[h];
+        if (val === undefined || val === null) return '';
+        if (h === 'timestamp') return Number(val);
+        return String(val);
       });
       sheet.appendRow(row);
       applyStatusValidation(sheet);
@@ -53,6 +56,7 @@ function doPost(e) {
       const idCol = headers.indexOf('id');
       const statusCol = headers.indexOf('status');
       const accountNumberCol = headers.indexOf('accountNumber');
+      const emailCol = headers.indexOf('email');
       for (let i = 1; i < data.length; i++) {
         if (String(data[i][idCol]) === String(payload.id)) {
           if (payload.status !== undefined) {
@@ -60,6 +64,9 @@ function doPost(e) {
           }
           if (payload.accountNumber !== undefined && accountNumberCol !== -1) {
             sheet.getRange(i + 1, accountNumberCol + 1).setValue(String(payload.accountNumber));
+          }
+          if (payload.email !== undefined && emailCol !== -1) {
+            sheet.getRange(i + 1, emailCol + 1).setValue(String(payload.email));
           }
           return respond({ success: true });
         }
@@ -107,6 +114,15 @@ function ensureHeaders(sheet) {
       .setBackground('#7C3AED')
       .setFontColor('#FFFFFF');
     sheet.setFrozenRows(1);
+  } else {
+    const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    HEADERS.forEach(h => {
+      if (!existing.includes(h)) {
+        const col = sheet.getLastColumn() + 1;
+        sheet.getRange(1, col).setValue(h)
+          .setFontWeight('bold').setBackground('#7C3AED').setFontColor('#FFFFFF');
+      }
+    });
   }
 }
 
