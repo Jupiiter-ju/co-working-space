@@ -1677,7 +1677,8 @@ function renderScheduleDayPanel() {
   const dateStr = scheduleSelectedDate;
   const all = getBookings().filter(b => b.date === dateStr);
 
-  let html = `<div class="text-sm font-semibold text-purple-600 mb-3">📅 ${formatDateTH(dateStr)} <span class="text-gray-400 font-normal">(${all.length} รายการ)</span></div>`;
+  const activeCount = all.filter(b => b.status !== 'cancelled').length;
+  let html = `<div class="text-sm font-semibold text-purple-600 mb-3">📅 ${formatDateTH(dateStr)} <span class="text-gray-400 font-normal">(${activeCount} รายการ)</span></div>`;
 
   if (all.length === 0) {
     html += '<p class="text-sm text-gray-400">ยังไม่มีคนจอง</p>';
