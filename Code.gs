@@ -47,6 +47,26 @@ function doPost(e) {
       return respond({ success: true });
     }
 
+    if (payload.action === 'update') {
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+      const idCol = headers.indexOf('id');
+      const statusCol = headers.indexOf('status');
+      const accountNumberCol = headers.indexOf('accountNumber');
+      for (let i = 1; i < data.length; i++) {
+        if (String(data[i][idCol]) === String(payload.id)) {
+          if (payload.status !== undefined) {
+            sheet.getRange(i + 1, statusCol + 1).setValue(String(payload.status));
+          }
+          if (payload.accountNumber !== undefined && accountNumberCol !== -1) {
+            sheet.getRange(i + 1, accountNumberCol + 1).setValue(String(payload.accountNumber));
+          }
+          return respond({ success: true });
+        }
+      }
+      return respond({ success: false, error: 'Booking not found' });
+    }
+
     if (payload.action === 'cancel_request') {
       const data = sheet.getDataRange().getValues();
       const headers = data[0];
@@ -54,7 +74,7 @@ function doPost(e) {
       const statusCol = headers.indexOf('status');
       for (let i = 1; i < data.length; i++) {
         if (String(data[i][idCol]) === String(payload.id)) {
-          sheet.getRange(i + 1, statusCol + 1).setValue('cancel_requested');
+          sheet.getRange(i + 1, statusCol + 1).setValue('cancelled');
           return respond({ success: true });
         }
       }
@@ -74,7 +94,7 @@ function getDataSheet() {
 function applyStatusValidation(sheet) {
   const rule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['confirmed', 'cancel_requested', 'cancelled', 'waitlist'], true)
-    .setAllowInvalid(false)
+    .setAllowInvalid(true)
     .build();
   sheet.getRange('L2:L1000').setDataValidation(rule);
 }
