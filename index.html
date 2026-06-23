@@ -849,10 +849,17 @@ async function loadBookingsFromSheet() {
     const data = await res.json();
     if (Array.isArray(data.bookings)) {
       // แปลง date ที่ Sheets ส่งมาเป็น ISO string กลับเป็น YYYY-MM-DD ตาม timezone ของเครื่อง
-      const bookings = data.bookings.map(b => ({
-        ...b,
-        date: normalizeSheetDate(b.date)
-      }));
+      const localMap = Object.fromEntries(getBookings().map(b => [b.id, b]));
+      const bookings = data.bookings.map(b => {
+        const normalized = { ...b, date: normalizeSheetDate(b.date) };
+        const local = localMap[b.id];
+        // ถ้า Sheet ยังแสดง waitlist แต่ localStorage ได้ promote เป็น confirmed แล้ว → เชื่อ localStorage
+        // (กรณี updateBookingInSheet ยังไม่ถึง Sheet ก่อนที่ timer จะ refresh)
+        if (local && local.status === 'confirmed' && normalized.status === 'waitlist') {
+          return { ...normalized, status: 'confirmed', accountNumber: local.accountNumber };
+        }
+        return normalized;
+      });
       saveBookings(bookings);
     }
   } catch (e) {
