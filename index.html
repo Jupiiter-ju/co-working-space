@@ -931,6 +931,19 @@ function openModal(id) { document.getElementById(id).classList.remove('hidden');
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 function showGuidePage() { document.getElementById('guide-page').classList.remove('hidden'); document.body.style.overflow = 'hidden'; var m=document.getElementById('modal-regus-img'); var g=document.getElementById('guide-regus-img'); if(m&&g) g.src=m.src; }
 function hideGuidePage() { document.getElementById('guide-page').classList.add('hidden'); document.body.style.overflow = ''; }
+function toggleAccountSteps() {
+  var panel = document.getElementById('account-steps-panel');
+  var chevron = document.getElementById('account-steps-chevron');
+  var isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+  if (isOpen) {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    requestAnimationFrame(function() { panel.style.maxHeight = '0'; });
+    chevron.style.transform = 'rotate(0deg)';
+  } else {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    chevron.style.transform = 'rotate(90deg)';
+  }
+}
 function toggleCheckinSteps() {
   var panel = document.getElementById('checkin-steps-panel');
   var chevron = document.getElementById('checkin-steps-chevron');
