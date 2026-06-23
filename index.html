@@ -409,9 +409,10 @@
       📌 ระบบจะส่งอีเมลแจ้งให้ทราบ พร้อม Account Number เมื่อได้รับการยืนยัน
     </div>
     <div class="mb-4">
-      <label class="block text-sm font-medium text-gray-700 mb-1">อีเมล <span class="text-gray-400 font-normal text-xs">(ไม่บังคับ — สำหรับแจ้งเตือนเมื่อถึงคิว)</span></label>
-      <input type="email" id="wl-email-input" placeholder="เช่น name@email.com"
+      <label class="block text-sm font-medium text-gray-700 mb-1">อีเมล <span class="text-red-500">*</span> <span class="text-gray-400 font-normal text-xs">(สำหรับแจ้งเตือนเมื่อถึงคิว)</span></label>
+      <input type="email" id="wl-email-input" placeholder="เช่น name@email.com" maxlength="200"
         class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-300 focus:border-transparent transition-all" />
+      <p id="wl-email-error" class="hidden text-xs text-red-500 mt-1">กรุณากรอกอีเมลให้ถูกต้อง</p>
     </div>
     <div class="flex gap-3">
       <button onclick="closeModal('modal-waitlist-confirm')"
@@ -1170,8 +1171,16 @@ function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', co
     `คุณจะได้เป็น <strong>คิวสำรองลำดับที่ ${wNum}</strong><br>` +
     `ต้องการลงทะเบียนคิวสำรองหรือไม่?`;
   document.getElementById('wl-email-input').value = '';
+  document.getElementById('wl-email-error').classList.add('hidden');
   document.getElementById('wl-confirm-btn').onclick = () => {
     const email = document.getElementById('wl-email-input').value.trim();
+    const errEl = document.getElementById('wl-email-error');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.classList.remove('hidden');
+      document.getElementById('wl-email-input').focus();
+      return;
+    }
+    errEl.classList.add('hidden');
     closeModal('modal-waitlist-confirm');
     doCreateBooking(name, date, branchId, source, team, company, email);
   };
