@@ -450,7 +450,7 @@
             <span class="text-sm font-semibold text-gray-700">Regus — Co-working & Office Space</span>
           </div>
           <div class="mt-2 flex gap-2 flex-wrap">
-            <a href="https://apps.apple.com/th/app/regus-offices-meeting-rooms/id387924487?l=th" target="_blank" rel="noopener"
+            <a href="https://apps.apple.com/th/app/regus-offices-meeting-rooms/id387924487?l=th" target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 bg-black text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-800 transition">
               <svg class="h-4 w-4 shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <defs><linearGradient id="asG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#25C8FB"/><stop offset="100%" stop-color="#1873EC"/></linearGradient></defs>
@@ -461,7 +461,7 @@
               </svg>
               App Store
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.regus&pcampaignid=web_share" target="_blank" rel="noopener"
+            <a href="https://play.google.com/store/apps/details?id=com.regus&pcampaignid=web_share" target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-green-700 transition">
               ▶ Google Play
             </a>
@@ -548,7 +548,7 @@
             <span class="text-sm font-semibold text-gray-700">Regus — Co-working & Office Space</span>
           </div>
           <div class="flex gap-2 flex-wrap mb-4 justify-center">
-            <a href="https://apps.apple.com/th/app/regus-offices-meeting-rooms/id387924487?l=th" target="_blank" rel="noopener"
+            <a href="https://apps.apple.com/th/app/regus-offices-meeting-rooms/id387924487?l=th" target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 bg-black text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-800 transition">
               <svg class="h-4 w-4 shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <defs><linearGradient id="asG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#25C8FB"/><stop offset="100%" stop-color="#1873EC"/></linearGradient></defs>
@@ -559,7 +559,7 @@
               </svg>
               App Store
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.regus&pcampaignid=web_share" target="_blank" rel="noopener"
+            <a href="https://play.google.com/store/apps/details?id=com.regus&pcampaignid=web_share" target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-green-700 transition">
               ▶ Google Play
             </a>
@@ -1068,7 +1068,7 @@ function validateBookingRules(name, date) {
     const typeLabel = dup.status === 'waitlist' ? 'คิวสำรอง' : 'คิว';
     return {
       title: `"${name}" จอง${typeLabel}`,
-      msg: `<div class="text-center">วันที่ ${formatDateTH(date)} จองไปแล้ว</div>`
+      msg: `<div class="text-center">วันที่ ${escapeHtml(formatDateTH(date))} จองไปแล้ว</div>`
     };
   }
 
@@ -1193,7 +1193,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
 function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', company = '', email = '') {
   const wNum = wCount + 1;
   document.getElementById('wl-confirm-msg').innerHTML =
-    `วันที่ <strong>${formatDateTH(date)}</strong><br>` +
+    `วันที่ <strong>${escapeHtml(formatDateTH(date))}</strong><br>` +
     `มีผู้จองครบ ${MAX_SLOTS} คนแล้ว · คิวสำรองอยู่แล้ว <strong>${wCount} คน</strong><br><br>` +
     `คุณจะได้เป็น <strong>คิวสำรองลำดับที่ ${wNum}</strong><br>` +
     `ต้องการลงทะเบียนคิวสำรองหรือไม่?`;
