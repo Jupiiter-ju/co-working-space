@@ -1102,10 +1102,10 @@ function submitBooking() {
 
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
-    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company, document.getElementById('emp-email').value.trim());
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company, '');
     return;
   }
-  doCreateBooking(name, date, branchId, 'form', team, company, document.getElementById('emp-email').value.trim());
+  doCreateBooking(name, date, branchId, 'form', team, company, '');
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
