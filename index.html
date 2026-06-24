@@ -744,11 +744,9 @@ const BRANCHES = [
   { id: 'B043', name: 'REGUS Gaysorn Village', zone: 'BTS Central Area', address: 'เกษรวิลเลจ ถนนเพลินจิต', travel: 'BTS: ชิดลม', maps: 'https://maps.google.com/?q=Gaysorn+Village+Bangkok' },
   { id: 'B044', name: 'REGUS M Thai Tower All Season Place', zone: 'BTS Central Area', address: 'เอ็ม ไทย ทาวเวอร์ ออลซีซั่นส์เพลส ถ.วิทยุ', travel: 'BTS: เพลินจิต', maps: 'https://maps.google.com/?q=M+Thai+Tower+All+Seasons+Place+Bangkok' },
   { id: 'B045', name: 'REGUS CRC Tower All Season Place', zone: 'BTS Central Area', address: 'ซีอาร์ซี ทาวเวอร์ ออลซีซั่นส์เพลส ถ.วิทยุ', travel: 'BTS: เพลินจิต', maps: 'https://maps.google.com/?q=CRC+Tower+All+Seasons+Place+Bangkok' },
-  { id: 'B046', name: 'HQ Serm Mit Tower', zone: 'BTS Central Area', address: 'เสริมมิตร ทาวเวอร์ สุขุมวิท 21 (อโศก)', travel: 'BTS: อโศก', maps: 'https://maps.google.com/?q=Serm+Mit+Tower+Asoke+Bangkok' },
   { id: 'B047', name: 'REGUS Interchange 21', zone: 'BTS Central Area', address: 'อินเตอร์เชนจ์ 21 สุขุมวิท 21 (อโศก)', travel: 'BTS: อโศก', maps: 'https://maps.google.com/?q=Interchange+21+Asoke+Bangkok' },
   { id: 'B048', name: 'REGUS Exchange Tower', zone: 'BTS Central Area', address: 'เอ็กซ์เชนจ์ ทาวเวอร์ สุขุมวิท 21 (อโศก)', travel: 'BTS: อโศก', maps: 'https://maps.google.com/?q=Exchange+Tower+Asoke+Bangkok' },
   { id: 'B049', name: 'REGUS Bhiraj Tower at EmQuartier', zone: 'BTS Central Area', address: 'ภิรัช ทาวเวอร์ ดิ เอ็มควอเทียร์ สุขุมวิท 35-37', travel: 'BTS: พร้อมพงษ์', maps: 'https://maps.google.com/?q=Bhiraj+Tower+EmQuartier+Bangkok' },
-  { id: 'B050', name: 'HQ SO24 (Soi Sukhumvit 24)', zone: 'BTS Central Area', address: 'อาคารเอสโอ 24 ซอยสุขุมวิท 24', travel: 'BTS: พร้อมพงษ์', maps: 'https://maps.google.com/?q=SO24+Sukhumvit+24+Bangkok' },
   { id: 'B051', name: 'HQ Sukhumvit 26', zone: 'BTS Central Area', address: 'สุขุมวิท 26 เขตคลองเตย', travel: 'BTS: พร้อมพงษ์', maps: 'https://maps.google.com/?q=Sukhumvit+26+Bangkok' },
   { id: 'B003', name: 'SPACES Chamchuri Square', zone: 'BTS Central Area', address: 'จามจุรี สแควร์ ถนนพญาไท', travel: 'MRT: สามย่าน', maps: 'https://maps.google.com/?q=Chamchuri+Square+Bangkok' },
   { id: 'B004', name: 'HQ MRT Hualamphong', zone: 'BTS Central Area', address: 'บริเวณสถานีหัวลำโพง ถนนพระราม 4', travel: 'MRT: หัวลำโพง', maps: 'https://maps.google.com/?q=MRT+Hualamphong+Bangkok' },
@@ -771,24 +769,19 @@ const BRANCHES = [
   { id: 'B029', name: 'SPACES Vanit Aree', zone: 'พญาไท', address: 'อาคารวานิช 2 ถนนพหลโยธิน อารีย์', travel: 'BTS: อารีย์', maps: 'https://maps.google.com/?q=Vanit+Building+Ari+Bangkok' },
   { id: 'B030', name: 'HQ S.P. Tower (IBM)', zone: 'พญาไท', address: 'เอส.พี. ทาวเวอร์ (อาคารไอบีเอ็ม) ถนนพหลโยธิน', travel: 'BTS: อารีย์', maps: 'https://maps.google.com/?q=SP+Tower+IBM+Phahonyothin+Bangkok' },
   { id: 'B031', name: 'HQ SPE Tower', zone: 'พญาไท', address: 'เอสพีอี ทาวเวอร์ ถนนพหลโยธิน สนามเป้า', travel: 'BTS: สนามเป้า', maps: 'https://maps.google.com/?q=SPE+Tower+Sanampao+Bangkok' },
-  { id: 'B032', name: 'HQ Century The Movie Plaza', zone: 'พญาไท', address: 'เซ็นจูรี่ เดอะ มูฟวี่ พลาซ่า ถนนพหลโยธิน', travel: 'BTS: อนุสาวรีย์ชัยสมรภูมิ', maps: 'https://maps.google.com/?q=Century+Movie+Plaza+Victory+Monument+Bangkok' },
   { id: 'B033', name: 'SPACES Ratchathewi', zone: 'พญาไท', address: 'บริเวณราชเทวี ถนนเพชรบุรี', travel: 'BTS: ราชเทวี', maps: 'https://maps.google.com/?q=Ratchathewi+Bangkok' },
   { id: 'B039', name: 'REGUS Singha Complex', zone: 'พญาไท', address: 'สิงห์ คอมเพล็กซ์ ถนนเพชรบุรี', travel: 'MRT: เพชรบุรี', maps: 'https://maps.google.com/?q=Singha+Complex+Bangkok' },
   { id: 'B040', name: 'SPACES Suthi Building', zone: 'พญาไท', address: 'อาคารสุธี ถนนเพชรบุรี', travel: 'MRT: เพชรบุรี', maps: 'https://maps.google.com/?q=Suthi+Building+Phetchaburi+Bangkok' },
 
   // ── ทองหล่อ-อ่อนนุช (6) ──
-  { id: 'B010', name: 'HQ Blue Chip Thonglor', zone: 'ทองหล่อ-อ่อนนุช', address: 'บลูชิพ ทาวเวอร์ ทองหล่อ สุขุมวิท 55', travel: 'BTS: ทองหล่อ', maps: 'https://maps.google.com/?q=Blue+Chip+Tower+Thonglor+Bangkok' },
   { id: 'B011', name: 'REGUS Somerset Thonglor', zone: 'ทองหล่อ-อ่อนนุช', address: 'ซัมเมอร์เซ็ท ทองหล่อ สุขุมวิท 55', travel: 'BTS: ทองหล่อ', maps: 'https://maps.google.com/?q=Somerset+Thonglor+Bangkok' },
   { id: 'B012', name: 'SPACES Summer Hill', zone: 'ทองหล่อ-อ่อนนุช', address: 'อาคารซัมเมอร์ฮิลล์ พระโขนง', travel: 'BTS: พระโขนง', maps: 'https://maps.google.com/?q=Summer+Hill+Phra+Khanong+Bangkok' },
   { id: 'B013', name: 'REGUS W-District', zone: 'ทองหล่อ-อ่อนนุช', address: 'ดับเบิลยู-ดิสทริค พระโขนง สุขุมวิท 69', travel: 'BTS: พระโขนง', maps: 'https://maps.google.com/?q=W-District+Phra+Khanong+Bangkok' },
-  { id: 'B014', name: 'HQ Sukhumvit Hills', zone: 'ทองหล่อ-อ่อนนุช', address: 'สุขุมวิท ฮิลล์ บริเวณอ่อนนุช - บางจาก', travel: 'BTS: อ่อนนุช, บางจาก', maps: 'https://maps.google.com/?q=Sukhumvit+Hills+Bangkok' },
   { id: 'B015', name: 'REGUS 66 Tower', zone: 'ทองหล่อ-อ่อนนุช', address: 'อาคาร 66 ทาวเวอร์ สุขุมวิท 66 อุดมสุข', travel: 'BTS: อุดมสุข', maps: 'https://maps.google.com/?q=66+Tower+Udomsuk+Bangkok' },
 
   // ── บางนา (5) ──
-  { id: 'B016', name: 'REGUS WHA Tower', zone: 'บางนา', address: 'ดับเบิลยูเอชเอ ทาวเวอร์ ถนนบางนา-ตราด ติดเมกาบางนา', travel: 'ติดกับเมกาบางนา', maps: 'https://maps.google.com/?q=WHA+Tower+Bangna+Bangkok' },
   { id: 'B017', name: 'REGUS Bangna Tower', zone: 'บางนา', address: 'บางนา ทาวเวอร์ ถนนบางนา-ตราด กม. 6.5', travel: 'ถนนบางนา-ตราด กม. 6.5', maps: 'https://maps.google.com/?q=Bangna+Tower+Bangkok' },
   { id: 'B019', name: 'REGUS Bhiraj Tower at Bitec', zone: 'บางนา', address: 'ภิรัช ทาวเวอร์ แอท ไบเทค บางนา', travel: 'BTS: บางนา', maps: 'https://maps.google.com/?q=Bhiraj+Tower+Bitec+Bangna' },
-  { id: 'B018', name: 'HQ OSC Building', zone: 'บางนา', address: 'อาคารโอเอสซี ถนนบางนา-ตราด กม. 12 บางพลี สมุทรปราการ', travel: 'ถนนบางนา-ตราด กม. 12 บางพลี สมุทรปราการ', maps: 'https://maps.google.com/?q=OSC+Building+Bangplee+Samutprakarn' },
   { id: 'B020', name: 'HQ The Metropolis Samrong', zone: 'บางนา', address: 'เดอะ เมโทรโพลิส สำโรง สุขุมวิท 103', travel: 'BTS: สำโรง', maps: 'https://maps.google.com/?q=The+Metropolis+Samrong+Bangkok' },
 
   // ── สีลม-สาทร (8) ──
@@ -797,8 +790,6 @@ const BRANCHES = [
   { id: 'B005', name: 'SPACES Empire Tower', zone: 'สีลม-สาทร', address: 'เอ็มไพร์ ทาวเวอร์ ถนนสาทรใต้', travel: 'BTS: ช่องนนทรี', maps: 'https://maps.google.com/?q=Empire+Tower+Sathorn+Bangkok' },
   { id: 'B006', name: 'REGUS Sathorn Square', zone: 'สีลม-สาทร', address: 'สาทร สแควร์ ถนนสาทรเหนือ', travel: 'BTS: ช่องนนทรี', maps: 'https://maps.google.com/?q=Sathorn+Square+Bangkok' },
   { id: 'B007', name: 'REGUS Chartered Square', zone: 'สีลม-สาทร', address: 'ชาร์เตอร์ สแควร์ ถนนสาทรเหนือ', travel: 'BTS: สุรศักดิ์', maps: 'https://maps.google.com/?q=Chartered+Square+Bangkok' },
-  { id: 'B008', name: 'HQ SV City Tower', zone: 'สีลม-สาทร', address: 'เอสวี ซิตี้ ทาวเวอร์ ถนนพระราม 3', travel: 'BRT: วัดดาน', maps: 'https://maps.google.com/?q=SV+City+Tower+Rama3+Bangkok' },
-  { id: 'B009', name: 'SPACES Kingbridge Tower', zone: 'สีลม-สาทร', address: 'คิงบริดจ์ ทาวเวอร์ ถนนพระราม 3', travel: 'BRT: วัดดาน', maps: 'https://maps.google.com/?q=Kingbridge+Tower+Rama3+Bangkok' },
   { id: 'B053', name: 'REGUS Silom Complex', zone: 'สีลม-สาทร', address: 'สีลม คอมเพล็กซ์ ถนนสีลม', travel: 'BTS: ศาลาแดง / MRT: สีลม', maps: 'https://maps.google.com/?q=Silom+Complex+Bangkok' },
 
   // ── แจ้งวัฒนะ (2) ──
