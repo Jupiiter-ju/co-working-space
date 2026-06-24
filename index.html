@@ -1831,25 +1831,31 @@ function qbRenderStep() {
           <label class="block text-sm font-medium text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
           <select id="qb-company" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
             <option value="">-- เลือกบริษัท --</option>
-            <option value="CZS" ${qbData.company==='CZS'?'selected':''}>CZS</option>
-            <option value="AGX" ${qbData.company==='AGX'?'selected':''}>AGX</option>
-            <option value="AZT" ${qbData.company==='AZT'?'selected':''}>AZT</option>
-            <option value="ECO" ${qbData.company==='ECO'?'selected':''}>ECO</option>
-            <option value="HOF" ${qbData.company==='HOF'?'selected':''}>HOF</option>
-            <option value="CDM" ${qbData.company==='CDM'?'selected':''}>CDM</option>
+            <option value="AGX">AGX</option>
+            <option value="AZT">AZT</option>
+            <option value="BIF">BIF</option>
+            <option value="CBSoft">CBSoft</option>
+            <option value="CDM">CDM</option>
+            <option value="CZS">CZS</option>
+            <option value="ECO">ECO</option>
+            <option value="EXE">EXE</option>
+            <option value="HOF">HOF</option>
+            <option value="หวังรวย">หวังรวย</option>
           </select>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
           <select id="qb-team" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
             <option value="">-- เลือกทีม --</option>
-            <option value="Design" ${qbData.team==='Design'?'selected':''}>Design</option>
-            <option value="Web Dev" ${qbData.team==='Web Dev'?'selected':''}>Web Dev</option>
-            <option value="GP" ${qbData.team==='GP'?'selected':''}>GP</option>
-            <option value="MKT" ${qbData.team==='MKT'?'selected':''}>MKT</option>
-            <option value="Dev" ${qbData.team==='Dev'?'selected':''}>Dev</option>
-            <option value="BD" ${qbData.team==='BD'?'selected':''}>BD</option>
-            <option value="Other" ${qbData.team==='Other'?'selected':''}>Other</option>
+            <option value="BD">BD</option>
+            <option value="Commu">Commu</option>
+            <option value="Design">Design</option>
+            <option value="Dev">Dev</option>
+            <option value="Esports">Esports</option>
+            <option value="GP">GP</option>
+            <option value="MKT">MKT</option>
+            <option value="Web Dev">Web Dev</option>
+            <option value="Other">Other</option>
           </select>
         </div>
       </div>`;
