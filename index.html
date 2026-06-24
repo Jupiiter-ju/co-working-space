@@ -1110,10 +1110,10 @@ function submitBooking() {
 
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
-    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company);
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company, document.getElementById('emp-email').value.trim());
     return;
   }
-  doCreateBooking(name, date, branchId, 'form', team, company);
+  doCreateBooking(name, date, branchId, 'form', team, company, document.getElementById('emp-email').value.trim());
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
@@ -1194,7 +1194,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
 // ============================================================
 // WAITLIST CONFIRM DIALOG
 // ============================================================
-function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', company = '') {
+function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', company = '', email = '') {
   const wNum = wCount + 1;
   document.getElementById('wl-confirm-msg').innerHTML =
     `วันที่ <strong>${formatDateTH(date)}</strong><br>` +
@@ -1373,6 +1373,7 @@ function showTicket(booking) {
             ${isWaitlist ? `⏳ คิวสำรอง #${waitlistPos}` : '✅ ยืนยันแล้ว'}
           </span>
         </div>
+        ${booking.email ? `<div class="flex justify-between text-sm"><span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">อีเมล</span><span class="font-semibold text-right text-xs">${escapeHtml(booking.email)}</span></div>` : ''}
       </div>
       <div class="text-center text-xs ${isWaitlist ? 'text-gray-400' : 'text-blue-200'}">จองเมื่อ: ${new Date(booking.timestamp).toLocaleString('th-TH')}</div>
     </div>
