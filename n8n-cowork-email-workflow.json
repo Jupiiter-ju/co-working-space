@@ -1,0 +1,253 @@
+{
+  "name": "Co-Working Email & Status",
+  "nodes": [
+    {
+      "id": "node-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cowork-email",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "webhookId": "cowork-email-trigger"
+    },
+    {
+      "id": "node-switch",
+      "name": "Route by Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.1,
+      "position": [440, 300],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "cond-send-email",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "send_email",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "send_email"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "cond-new-waitlist",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "new_waitlist",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "new_waitlist"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "cond-waitlist-confirmed",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "waitlist_confirmed",
+                    "operator": { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "waitlist_confirmed"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-gmail-send-acct",
+      "name": "Gmail - Send Account Number",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [700, 80],
+      "parameters": {
+        "sendTo": "={{ $('Webhook').first().json.body.email }}",
+        "subject": "Account Number สำหรับการจอง Co-Working Space",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: 'Sarabun', sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb;\">\n  <div style=\"text-align: center; margin-bottom: 24px;\">\n    <h2 style=\"color: #7c3aed; font-size: 20px; margin: 0;\">🏢 Co-Working Space Booking</h2>\n  </div>\n  <p style=\"color: #374151; font-size: 15px;\">สวัสดีคุณ <strong>{{ $('Webhook').first().json.body.name }}</strong>,</p>\n  <p style=\"color: #374151; font-size: 15px;\"><strong>Account Number สำหรับ Check in ใน Application</strong></p>\n  <div style=\"background: linear-gradient(135deg, #DB2777 0%, #9333EA 100%); border-radius: 14px; padding: 24px; text-align: center; margin: 24px 0;\">\n    <div style=\"color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;\">Account Number</div>\n    <div style=\"color: #ffffff; font-size: 36px; font-weight: 700; letter-spacing: 6px;\">{{ $('Webhook').first().json.body.accountNumber }}</div>\n  </div>\n  <table style=\"width: 100%; border-collapse: collapse; font-size: 14px; color: #374151;\">\n    <tr style=\"border-bottom: 1px solid #f3f4f6;\">\n      <td style=\"padding: 10px 0; color: #6b7280;\">วันที่จอง</td>\n      <td style=\"padding: 10px 0; font-weight: 600; text-align: right;\">{{ (() => { const d = new Date($('Webhook').first().json.body.date); const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear(); })() }}</td>\n    </tr>\n    <tr style=\"border-bottom: 1px solid #f3f4f6;\">\n      <td style=\"padding: 10px 0; color: #6b7280;\">สาขา</td>\n      <td style=\"padding: 10px 0; font-weight: 600; text-align: right;\">{{ $('Webhook').first().json.body.branch }}</td>\n    </tr>\n  </table>\n  <p style=\"margin-top: 24px; font-size: 12px; color: #9ca3af; text-align: center;\">ส่งโดยระบบจอง Co-Working Space อัตโนมัติ</p>\n</div>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "node-sheets-email-sent",
+      "name": "Sheets - Mark email sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [960, 80],
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "1CvaE43lwSzJtnAbtTV0rr15KEHH6y9v6G5bQpMNTt2U", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').first().json.body.id }}",
+            "email_status": "email sent"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            { "id": "id", "displayName": "id", "required": false, "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "email_status", "displayName": "email_status", "required": false, "defaultMatch": false, "canBeUsedToMatch": false }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "id": "node-sheets-waiting-list",
+      "name": "Sheets - Mark waiting list",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [700, 300],
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "1CvaE43lwSzJtnAbtTV0rr15KEHH6y9v6G5bQpMNTt2U", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').first().json.body.id }}",
+            "email_status": "waiting list"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            { "id": "id", "displayName": "id", "required": false, "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "email_status", "displayName": "email_status", "required": false, "defaultMatch": false, "canBeUsedToMatch": false }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "id": "node-if-has-email",
+      "name": "Has Email?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [700, 520],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "check-email",
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-gmail-waitlist-confirmed",
+      "name": "Gmail - Waitlist Confirmed",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [960, 440],
+      "parameters": {
+        "sendTo": "={{ $('Webhook').first().json.body.email }}",
+        "subject": "🎉 คิวสำรองของคุณได้รับการยืนยัน — Co-Working Space",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: 'Sarabun', sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb;\">\n  <div style=\"text-align: center; margin-bottom: 24px;\">\n    <h2 style=\"color: #7c3aed; font-size: 20px; margin: 0;\">🏢 Co-Working Space Booking</h2>\n  </div>\n  <p style=\"color: #374151; font-size: 15px;\">สวัสดีคุณ <strong>{{ $('Webhook').first().json.body.name }}</strong>,</p>\n  <div style=\"background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; margin-bottom: 20px;\">\n    <p style=\"color: #166534; font-size: 15px; margin: 0;\">🎉 <strong>ยินดีด้วย!</strong> คิวสำรองของคุณได้รับการยืนยันแล้ว</p>\n  </div>\n  <p style=\"color: #374151; font-size: 15px;\"><strong>Account Number สำหรับ Check in ใน Application</strong></p>\n  <div style=\"background: linear-gradient(135deg, #DB2777 0%, #9333EA 100%); border-radius: 14px; padding: 24px; text-align: center; margin: 24px 0;\">\n    <div style=\"color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;\">Account Number</div>\n    <div style=\"color: #ffffff; font-size: 36px; font-weight: 700; letter-spacing: 6px;\">{{ $('Webhook').first().json.body.accountNumber }}</div>\n  </div>\n  <table style=\"width: 100%; border-collapse: collapse; font-size: 14px; color: #374151;\">\n    <tr style=\"border-bottom: 1px solid #f3f4f6;\">\n      <td style=\"padding: 10px 0; color: #6b7280;\">วันที่จอง</td>\n      <td style=\"padding: 10px 0; font-weight: 600; text-align: right;\">{{ (() => { const d = new Date($('Webhook').first().json.body.date); const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear(); })() }}</td>\n    </tr>\n    <tr style=\"border-bottom: 1px solid #f3f4f6;\">\n      <td style=\"padding: 10px 0; color: #6b7280;\">สาขา</td>\n      <td style=\"padding: 10px 0; font-weight: 600; text-align: right;\">{{ $('Webhook').first().json.body.branch }}</td>\n    </tr>\n  </table>\n  <p style=\"margin-top: 24px; font-size: 12px; color: #9ca3af; text-align: center;\">ส่งโดยระบบจอง Co-Working Space อัตโนมัติ</p>\n</div>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": { "id": "", "name": "Gmail account" }
+      }
+    },
+    {
+      "id": "node-sheets-in-queue",
+      "name": "Sheets - Mark in queue",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [1220, 520],
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "1CvaE43lwSzJtnAbtTV0rr15KEHH6y9v6G5bQpMNTt2U", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').first().json.body.id }}",
+            "email_status": "in queue"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            { "id": "id", "displayName": "id", "required": false, "defaultMatch": true, "canBeUsedToMatch": true },
+            { "id": "email_status", "displayName": "email_status", "required": false, "defaultMatch": false, "canBeUsedToMatch": false }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "", "name": "Google Sheets account" }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[ { "node": "Route by Action", "type": "main", "index": 0 } ]]
+    },
+    "Route by Action": {
+      "main": [
+        [ { "node": "Gmail - Send Account Number", "type": "main", "index": 0 } ],
+        [ { "node": "Sheets - Mark waiting list", "type": "main", "index": 0 } ],
+        [ { "node": "Has Email?", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Gmail - Send Account Number": {
+      "main": [[ { "node": "Sheets - Mark email sent", "type": "main", "index": 0 } ]]
+    },
+    "Has Email?": {
+      "main": [
+        [ { "node": "Gmail - Waitlist Confirmed", "type": "main", "index": 0 } ],
+        [ { "node": "Sheets - Mark in queue", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Gmail - Waitlist Confirmed": {
+      "main": [[ { "node": "Sheets - Mark in queue", "type": "main", "index": 0 } ]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}
