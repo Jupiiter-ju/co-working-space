@@ -1699,7 +1699,7 @@ function renderScheduleDayPanel() {
     const groups = [
       { key: 'fullday',   label: 'เต็มวัน',    items: [], cls: 'bg-pink-100 text-pink-700', borderCls: 'border-l-pink-400' },
       { key: 'waitlist',  label: 'คิวสำรอง',   items: [], cls: 'bg-purple-100 text-purple-700', borderCls: 'border-l-purple-400' },
-      { key: 'cancelled', label: 'ยกเลิกแล้ว', items: [], cls: 'bg-yellow-100 text-yellow-700', borderCls: 'border-l-yellow-300' },
+      { key: 'cancelled', label: 'ยกเลิกแล้ว', items: [], cls: 'bg-purple-100 text-purple-700', borderCls: 'border-l-purple-300' },
     ];
     all.forEach(b => {
       const group = b.status === 'cancelled' ? groups[2] : b.status === 'waitlist' ? groups[1] : groups[0];
