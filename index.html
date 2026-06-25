@@ -1955,7 +1955,7 @@ function switchQbZone(idx) {
 function renderQbBranchCards(zone) {
   const container = document.getElementById('qb-branch-cards');
   if (!container) return;
-  const branches = BRANCHES.filter(b => b.zone === zone);
+  const branches = BRANCHES.filter(b => b.zone === zone).sort((a,b) => { const rank = t => t === 'Recommend' ? 0 : t === 'Newly' ? 1 : 2; return rank(a.tag) - rank(b.tag); });
   if (!branches.length) {
     container.innerHTML = '<p class="text-center text-gray-400 text-sm py-4">ไม่พบสาขา</p>';
     return;
@@ -2092,7 +2092,7 @@ function switchBranchZone(idx) {
 function renderBranchCards() {
   const grid = document.getElementById('branch-cards-grid');
   if (!grid) return;
-  const branches = BRANCHES.filter(b => b.zone === activeBranchZone);
+  const branches = BRANCHES.filter(b => b.zone === activeBranchZone).sort((a,b) => { const rank = t => t === 'Recommend' ? 0 : t === 'Newly' ? 1 : 2; return rank(a.tag) - rank(b.tag); });
   const pinSvg = `<svg class="pin-icon w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
   </svg>`;
@@ -2234,7 +2234,7 @@ function switchFormZone(idx) {
 function renderFormBranchCards(zone) {
   const container = document.getElementById('form-branch-cards');
   if (!container) return;
-  const branches = BRANCHES.filter(b => b.zone === zone);
+  const branches = BRANCHES.filter(b => b.zone === zone).sort((a,b) => { const rank = t => t === 'Recommend' ? 0 : t === 'Newly' ? 1 : 2; return rank(a.tag) - rank(b.tag); });
 
   container.innerHTML = branches.map(b => {
     const isSelected = b.id === formSelectedBranchId;
