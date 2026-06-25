@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Co-Working Space Booking System</title>
@@ -1168,7 +1169,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
       document.getElementById('emp-name').value = '';
       document.getElementById('emp-company').value = '';
       document.getElementById('emp-team').value = '';
-      document.getElementById('book-date').value = '';
+      document.getElementById('book-date').value = ''; if(window._bookDateFp) window._bookDateFp.clear();
       document.getElementById('slot-info')?.classList.add('hidden');
       formSelectedBranchId = null; formZoneOpen = false;
       const label = document.getElementById('form-selected-label');
@@ -2359,5 +2360,38 @@ function scrollToTop() {
   </svg>
 </button>
 
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+(function() {
+  var fp = flatpickr("#book-date", {
+    dateFormat: "Y-m-d",
+    minDate: todayStr(),
+    maxDate: maxDateStr(),
+    disableMobile: true,
+    locale: {
+      months: {
+        shorthand: ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],
+        longhand: ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+      },
+      weekdays: {
+        shorthand: ["อา","จ","อ","พ","พฤ","ศ","ส"],
+        longhand: ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"]
+      },
+      firstDayOfWeek: 0
+    },
+    onChange: function() { updateSlotCounter(); updateFullCalendar(); },
+    onReady: function(_, __, instance) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "เลือก";
+      btn.style.cssText = "width:100%;padding:6px 0;background:linear-gradient(135deg,#e91e8c,#9c27b0);color:#fff;font-size:13px;font-weight:600;border:none;border-radius:0 0 8px 8px;cursor:pointer;";
+      btn.addEventListener("click", function() { instance.setDate(new Date()); instance.close(); });
+      instance.calendarContainer.appendChild(btn);
+    }
+  });
+  window._bookDateFp = fp;
+})();
+</script>
 </body>
 </html>
