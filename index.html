@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<
+  const bc = document.getElementById('branch-count'); if(bc) bc.textContent = BRANCHES.length;!DOCTYPE html>
 <html lang="th">
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -304,7 +305,7 @@
   <div id="tab-content-branches" class="hidden">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <h2 class="text-lg font-semibold text-gray-800 mb-2">🗺️ Co-Working Branch</h2>
-      <p class="text-sm text-gray-500 mb-4">39 สาขา ใน 8 โซน ทั่วกรุงเทพและปริมณฑล · กดที่สาขาเพื่อดูแผนที่</p>
+      <p class="text-sm text-gray-500 mb-4"><span id="branch-count"></span> สาขา ใน 8 โซน ทั่วกรุงเทพและปริมณฑล · กดที่สาขาเพื่อดูแผนที่</p>
       <div id="branches-list"></div>
     </div>
   </div>
@@ -2004,6 +2005,7 @@ let activeBranchZone = null;
 let selectedBranchForMap = null;
 
 function renderBranches() {
+  const bc = document.getElementById('branch-count'); if(bc) bc.textContent = BRANCHES.length;
   const container = document.getElementById('branches-list');
   const zones = [...new Set(BRANCHES.map(b => b.zone))];
   if (!activeBranchZone) activeBranchZone = zones[0];
