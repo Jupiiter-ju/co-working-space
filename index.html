@@ -304,7 +304,7 @@
   <div id="tab-content-branches" class="hidden">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <h2 class="text-lg font-semibold text-gray-800 mb-2">🗺️ Co-Working Branch</h2>
-      <p class="text-sm text-gray-500 mb-4">41 สาขา ใน 8 โซน ทั่วกรุงเทพและปริมณฑล · กดที่สาขาเพื่อดูแผนที่</p>
+      <p class="text-sm text-gray-500 mb-4">39 สาขา ใน 8 โซน ทั่วกรุงเทพและปริมณฑล · กดที่สาขาเพื่อดูแผนที่</p>
       <div id="branches-list"></div>
     </div>
   </div>
@@ -752,7 +752,6 @@ const BRANCHES = [
   // ── BTS Central Area (13) ──
   { id: 'B041', name: 'REGUS Siam Tower', zone: 'BTS Central Area', address: 'ชั้น 12 สยาม ทาวเวอร์ ถนนพระราม 1 สยาม', travel: 'BTS: สยาม', maps: 'https://maps.google.com/?q=Siam+Tower+Bangkok' },
   { id: 'B042', name: 'REGUS Central Tower', zone: 'BTS Central Area', address: 'ชั้น 12 เซ็นทรัล ทาวเวอร์ เซ็นทรัลเวิลด์ ถนนราชดำริ', travel: 'BTS: ชิดลม, สยาม', maps: 'https://maps.google.com/?q=Central+Tower+CentralWorld+Bangkok' },
-  { id: 'B043', name: 'REGUS Gaysorn Village', zone: 'BTS Central Area', address: 'ชั้น 5 เกษรวิลเลจ ถนนเพลินจิต', travel: 'BTS: ชิดลม', maps: 'https://maps.google.com/?q=Gaysorn+Village+Bangkok' },
   { id: 'B044', name: 'REGUS M Thai Tower All Season Place', zone: 'BTS Central Area', address: 'ชั้น 23 เอ็ม ไทย ทาวเวอร์ ออลซีซั่นส์เพลส ถ.วิทยุ', travel: 'BTS: เพลินจิต', maps: 'https://maps.google.com/?q=M+Thai+Tower+All+Seasons+Place+Bangkok' },
   { id: 'B045', name: 'REGUS CRC Tower All Season Place', zone: 'BTS Central Area', address: 'ชั้น 36 ซีอาร์ซี ทาวเวอร์ ออลซีซั่นส์เพลส ถ.วิทยุ', travel: 'BTS: เพลินจิต', maps: 'https://maps.google.com/?q=CRC+Tower+All+Seasons+Place+Bangkok' },
   { id: 'B047', name: 'REGUS Interchange 21', zone: 'BTS Central Area', address: 'ชั้น 32-33 อินเตอร์เชนจ์ 21 สุขุมวิท 21 (อโศก)', travel: 'BTS: อโศก', maps: 'https://maps.google.com/?q=Interchange+21+Asoke+Bangkok' },
@@ -770,7 +769,6 @@ const BRANCHES = [
   { id: 'B027', name: 'REGUS The Rice Tower', zone: 'ลาดพร้าว', address: 'ชั้น 12 เดอะ ไรซ์ ทาวเวอร์ ถนนพหลโยธิน', travel: 'BTS: สะพานควาย', maps: 'https://maps.google.com/?q=The+Rice+Tower+Bangkok' , tag: 'Recommend'},
 
   // ── รัชดา (4) ──
-  { id: 'B036', name: 'HQ Office Ready', zone: 'รัชดา', address: 'ชั้น 11 อินทามระ 18 ดินแดง กรุงเทพมหานคร', travel: 'อินทามระ 18 ดินแดง', maps: 'https://maps.google.com/?q=Inthamara+18+Din+Daeng+Bangkok' },
   { id: 'B037', name: 'REGUS AIA Capital Center', zone: 'รัชดา', address: 'ชั้น 30 เอไอเอ แคปปิตอล เซ็นเตอร์ ถนนรัชดาภิเษก', travel: 'MRT: ศูนย์วัฒนธรรมแห่งประเทศไทย', maps: 'https://maps.google.com/?q=AIA+Capital+Center+Bangkok' },
   { id: 'B038', name: 'REGUS The Ninth Tower', zone: 'รัชดา', address: 'ชั้น 35 เดอะ ไนน์ ทาวเวอร์ ถนนพระราม 9', travel: 'MRT: พระราม 9', maps: 'https://maps.google.com/?q=The+Ninth+Tower+Rama9+Bangkok' , tag: 'Recommend'},
   { id: 'B052', name: 'REGUS KPN Tower Rama9', zone: 'รัชดา', address: 'ชั้น 5 เคพีเอ็น ทาวเวอร์ ถนนพระราม 9', travel: 'MRT: พระราม 9', maps: 'https://maps.google.com/?q=KPN+Tower+Rama9+Bangkok' , tag: 'Newly'},
@@ -797,13 +795,13 @@ const BRANCHES = [
 
   // ── สีลม-สาทร (8) ──
   { id: 'B002', name: 'REGUS Supalai Icon Sathorn', zone: 'สีลม-สาทร', address: 'ชั้น 3 ศุภาลัย ไอคอน สาทร ถนนสาทรใต้', travel: 'BTS: ศาลาแดง / MRT: ลุมพินี', maps: 'https://maps.google.com/?q=Supalai+Icon+Sathorn+Bangkok' },
-  { id: 'B005', name: 'SPACES Empire Tower', zone: 'สีลม-สาทร', address: 'ชั้น M เอ็มไพร์ ทาวเวอร์ ถนนสาทรใต้', travel: 'BTS: ช่องนนทรี', maps: 'https://maps.google.com/?q=Empire+Tower+Sathorn+Bangkok' },
+  { id: 'B005', name: 'SPACES Empire Tower', zone: 'สีลม-สาทร', address: 'ชั้น M,27 เอ็มไพร์ ทาวเวอร์ ถนนสาทรใต้', travel: 'BTS: ช่องนนทรี', maps: 'https://maps.google.com/?q=Empire+Tower+Sathorn+Bangkok' },
   { id: 'B006', name: 'REGUS Sathorn Square', zone: 'สีลม-สาทร', address: 'ชั้น 37 สาทร สแควร์ ถนนสาทรเหนือ', travel: 'BTS: ช่องนนทรี', maps: 'https://maps.google.com/?q=Sathorn+Square+Bangkok' },
   { id: 'B007', name: 'REGUS Chartered Square', zone: 'สีลม-สาทร', address: 'ชั้น 30 ชาร์เตอร์ สแควร์ ถนนสาทรเหนือ', travel: 'BTS: สุรศักดิ์', maps: 'https://maps.google.com/?q=Chartered+Square+Bangkok' },
   { id: 'B053', name: 'REGUS Silom Complex', zone: 'สีลม-สาทร', address: 'ชั้น 17 สีลม คอมเพล็กซ์ ถนนสีลม', travel: 'BTS: ศาลาแดง / MRT: สีลม', maps: 'https://maps.google.com/?q=Silom+Complex+Bangkok' , tag: 'Newly'},
 
   // ── แจ้งวัฒนะ (2) ──
-  { id: 'B021', name: 'REGUS EnCo Terminal (EnTer)', zone: 'แจ้งวัฒนะ', address: 'เอ็นโค เทอร์มินอล การเคหะ', travel: 'รถไฟชานเมืองสายสีแดง: การเคหะ', maps: 'https://maps.google.com/?q=EnCo+Terminal+Kan+Kheha+Bangkok' },
+  { id: 'B021', name: 'REGUS EnCo Terminal', zone: 'แจ้งวัฒนะ', address: 'เอ็นโค เทอร์มินอล การเคหะ', travel: 'รถไฟชานเมืองสายสีแดง: การเคหะ', maps: 'https://maps.google.com/?q=EnCo+Terminal+Kan+Kheha+Bangkok' },
   { id: 'B022', name: 'REGUS Central Chaengwattana', zone: 'แจ้งวัฒนะ', address: 'ชั้น 20 เซ็นทรัล แจ้งวัฒนะ', travel: 'MRT: แจ้งวัฒนะ-ปากเกร็ด 28', maps: 'https://maps.google.com/?q=Central+Chaengwattana+Bangkok' },
 ];
 
