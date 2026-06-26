@@ -170,8 +170,8 @@
       <!-- Row 1: ชื่อเล่น + บริษัท + ทีม + วันที่ -->
       <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่น <span class="text-red-500">*</span></label>
-          <input type="text" id="emp-name" placeholder="เช่น จู" maxlength="50"
+          <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ <span class="text-red-500">*</span></label>
+          <input type="text" id="emp-name" placeholder="เช่น แพทตี้" maxlength="50"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
         </div>
         <div>
@@ -373,10 +373,10 @@
     <div id="ticket-content" class="success-bg rounded-2xl p-6 text-white mb-4">
       <!-- Ticket content here -->
     </div>
-    <div id="ticket-warning" style="background:linear-gradient(135deg,#fff0f6 0%,#f5f0ff 100%);border:2px solid #e879a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:12px;font-weight:700;letter-spacing:0.06em;background:linear-gradient(135deg,#be185d,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">ACCOUNT NUMBER</span><div style="display:flex;align-items:center;gap:8px;width:fit-content;"><span id="acct-display" style="font-size:28px;font-weight:700;background:linear-gradient(135deg,#9f1239,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;"></span><button id="acct-copy-btn" onclick="copyAcctFromBox()" style="background:linear-gradient(135deg,#fce7f3,#ede9fe);border:none;border-radius:8px;padding:7px 9px;cursor:pointer;color:#9333ea;display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div id="email-section" class="mb-3" style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 14px;"><p class="text-sm font-semibold mb-2" style="color:#166534;">📧 รับ Account Number ทางอีเมล <span style="font-weight:400;color:#16a34a;">(ไม่บังคับ)</span></p><div class="flex gap-2"><input id="email-input" type="email" placeholder="กรอกอีเมลของคุณ" maxlength="200" class="flex-1 border rounded-xl px-3 py-2.5 text-sm focus:outline-none" style="border-color:#86efac;" /><button onclick="sendBookingEmail()" class="shrink-0 text-white text-sm font-semibold px-4 py-2.5 rounded-xl" style="background:#16a34a;">ส่ง</button></div><p id="email-status" class="text-xs mt-1.5 hidden"></p></div>
+    <div id="ticket-warning" style="background:linear-gradient(135deg,#fff0f6 0%,#f5f0ff 100%);border:2px solid #e879a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:13px;font-weight:700;letter-spacing:0.06em;background:linear-gradient(135deg,#be185d,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">ACCOUNT NUMBER</span><div style="display:flex;align-items:center;gap:8px;width:fit-content;"><span id="acct-display" style="font-size:28px;font-weight:700;background:linear-gradient(135deg,#9f1239,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;"></span><button id="acct-copy-btn" onclick="copyAcctFromBox()" style="background:linear-gradient(135deg,#fce7f3,#ede9fe);border:none;border-radius:8px;padding:7px 9px;cursor:pointer;color:#9333ea;display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div id="email-section" class="mb-3" style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 14px;"><p class="text-sm font-semibold mb-2" style="color:#166534;">✉️ รับ <span style="font-size:15px;">Account Number</span> ทางอีเมล <span style="font-weight:400;color:#16a34a;">(ไม่บังคับ)</span></p><div class="flex gap-2"><input id="email-input" type="email" placeholder="กรอกอีเมล" maxlength="200" class="flex-1 border rounded-xl px-3 py-2.5 text-sm focus:outline-none" style="border-color:#86efac;" /><button onclick="sendBookingEmail()" class="shrink-0 text-white text-sm font-semibold px-4 py-2.5 rounded-xl" style="background:#16a34a;">ส่ง</button></div><p id="email-status" class="text-xs mt-1.5 hidden"></p></div>
     <label id="confirm-acct-label" style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;border:1.5px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:12px;transition:border-color 0.2s;">
       <input type="checkbox" id="confirm-acct-cb" style="width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:#9333ea;cursor:pointer;" onchange="onConfirmAcct(this)">
-      <span id="confirm-acct-text" style="font-size:13px;color:#374151;line-height:1.5;">บันทึก Account Number แล้ว</span>
+      <span id="confirm-acct-text" style="font-size:15px;color:#374151;line-height:1.5;">บันทึก Account Number แล้ว</span>
     </label>
     <button id="btn-success" onclick="closeModal('modal-success')" disabled class="w-full text-white font-semibold py-3 rounded-xl transition-all" style="background:#d1d5db;cursor:not-allowed;">สำเร็จ</button>
   </div>
@@ -1366,7 +1366,7 @@ function showTicket(booking) {
           <span class="font-semibold">${formatDateTH(booking.date)}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ช่วงเวลา</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">เวลา</span>
           <span class="font-semibold">${(booking.slotLabel || '—').replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span>
         </div>
         <div class="flex justify-between text-sm">
@@ -1398,7 +1398,7 @@ function showTicket(booking) {
   const _acctDisp = document.getElementById('acct-display'); if(_acctDisp){_acctDisp.textContent=_acctNum;}
   const _ticketWarn = document.getElementById('ticket-warning'); if(_ticketWarn){_ticketWarn.style.display=_acctNum?'flex':'none';}
   const _acctText = document.getElementById('confirm-acct-text');
-  if(_acctText){ _acctText.innerHTML = _acctNum ? 'บันทึก Account Number <strong>' + _acctNum + '</strong> แล้ว' : 'บันทึก Account Number แล้ว'; }
+  if(_acctText){ _acctText.innerHTML = ''; if(_acctNum){ const _s1=document.createElement('span'); _s1.textContent='บันทึก '; const _s2=document.createElement('span'); _s2.style.fontSize='16px'; _s2.textContent='Account Number'; const _s3=document.createTextNode(' '); const _strong=document.createElement('strong'); _strong.textContent=_acctNum; const _s4=document.createTextNode(' แล้ว'); _acctText.append(_s1,_s2,_s3,_strong,_s4); } else { _acctText.textContent='บันทึก Account Number แล้ว'; } }
   const _cb = document.getElementById('confirm-acct-cb'); if(_cb){_cb.checked=false;}
   const _btn = document.getElementById('btn-success'); if(_btn){_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}
   const _lbl = document.getElementById('confirm-acct-label'); if(_lbl){_lbl.style.borderColor='#e5e7eb';_lbl.style.background='';}
@@ -1842,7 +1842,7 @@ function qbRenderStep() {
       <div class="space-y-3">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่น <span class="text-red-500">*</span></label>
-          <input type="text" id="qb-name" value="${escapeHtml(qbData.name)}" placeholder="เช่น จู" maxlength="50"
+          <input type="text" id="qb-name" value="${escapeHtml(qbData.name)}" placeholder="เช่น แพทตี้" maxlength="50"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
         </div>
         <div>
@@ -1979,7 +1979,7 @@ function renderQbBranchCards(zone) {
     const isSelected = b.id === qbSelectedBranchId;
     return `<div onclick="selectQbBranch('${b.id}')"
       class="rounded-xl px-4 py-3 border-2 cursor-pointer transition-all flex items-center justify-between
-        ${isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
+        ${isSelected ? 'border-purple-500 bg-purple-50' : 'border-pink-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
       <div>
         <div class="text-sm font-semibold ${isSelected ? 'text-purple-700' : 'text-gray-800'}">${b.name}</div>
         <div class="text-xs text-gray-400 mt-0.5">🚇 ${b.travel}</div>
@@ -2126,7 +2126,7 @@ function renderBranchCards() {
         class="branch-card border-2 rounded-xl p-4 cursor-pointer transition-all
           ${isSelected
             ? 'border-purple-500 bg-purple-50 shadow-md'
-            : 'border-gray-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">  
+            : 'border-pink-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
         <div class="flex items-start justify-between gap-2 mb-2">
          ${b.tag ? `<div><div class="font-semibold text-gray-800 text-sm leading-snug">${b.name}</div><span class="inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full ${b.tag === 'Recommend' ? 'bg-green-100 text-green-700' : b.tag === 'Newly' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}">${b.tag}</span></div>` : `<div class="font-semibold text-gray-800 text-sm leading-snug">${b.name}</div>`}
           <div class="flex flex-row items-center gap-2 flex-shrink-0">
@@ -2256,7 +2256,7 @@ function renderFormBranchCards(zone) {
     return `
       <div onclick="selectFormBranch('${b.id}')"
         class="rounded-xl p-3 border-2 cursor-pointer transition-all
-          ${isSelected ? 'border-purple-500 bg-purple-50 shadow-sm' : 'border-gray-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
+          ${isSelected ? 'border-purple-500 bg-purple-50 shadow-sm' : 'border-pink-200 bg-white hover:border-pink-300 hover:bg-pink-50'}">
         <div class="text-xs font-semibold leading-snug ${isSelected ? 'text-purple-700' : 'text-gray-800'}">${b.name}</div>
         <div class="text-[10px] text-gray-400 mt-1 leading-snug">${b.address}</div>
       </div>`;
