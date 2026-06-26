@@ -113,14 +113,15 @@
     #guide-page.hidden { display: none !important; }
     .flatpickr-input::placeholder { color: #9ca3af; }
     .flatpickr-monthDropdown-months, .flatpickr-current-month .numInputWrapper input { font-size: 14px !important; }
-    .flatpickr-monthDropdown-months { appearance: none !important; -webkit-appearance: none !important; pointer-events: none !important; }
+    .flatpickr-monthDropdown-months { appearance: none !important; -webkit-appearance: none !important; pointer-events: none !important; opacity: 0 !important; position: absolute !important; width: 0 !important; }
+    .flatpickr-month-label { font-size: 14px; font-weight: 600; color: inherit; }
     .flatpickr-current-month .numInputWrapper { display: none !important; }
     .flatpickr-current-month { display: flex !important; justify-content: center !important; align-items: center !important; }
     .flatpickr-monthDropdown-months { text-align: center !important; }
     .flatpickr-day { border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; box-sizing: border-box !important; }
     .flatpickr-day.today { border: 1px solid #fb7185 !important; color: #fb7185 !important; background: transparent !important; }
     .flatpickr-day.today:hover { background: #fb7185 !important; color: #fff !important; }
-    .flatpickr-calendar { border-radius: 12px !important; overflow: hidden; }
+    .flatpickr-calendar { border-radius: 12px !important; overflow: hidden; font-family: 'Sarabun', sans-serif !important; }
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -2493,6 +2494,13 @@ function scrollToTop() {
       });
     },
     onReady: function(_, __, instance) {
+      // Replace <select> with a plain <span> so Thai font renders correctly
+      var sel = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
+      var lbl = document.createElement('span');
+      lbl.className = 'flatpickr-month-label';
+      lbl.textContent = sel ? sel.options[sel.selectedIndex].text : '';
+      sel && sel.parentNode.insertBefore(lbl, sel);
+
       // เลือก button
       var btn = document.createElement("button");
       btn.type = "button";
@@ -2500,6 +2508,11 @@ function scrollToTop() {
       btn.style.cssText = "display:block;margin:8px auto 10px;padding:5px 28px;background:linear-gradient(135deg,#e91e8c,#9c27b0);color:#fff;font-size:13px;font-weight:600;border:none;border-radius:20px;cursor:pointer;";
       btn.addEventListener("click", function() { instance.setDate(new Date()); instance.close(); });
       instance.calendarContainer.appendChild(btn);
+    },
+    onMonthChange: function(_, __, instance) {
+      var sel = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
+      var lbl = instance.calendarContainer.querySelector('.flatpickr-month-label');
+      if (sel && lbl) lbl.textContent = sel.options[sel.selectedIndex].text;
     }
   });
   window._bookDateFp = fp;
