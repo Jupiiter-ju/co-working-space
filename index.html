@@ -1569,6 +1569,39 @@ function updateFullCalendar() {
         </div>
       </div>`;
   }
+  // Trailing days from next month
+  const totalCells = firstDay + daysInMonth;
+  const trailingCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+  if (trailingCount > 0) {
+    const nextMonth = empCalMonth === 11 ? 0 : empCalMonth + 1;
+    const nextYear = empCalMonth === 11 ? empCalYear + 1 : empCalYear;
+    for (let day = 1; day <= trailingCount; day++) {
+      const nm = String(nextMonth + 1).padStart(2,'0');
+      const nd = String(day).padStart(2,'0');
+      const dateStr = `${nextYear}-${nm}-${nd}`;
+      const totalRemain = MAX_SLOTS - getSlotCount(dateStr);
+      const isFuture = dateStr > maxDate;
+      const isBookable = !isFuture;
+      const dow = new Date(nextYear, nextMonth, day).getDay();
+      const isWeekend = dow === 0 || dow === 6;
+      const clickFn = isBookable ? `onclick="selectCalDate('${dateStr}')"` : '';
+      let statusText = '', statusColor = '';
+      if (!isFuture) {
+        const wCount = getWaitlistCount(dateStr);
+        if (totalRemain <= 0 && wCount > 0) { statusText = 'เต็ม+สำรอง'; statusColor = 'text-purple-400'; }
+        else if (totalRemain <= 0) { statusText = 'เต็มแล้ว'; statusColor = 'text-red-300'; }
+        else if (totalRemain <= 6) { statusText = `ว่าง ${totalRemain}`; statusColor = 'text-yellow-400'; }
+        else { statusText = `ว่าง ${totalRemain}`; statusColor = 'text-green-400'; }
+      }
+      html += `
+      <div class="cal-day-wrap">
+        <div class="cal-day-inner bg-gray-50 opacity-50 ${isBookable ? 'cursor-pointer hover:opacity-75' : ''}" ${clickFn}>
+          <span class="text-sm font-bold ${isWeekend ? 'text-red-300' : 'text-gray-400'}">${day}</span>
+          ${statusText ? `<span class="text-[7px] sm:text-[11px] font-medium leading-tight text-center block whitespace-nowrap overflow-hidden ${statusColor}">${statusText}</span>` : ''}
+        </div>
+      </div>`;
+    }
+  }
   html += '</div>';
   container.innerHTML = html;
 }
@@ -1659,6 +1692,37 @@ function renderScheduleCalendar() {
           <span class="text-[9px] font-bold leading-none ${numColor}">${day}</span>
         </div>
       </div>`;
+  }
+  // Trailing days from next month
+  const totalCellsSch = firstDay + daysInMonth;
+  const trailingCountSch = totalCellsSch % 7 === 0 ? 0 : 7 - (totalCellsSch % 7);
+  if (trailingCountSch > 0) {
+    const nextMonth = scheduleCalMonth === 11 ? 0 : scheduleCalMonth + 1;
+    const nextYear = scheduleCalMonth === 11 ? scheduleCalYear + 1 : scheduleCalYear;
+    for (let day = 1; day <= trailingCountSch; day++) {
+      const nm = String(nextMonth + 1).padStart(2,'0');
+      const nd = String(day).padStart(2,'0');
+      const dateStr = `${nextYear}-${nm}-${nd}`;
+      const totalRemain = MAX_SLOTS - getSlotCount(dateStr);
+      const isFuture = dateStr > maxDate;
+      const isClickable = !isFuture;
+      const dow = new Date(nextYear, nextMonth, day).getDay();
+      const isWeekend = dow === 0 || dow === 6;
+      const clickFn = isClickable ? `onclick="showScheduleDayDetail('${dateStr}')"` : '';
+      let statusText = '';
+      if (!isFuture) {
+        const wCount = getWaitlistCount(dateStr);
+        if (totalRemain <= 0 && wCount > 0) { statusText = `เต็ม+${wCount}`; }
+        else if (totalRemain <= 0) { statusText = 'เต็ม'; }
+        else { statusText = `${totalRemain}`; }
+      }
+      html += `
+      <div class="cal-day-wrap">
+        <div class="cal-day-inner bg-gray-50 opacity-50 ${isClickable ? 'cursor-pointer hover:opacity-75' : ''}" ${clickFn}>
+          <span class="text-[9px] font-bold leading-none ${isWeekend ? 'text-red-300' : 'text-gray-400'}">${day}</span>
+        </div>
+      </div>`;
+    }
   }
   html += '</div>';
   container.innerHTML = html;
