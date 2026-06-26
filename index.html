@@ -113,6 +113,10 @@
     #guide-page.hidden { display: none !important; }
     .flatpickr-input::placeholder { color: #9ca3af; }
     .flatpickr-monthDropdown-months, .flatpickr-current-month .numInputWrapper input { font-size: 14px !important; }
+    .flatpickr-day { border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; box-sizing: border-box !important; }
+    .flatpickr-day.today { border: 1px solid #fb7185 !important; color: #fb7185 !important; background: transparent !important; }
+    .flatpickr-day.today:hover { background: #fb7185 !important; color: #fff !important; }
+    .flatpickr-calendar { border-radius: 12px !important; overflow: hidden; }
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -2488,7 +2492,7 @@ function scrollToTop() {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = "เลือก";
-      btn.style.cssText = "width:100%;padding:6px 0;background:linear-gradient(135deg,#e91e8c,#9c27b0);color:#fff;font-size:13px;font-weight:600;border:none;border-radius:0 0 8px 8px;cursor:pointer;";
+      btn.style.cssText = "display:block;margin:8px auto 10px;padding:5px 28px;background:linear-gradient(135deg,#e91e8c,#9c27b0);color:#fff;font-size:13px;font-weight:600;border:none;border-radius:20px;cursor:pointer;";
       btn.addEventListener("click", function() { instance.setDate(new Date()); instance.close(); });
       instance.calendarContainer.appendChild(btn);
     }
