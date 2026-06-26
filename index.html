@@ -1358,7 +1358,7 @@ function showTicket(booking) {
       ${loginSection}
       <div class="${isWaitlist ? 'bg-gray-50 border border-gray-100' : 'bg-white bg-opacity-20'} rounded-xl p-4 space-y-2">
         <div class="flex justify-between text-sm">
-          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อเล่น</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อ</span>
           <span class="font-semibold">${escapeHtml(booking.name)}</span>
         </div>
         <div class="flex justify-between text-sm">
@@ -1370,7 +1370,7 @@ function showTicket(booking) {
           <span class="font-semibold">${(booking.slotLabel || '—').replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สาขา</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สถานที่</span>
           <span class="font-semibold text-right text-xs whitespace-nowrap">${escapeHtml(booking.branch)}</span>
         </div>
         <div class="flex justify-between text-sm">
