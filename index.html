@@ -112,6 +112,7 @@
     }
     #guide-page.hidden { display: none !important; }
     .flatpickr-input::placeholder { color: #9ca3af; }
+    .flatpickr-monthDropdown-months, .flatpickr-current-month .numInputWrapper input { font-size: 14px !important; }
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -881,15 +882,18 @@ function normalizeSheetDate(dateStr) {
 }
 
 async function syncBookingToSheet(booking) {
-  if (!APPS_SCRIPT_URL) return;
+  if (!APPS_SCRIPT_URL) return null;
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    const resp = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       redirect: 'follow',
       body: JSON.stringify({ action: 'add', booking })
     });
+    const json = await resp.json();
+    return json.accountNumber || null;
   } catch (e) {
     console.warn('บันทึกข้อมูลไปยัง Google Sheet ไม่ได้:', e.message);
+    return null;
   }
 }
 function updateBookingInSheet(id, fields) {
@@ -1103,7 +1107,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
   bookingLock = true;
   const lockTimestamp = Date.now();
 
-  setTimeout(() => {
+  setTimeout(async () => {
     const recheck = validateBookingRules(name, date);
     if (recheck) {
       bookingLock = false;
@@ -1112,14 +1116,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
     }
 
     const full = isSlotFull(date);
-    let assignedUser = null, bookingStatus = 'confirmed';
-
-    if (!full) {
-      assignedUser = assignUser(date);
-      if (!assignedUser) { bookingLock = false; showError('ไม่มี User ว่างสำหรับวันนี้'); return; }
-    } else {
-      bookingStatus = 'waitlist';
-    }
+    const bookingStatus = full ? 'waitlist' : 'confirmed';
 
     const branch = BRANCHES.find(b => b.id === branchId);
     const newBooking = {
@@ -1127,15 +1124,29 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
       slotLabel: SLOT_LABEL,
       timestamp: lockTimestamp,
       branch: branch ? branch.name : branchId, branchId,
-      accountNumber: assignedUser,
+      accountNumber: null,
       status: bookingStatus,
     };
+
+    if (bookingStatus === 'confirmed') {
+      // Server assigns account number atomically via LockService — prevents duplicates
+      const gasAccountNumber = await syncBookingToSheet(newBooking);
+      if (gasAccountNumber) {
+        newBooking.accountNumber = gasAccountNumber;
+      } else {
+        // GAS unavailable — fallback to local assignment
+        const local = assignUser(date);
+        if (!local) { bookingLock = false; showError('ไม่มี User ว่างสำหรับวันนี้'); return; }
+        newBooking.accountNumber = local;
+      }
+    } else {
+      syncBookingToSheet(newBooking);
+    }
 
     const bookings = getBookings();
     bookings.push(newBooking);
     saveBookings(bookings);
     bookingLock = false;
-    syncBookingToSheet(newBooking);
 
     if (newBooking.status === 'waitlist') {
       fetch(N8N_WEBHOOK_URL, {
@@ -1400,8 +1411,8 @@ function showTicket(booking) {
   const _acctText = document.getElementById('confirm-acct-text');
   if(_acctText){ _acctText.innerHTML = ''; if(_acctNum){ const _s1=document.createElement('span'); _s1.textContent='บันทึก '; const _s2=document.createElement('span'); _s2.style.fontSize='16px'; _s2.textContent='Account Number'; const _s3=document.createTextNode(' '); const _strong=document.createElement('strong'); _strong.textContent=_acctNum; const _s4=document.createTextNode(' แล้ว'); _acctText.append(_s1,_s2,_s3,_strong,_s4); } else { _acctText.textContent='บันทึก Account Number แล้ว'; } }
   const _cb = document.getElementById('confirm-acct-cb'); if(_cb){_cb.checked=false;}
-  const _btn = document.getElementById('btn-success'); if(_btn){_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}
-  const _lbl = document.getElementById('confirm-acct-label'); if(_lbl){_lbl.style.borderColor='#e5e7eb';_lbl.style.background='';}
+  const _lbl = document.getElementById('confirm-acct-label'); if(_lbl){_lbl.style.borderColor='#e5e7eb';_lbl.style.background='';_lbl.style.display=_acctNum?'flex':'none';}
+  const _btn = document.getElementById('btn-success'); if(_btn){ if(isWaitlist){_btn.disabled=false;_btn.style.background='linear-gradient(135deg,#e91e8c,#9c27b0)';_btn.style.cursor='pointer';}else{_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}}
 }
 
 // ============================================================
@@ -2464,6 +2475,15 @@ function scrollToTop() {
       firstDayOfWeek: 0
     },
     onChange: function() { updateSlotCounter(); updateFullCalendar(); },
+    onOpen: function(_, __, instance) {
+      const cal = instance.calendarContainer;
+      requestAnimationFrame(function() {
+        const rect = cal.getBoundingClientRect();
+        if (rect.right > window.innerWidth - 8) {
+          cal.style.left = (parseFloat(cal.style.left || 0) - (rect.right - window.innerWidth + 8)) + 'px';
+        }
+      });
+    },
     onReady: function(_, __, instance) {
       var btn = document.createElement("button");
       btn.type = "button";
