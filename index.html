@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -111,6 +111,31 @@
       display: flex; flex-direction: column;
     }
     #guide-page.hidden { display: none !important; }
+    #guide-back-to-top {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #DB2777 0%, #7C3AED 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(124,58,237,0.35);
+      border: none;
+      cursor: pointer;
+      z-index: 2100;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    #guide-back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    #guide-back-to-top:hover { filter: brightness(1.1); box-shadow: 0 10px 26px rgba(219,39,119,0.45); transform: translateY(-3px); }
+    #guide-back-to-top:active { transform: translateY(0) scale(0.94); }
+    @media (max-width: 640px) { #guide-back-to-top { right: 1rem; bottom: 1rem; width: 44px; height: 44px; } }
     .flatpickr-input::placeholder { color: #9ca3af; }
     .flatpickr-monthDropdown-months, .flatpickr-current-month .numInputWrapper input { font-size: 14px !important; }
     .flatpickr-monthDropdown-months { appearance: none !important; -webkit-appearance: none !important; pointer-events: none !important; opacity: 0 !important; position: absolute !important; width: 0 !important; }
@@ -688,6 +713,13 @@
   </div>
 </div>
 
+<!-- Guide Back to Top Button -->
+<button id="guide-back-to-top" onclick="scrollGuideToTop()" aria-label="กลับขึ้นด้านบน" title="กลับขึ้นด้านบน">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 15l-6-6-6 6"/>
+  </svg>
+</button>
+
 <div id="modal-cancel" class="modal-overlay hidden">
   <div class="modal-box max-w-sm">
     <div class="text-center">
@@ -1228,7 +1260,7 @@ let currentTicketBooking = null;
 function onConfirmAcct(cb) {
   const btn = document.getElementById('btn-success');
   const lbl = document.getElementById('confirm-acct-label');
-  const acctEl = document.querySelector('#ticket-content .tracking-widest');
+  const acctEl = document.getElementById('acct-display');
   const acct = acctEl ? acctEl.textContent.trim() : '';
   if (cb.checked) {
     btn.disabled = false;
@@ -1237,10 +1269,21 @@ function onConfirmAcct(cb) {
     lbl.style.borderColor = '#9333ea';
     lbl.style.background = '#faf5ff';
     if (acct) {
-      navigator.clipboard.writeText(acct).then(() => {
-        const span = document.getElementById('confirm-acct-text');
-        if (span) { const orig = span.innerHTML; span.innerHTML = 'คัดลอก Account Number แล้ว ✓'; setTimeout(() => { span.innerHTML = orig; }, 2000); }
-      }).catch(() => {});
+      (() => {
+        const _showCopied = () => {
+          const span = document.getElementById('confirm-acct-text');
+          if (span) { const orig = span.innerHTML; span.innerHTML = 'คัดลอก Account Number แล้ว ✓'; setTimeout(() => { span.innerHTML = orig; }, 2000); }
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(acct).then(_showCopied).catch(() => {});
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = acct; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+          document.body.appendChild(ta); ta.focus(); ta.select();
+          try { document.execCommand('copy'); _showCopied(); } catch(e) {}
+          document.body.removeChild(ta);
+        }
+      })();
     }
   } else {
     btn.disabled = true;
@@ -2455,6 +2498,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+function scrollGuideToTop() {
+  document.getElementById('guide-page').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+(function() {
+  var guideEl = document.getElementById('guide-page');
+  var guideBtn = document.getElementById('guide-back-to-top');
+  if (guideEl && guideBtn) {
+    guideEl.addEventListener('scroll', function() {
+      if (guideEl.scrollTop > 300) guideBtn.classList.add('show');
+      else guideBtn.classList.remove('show');
+    });
+  }
+})();
 </script>
 <!-- Back to Top Button -->
 <button id="back-to-top" onclick="scrollToTop()" aria-label="ย้อนกลับขึ้นด้านบน" title="ย้อนกลับขึ้นด้านบน">
