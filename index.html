@@ -2512,7 +2512,10 @@ function scrollToTop() {
     onMonthChange: function(_, __, instance) {
       var sel = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
       var lbl = instance.calendarContainer.querySelector('.flatpickr-month-label');
-      if (sel && lbl) lbl.textContent = sel.options[sel.selectedIndex].text;
+      if (sel && lbl) {
+        var opt = Array.from(sel.options).find(function(o) { return parseInt(o.value) === instance.currentMonth; });
+        if (opt) lbl.textContent = opt.text;
+      }
     }
   });
   window._bookDateFp = fp;
