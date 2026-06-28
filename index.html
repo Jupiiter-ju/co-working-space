@@ -842,13 +842,31 @@ let bookingLock = false; // Anti-race condition
 // ============================================================
 // CONFIG — วาง URL ของ Google Apps Script Web App ที่นี่
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpZ0YfDhqlXiIdhwnFdBOuz9u3qTpUIfXJU7iY9po75gaiYjbVM2UT754wo6gGZzGa/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA3KgjAcFE49vUSv5dz2yfprq5BDMN4ILxsenYZISKg69mqosuC2c8w_xX0jCU4qE/exec';
 
 // ============================================================
 // LOCALSTORAGE HELPERS
 // ============================================================
+function fixColumnShift(b) {
+  // Detect slotLabel column shift bug: v13 deployment inserted slotLabel at position 6,
+  // shifting timestamp→branch→branchId→accountNumber→status. Old bookings have status
+  // value ('confirmed'/'waitlist'/'cancelled') in the accountNumber field as a result.
+  if (b.accountNumber === 'confirmed' || b.accountNumber === 'waitlist' || b.accountNumber === 'cancelled') {
+    return {
+      ...b,
+      timestamp: b.slotLabel,
+      branch: b.timestamp,
+      branchId: b.branch,
+      accountNumber: b.branchId,
+      status: b.accountNumber,
+      waitlistPosition: b.status || b.waitlistPosition,
+    };
+  }
+  return b;
+}
 function sanitizeBooking(b) {
   if (!b || typeof b !== 'object') return null;
+  b = fixColumnShift(b);
   const validStatuses = ['confirmed', 'waitlist', 'cancelled'];
   const id = String(b.id || '').replace(/[^A-Za-z0-9_-]/g, '');
   const accountNumber = String(b.accountNumber || '').replace(/[^A-Za-z0-9]/g, '');
@@ -894,8 +912,9 @@ async function loadBookingsFromSheet() {
       // แปลง date ที่ Sheets ส่งมาเป็น ISO string กลับเป็น YYYY-MM-DD ตาม timezone ของเครื่อง
       const localMap = Object.fromEntries(getBookings().map(b => [b.id, b]));
       const bookings = data.bookings.map(b => {
-        const normalized = { ...b, date: normalizeSheetDate(b.date) };
-        const local = localMap[b.id];
+        const fixed = fixColumnShift(b);
+        const normalized = { ...fixed, date: normalizeSheetDate(fixed.date) };
+        const local = localMap[fixed.id];
         // ถ้า Sheet ยังแสดง waitlist แต่ localStorage ได้ promote เป็น confirmed แล้ว → เชื่อ localStorage
         // (กรณี updateBookingInSheet ยังไม่ถึง Sheet ก่อนที่ timer จะ refresh)
         if (local && local.status === 'confirmed' && normalized.status === 'waitlist') {
