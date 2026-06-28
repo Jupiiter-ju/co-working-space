@@ -1166,14 +1166,18 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
   // Show loading state on confirm button
   const _qbBtn = document.getElementById('qb-next-btn');
   const _subBtn = document.getElementById('submit-btn');
+  const _formBtn = document.getElementById('form-confirm-btn');
   if (_qbBtn) { _qbBtn.disabled = true; _qbBtn.textContent = '⏳ กำลังส่ง...'; }
   if (_subBtn) { _subBtn.disabled = true; _subBtn.textContent = '⏳ กำลังส่ง...'; }
+  if (_formBtn) { _formBtn.disabled = true; _formBtn.textContent = '⏳ กำลังส่ง...'; }
 
   const _resetBookingBtn = () => {
     const b1 = document.getElementById('qb-next-btn');
     const b2 = document.getElementById('submit-btn');
+    const b3 = document.getElementById('form-confirm-btn');
     if (b1) { b1.disabled = false; b1.textContent = '✅ ยืนยันจอง'; }
     if (b2) { b2.disabled = false; b2.textContent = 'จองคิว'; }
+    if (b3) { b3.disabled = false; b3.textContent = '✅ ยืนยันการจอง'; }
   };
 
   setTimeout(async () => {
