@@ -838,7 +838,7 @@ let bookingLock = false; // Anti-race condition
 // ============================================================
 // CONFIG — วาง URL ของ Google Apps Script Web App ที่นี่
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoBuQE18RzaoYSVo8l33QG6ubLpFeBI_UDhKlfz2YTPcqRJGyhDfl-qv3Bv91qHV51/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGsE_AxpJ2mANXp539Ho10cT_TyaVqUiA7dp4ybK3RWLRCxA8D3NG5fHcJdKmXnYnk/exec';
 
 // ============================================================
 // LOCALSTORAGE HELPERS
@@ -911,8 +911,9 @@ async function loadBookingsFromSheet() {
         const fixed = fixColumnShift(b);
         const normalized = { ...fixed, date: normalizeSheetDate(fixed.date) };
         const local = localMap[fixed.id];
-        // ถ้า Sheet ยังแสดง waitlist แต่ localStorage ได้ promote เป็น confirmed แล้ว → เชื่อ localStorage
-        if (local && local.status === 'confirmed' && normalized.status === 'waitlist') {
+        // ถ้า Sheet ยังแสดง waitlist แต่ localStorage ได้ promote เป็น confirmed และมี accountNumber → เชื่อ localStorage
+        // (ถ้าไม่มี accountNumber = promotion ล้มเหลว ให้เชื่อ Sheet แทน)
+        if (local && local.status === 'confirmed' && normalized.status === 'waitlist' && local.accountNumber) {
           return { ...normalized, status: 'confirmed', accountNumber: local.accountNumber };
         }
         // ถ้า localStorage ยกเลิกแล้ว แต่ Sheet ยังไม่อัปเดต (updateBookingInSheet ยังไม่ถึง) → เชื่อ localStorage
