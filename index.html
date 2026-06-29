@@ -1626,9 +1626,19 @@ function updateFullCalendar() {
   html += `</div><div class="cal-grid">`;
 
   const daysInPrevMonth = new Date(empCalYear, empCalMonth, 0).getDate();
+  const prevMonthYear = empCalMonth === 0 ? empCalYear - 1 : empCalYear;
+  const prevMonthIdx = empCalMonth === 0 ? 11 : empCalMonth - 1;
   for (let i = 0; i < firstDay; i++) {
     const prevDay = daysInPrevMonth - (firstDay - 1 - i);
-    html += `<div class="cal-day-wrap"><div class="cal-day-inner bg-gray-50"><span class="text-sm font-bold text-gray-300">${prevDay}</span></div></div>`;
+    const pm = String(prevMonthIdx + 1).padStart(2,'0');
+    const pd = String(prevDay).padStart(2,'0');
+    const prevDateStr = `${prevMonthYear}-${pm}-${pd}`;
+    const isPrevPast = prevDateStr < today;
+    const isPrevFuture = prevDateStr > maxDate;
+    const isPrevBookable = !isPrevPast && !isPrevFuture;
+    const clickFnPrev = isPrevBookable ? `onclick="selectCalDate('${prevDateStr}')"` : '';
+    const prevCellBg = isPrevBookable ? 'bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100' : 'bg-gray-50';
+    html += `<div class="cal-day-wrap"><div class="cal-day-inner ${prevCellBg}" ${clickFnPrev}><span class="text-sm font-bold text-gray-300">${prevDay}</span></div></div>`;
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
