@@ -912,9 +912,12 @@ async function loadBookingsFromSheet() {
         const normalized = { ...fixed, date: normalizeSheetDate(fixed.date) };
         const local = localMap[fixed.id];
         // ถ้า Sheet ยังแสดง waitlist แต่ localStorage ได้ promote เป็น confirmed แล้ว → เชื่อ localStorage
-        // (กรณี updateBookingInSheet ยังไม่ถึง Sheet ก่อนที่ timer จะ refresh)
         if (local && local.status === 'confirmed' && normalized.status === 'waitlist') {
           return { ...normalized, status: 'confirmed', accountNumber: local.accountNumber };
+        }
+        // ถ้า localStorage ยกเลิกแล้ว แต่ Sheet ยังไม่อัปเดต (updateBookingInSheet ยังไม่ถึง) → เชื่อ localStorage
+        if (local && local.status === 'cancelled' && normalized.status !== 'cancelled') {
+          return { ...normalized, status: 'cancelled' };
         }
         return normalized;
       });
