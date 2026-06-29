@@ -1625,7 +1625,11 @@ function updateFullCalendar() {
   });
   html += `</div><div class="cal-grid">`;
 
-  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day-wrap"><div class="cal-day-inner"></div></div>';
+  const daysInPrevMonth = new Date(empCalYear, empCalMonth, 0).getDate();
+  for (let i = 0; i < firstDay; i++) {
+    const prevDay = daysInPrevMonth - (firstDay - 1 - i);
+    html += `<div class="cal-day-wrap"><div class="cal-day-inner bg-gray-50"><span class="text-sm font-bold text-gray-300">${prevDay}</span></div></div>`;
+  }
 
   for (let day = 1; day <= daysInMonth; day++) {
     const m = String(empCalMonth + 1).padStart(2,'0');
