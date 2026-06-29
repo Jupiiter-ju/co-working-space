@@ -955,13 +955,17 @@ async function syncBookingToSheet(booking) {
     return null;
   }
 }
-function updateBookingInSheet(id, fields) {
+async function updateBookingInSheet(id, fields) {
   if (!APPS_SCRIPT_URL) return;
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    redirect: 'follow',
-    body: JSON.stringify({ action: 'update', id, ...fields })
-  }).catch(e => console.warn('อัปเดต Sheet ไม่ได้:', e.message));
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      body: JSON.stringify({ action: 'update', id, ...fields })
+    });
+  } catch (e) {
+    console.warn('อัปเดต Sheet ไม่ได้:', e.message);
+  }
 }
 
 
@@ -1516,7 +1520,7 @@ function confirmCancel(bookingId) {
   showModal('modal-cancel');
 }
 
-function doCancel(bookingId) {
+async function doCancel(bookingId) {
   const b = getBookings().find(x => x.id === bookingId);
   if (!b) return;
   const input = document.getElementById('cancel-code-input').value.trim();
@@ -1536,8 +1540,8 @@ function doCancel(bookingId) {
     return x;
   });
 
-  // sync cancelled status to Sheet
-  updateBookingInSheet(bookingId, { status: 'cancelled' });
+  // sync cancelled status to Sheet first, then promote waitlist (sequential to avoid LockService timeout)
+  await updateBookingInSheet(bookingId, { status: 'cancelled' });
 
   // auto-promote first waitlist booking for this date
   const cancelledDate = b.date;
