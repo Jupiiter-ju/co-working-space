@@ -2542,7 +2542,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateFullCalendar();
 
   // Close modals on overlay click
-  ['modal-success','modal-error','modal-cancel','modal-quick-book','modal-waitlist-confirm'].forEach(id => {
+  ['modal-error','modal-cancel','modal-quick-book','modal-waitlist-confirm'].forEach(id => {
     document.getElementById(id).addEventListener('click', (e) => {
       if (e.target.id === id) closeModal(id);
     });
