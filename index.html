@@ -1536,6 +1536,9 @@ async function doCancel(bookingId) {
     errEl.classList.remove('hidden');
     return;
   }
+  const _cancelBtn = document.getElementById('confirm-cancel-btn');
+  if (_cancelBtn) { _cancelBtn.disabled = true; _cancelBtn.textContent = '⏳ กำลังส่ง...'; }
+
   let bookings = getBookings().map(x => {
     if (x.id === bookingId) return { ...x, status: 'cancelled' };
     return x;
@@ -1579,6 +1582,7 @@ async function doCancel(bookingId) {
     body: JSON.stringify({ action: 'cancel_request', id: b.id }),
   }).catch(() => {});
 
+  if (_cancelBtn) { _cancelBtn.disabled = false; _cancelBtn.textContent = 'ยกเลิกการจอง'; }
   closeModal('modal-cancel');
   updateFullCalendar();
   renderScheduleCalendar();
