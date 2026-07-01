@@ -853,6 +853,16 @@ const BRANCHES = [
   { id: 'B059', name: 'REGUS Royal Phuket Marina', zone: 'ใต้', address: 'อำเภอเมือง ภูเก็ต', travel: 'ภูเก็ต', maps: 'https://maps.google.com/?q=Royal+Phuket+Marina' },
   { id: 'B060', name: 'REGUS PKCD Phuket', zone: 'ใต้', address: 'อำเภอเมือง ภูเก็ต', travel: 'ภูเก็ต', maps: 'https://maps.google.com/?q=PKCD+Phuket' },
   { id: 'B061', name: 'REGUS BTC Phuket', zone: 'ใต้', address: 'ฉลอง ภูเก็ต', travel: 'ภูเก็ต', maps: 'https://maps.google.com/?q=BTC+Phuket+Chalong' },
+
+  // ── Coming soon (8) ──
+  { id: 'C001', name: 'REGUS Voco Hotel Surawong', zone: 'Coming soon', address: 'สุรวงศ์ กรุงเทพฯ', travel: 'BTS: ศาลาแดง / MRT: สามย่าน', maps: 'https://maps.google.com/?q=Voco+Hotel+Surawong+Bangkok', tag: "Jul'26" },
+  { id: 'C002', name: 'SPACES Montien Hotel Surawong', zone: 'Coming soon', address: 'สุรวงศ์ กรุงเทพฯ', travel: 'BTS: ศาลาแดง / MRT: สามย่าน', maps: 'https://maps.google.com/?q=Montien+Hotel+Surawong+Bangkok', tag: 'To be confirmed' },
+  { id: 'C003', name: 'REGUS PNP Tower', zone: 'Coming soon', address: 'ถนนวงแหวนอุตสาหกรรม กรุงเทพฯ', travel: 'Industrial Ring Road, BKK', maps: 'https://maps.google.com/?q=PNP+Tower+Bangkok', tag: "Q2'2027" },
+  { id: 'C004', name: 'Openoffice Punnawithi', zone: 'Coming soon', address: 'BTS: อุดมสุข / พุนนาวิถี กรุงเทพฯ', travel: 'BTS: อุดมสุข / พุนนาวิถี', maps: 'https://maps.google.com/?q=Punnawithi+Bangkok', tag: "Oct'26" },
+  { id: 'C005', name: 'REGUS Kata Thani Building', zone: 'Coming soon', address: 'ป่าตอง ภูเก็ต', travel: 'Patong, Phuket', maps: 'https://maps.google.com/?q=Kata+Thani+Building+Phuket', tag: 'To be confirmed' },
+  { id: 'C006', name: 'Spaces Synthetic Ark Phuket', zone: 'Coming soon', address: 'เกาะแก้ว ถลาง ภูเก็ต', travel: 'Ko Kaeo area, Thalang, Phuket', maps: 'https://maps.google.com/?q=Synthetic+Ark+Phuket', tag: "Q4'2027" },
+  { id: 'C007', name: 'REGUS Bukis Phuket', zone: 'Coming soon', address: 'อำเภอเมือง ภูเก็ต', travel: 'ภูเก็ต', maps: 'https://maps.google.com/?q=Bukis+Phuket', tag: "Aug'26" },
+  { id: 'C008', name: 'REGUS Star I.T. Center', zone: 'Coming soon', address: 'เมืองระยอง ระยอง', travel: 'Mueang Rayong, Rayong', maps: 'https://maps.google.com/?q=Star+IT+Center+Rayong', tag: "Aug'26" },
 ];
 
 // ============================================================
@@ -2151,8 +2161,9 @@ function qbRenderStep() {
       const btn = document.createElement('button');
       btn.id = 'qbtab-' + i;
       if (z === 'Coming soon') {
-        btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-normal border-2 text-center bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed';
-        btn.disabled = true;
+        btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-normal border-2 text-center transition-all ' +
+          (z === qbCurrentZone ? 'gradient-btn text-white border-transparent' : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300 hover:bg-gray-100');
+        btn.onclick = () => switchQbZone(i);
       } else {
         btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-medium border-2 text-center transition-all ' +
           (z === qbCurrentZone ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50');
@@ -2465,10 +2476,10 @@ function initFormBranchTabs() {
 
   tabContainer.innerHTML = zones.map((zone, i) => {
     const isComingSoon = zone === 'Coming soon';
-    if (isComingSoon) {
-      return `<button disabled id="fztab-${i}" class="fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-normal transition-all border-2 text-center bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed">${zone}</button>`;
-    }
-    return `<button onclick="switchFormZone(${i})" id="fztab-${i}" class="fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50">${zone}</button>`;
+    const cls = isComingSoon
+      ? 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-normal transition-all border-2 text-center bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+      : 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50';
+    return `<button onclick="switchFormZone(${i})" id="fztab-${i}" class="${cls}">${zone}</button>`;
   }).join('');
 
   // ซ่อน cards ไว้ก่อน
