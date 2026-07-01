@@ -2496,7 +2496,10 @@ function switchFormZone(idx) {
     formCurrentZone = null;
     // reset all tabs to inactive
     document.querySelectorAll('.fz-tab').forEach(btn => {
-      btn.className = 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50';
+      const isCs = btn.textContent.trim() === 'Coming soon';
+      btn.className = isCs
+        ? 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-normal transition-all border-2 text-center bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+        : 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50';
     });
     const cards = document.getElementById('form-branch-cards');
     if (cards) { cards.classList.add('hidden'); cards.innerHTML = ''; }
@@ -2507,9 +2510,12 @@ function switchFormZone(idx) {
   formZoneOpen = true;
   formCurrentZone = clickedZone;
   document.querySelectorAll('.fz-tab').forEach((btn, i) => {
+    const isCs = btn.textContent.trim() === 'Coming soon';
     btn.className = i === idx
       ? 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 text-center gradient-btn text-white border-transparent shadow-sm'
-      : 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50';
+      : isCs
+        ? 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-normal transition-all border-2 text-center bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+        : 'fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50';
   });
 
   const cards = document.getElementById('form-branch-cards');
@@ -2522,8 +2528,17 @@ function renderFormBranchCards(zone) {
   if (!container) return;
   const branches = BRANCHES.filter(b => b.zone === zone).sort((a,b) => { const rank = t => t === 'Recommend' ? 0 : t === 'Newly' ? 1 : 2; return rank(a.tag) - rank(b.tag); });
 
+  const isComingSoonZone = zone === 'Coming soon';
   container.innerHTML = branches.map(b => {
     const isSelected = b.id === formSelectedBranchId;
+    if (isComingSoonZone) {
+      return `
+        <div class="rounded-xl p-3 border-2 border-gray-200 bg-gray-50 cursor-not-allowed opacity-80">
+          <div class="text-xs font-semibold leading-snug text-gray-500">${b.name}</div>
+          <div class="text-[10px] text-gray-400 mt-1 leading-snug">${b.travel}</div>
+          ${b.tag ? `<div class="text-[10px] font-medium text-amber-500 mt-1">${b.tag}</div>` : ''}
+        </div>`;
+    }
     return `
       <div onclick="selectFormBranch('${b.id}')"
         class="rounded-xl p-3 border-2 cursor-pointer transition-all
