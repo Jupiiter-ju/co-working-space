@@ -2136,10 +2136,15 @@ function qbRenderStep() {
     zones.forEach((z, i) => {
       const btn = document.createElement('button');
       btn.id = 'qbtab-' + i;
-      btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-medium border-2 text-center transition-all ' +
-        (z === qbCurrentZone ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50');
+      if (z === 'Coming soon') {
+        btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-normal border-2 text-center bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed';
+        btn.disabled = true;
+      } else {
+        btn.className = 'qb-zone-tab w-full px-3 py-2 rounded-xl text-xs font-medium border-2 text-center transition-all ' +
+          (z === qbCurrentZone ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50');
+        btn.onclick = () => switchQbZone(i);
+      }
       btn.textContent = z;
-      btn.onclick = () => switchQbZone(i);
       tabWrap.appendChild(btn);
     });
     content.appendChild(tabWrap);
@@ -2191,8 +2196,9 @@ function qbPrevStep() {
 }
 
 
+const EXTRA_ZONES = ['เชียงใหม่', 'กลาง-ตะวันออก', 'ใต้', 'Coming soon'];
 function getZones() {
-  return [...new Set(BRANCHES.map(b => b.zone))];
+  return [...new Set(BRANCHES.map(b => b.zone)), ...EXTRA_ZONES];
 }
 
 function switchQbZone(idx) {
@@ -2443,11 +2449,13 @@ function initFormBranchTabs() {
   const tabContainer = document.getElementById('form-zone-tabs');
   if (!tabContainer) return;
 
-  tabContainer.innerHTML = zones.map((zone, i) => `
-    <button onclick="switchFormZone(${i})" id="fztab-${i}"
-      class="fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50">
-      ${zone}
-    </button>`).join('');
+  tabContainer.innerHTML = zones.map((zone, i) => {
+    const isComingSoon = zone === 'Coming soon';
+    if (isComingSoon) {
+      return `<button disabled id="fztab-${i}" class="fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-normal transition-all border-2 text-center bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed">${zone}</button>`;
+    }
+    return `<button onclick="switchFormZone(${i})" id="fztab-${i}" class="fz-tab w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all border-2 text-center bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50">${zone}</button>`;
+  }).join('');
 
   // ซ่อน cards ไว้ก่อน
   const cards = document.getElementById('form-branch-cards');
