@@ -2221,9 +2221,8 @@ function qbPrevStep() {
 }
 
 
-const EXTRA_ZONES = ['เชียงใหม่', 'กลาง-ตะวันออก', 'ใต้', 'Coming soon'];
 function getZones() {
-  return [...new Set(BRANCHES.map(b => b.zone)), ...EXTRA_ZONES];
+  return [...new Set(BRANCHES.map(b => b.zone))];
 }
 
 function switchQbZone(idx) {
