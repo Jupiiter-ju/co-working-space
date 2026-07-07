@@ -600,6 +600,7 @@
       <div style="display:flex; background:transparent; border-radius:0; padding:0; gap:4px; margin-bottom:16px;">
         <button id="tab-btn-email" onclick="switchRegusTab('email')" style="flex:1; padding:9px 8px; border-radius:7px; border:none; font-size:13px; font-weight:600; background:#ec4899; color:#fff; cursor:pointer; font-family:inherit;">วิธีเข้าสู่ระบบด้วยอีเมล</button>
         <button id="tab-btn-wifi" onclick="switchRegusTab('wifi')" style="flex:1; padding:9px 8px; border-radius:7px; border:1px solid #ddd6fe; font-size:13px; font-weight:600; background:#f5f3ff; color:#7c3aed; cursor:pointer; font-family:inherit;">วิธีรับรหัส Wi-Fi</button>
+        <button id="tab-btn-meeting" onclick="switchRegusTab('meeting')" style="flex:1; padding:9px 8px; border-radius:7px; border:1px solid #ddd6fe; font-size:13px; font-weight:600; background:#f5f3ff; color:#7c3aed; cursor:pointer; font-family:inherit;">ขั้นตอนจองห้องประชุม</button>
       </div>
 
       <!-- Tab: Email Login -->
@@ -680,6 +681,29 @@
           </div>
         </div>
       </div>
+      </div>
+
+      <!-- Tab: Meeting Room -->
+      <div id="tab-panel-meeting" style="display:none;">
+        <div style="padding:16px 4px 8px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:16px; font-weight:600; color:#374151; line-height:1.7; margin:0;">สามารถใช้งานห้องประชุมได้ โดยแจ้งที่หัวหน้าทีมก่อน และแจ้งให้ <span>"แพทตี้"</span> หรือ <span>"หยกเทียน"</span> เป็นผู้ดำเนินการจองให้ค่ะ</p>
+          <div style="background:#f5f3ff; border-radius:10px; padding:14px 16px;">
+            <p style="font-size:14px; font-weight:600; color:#374151; margin:0 0 8px 0;">โดยแจ้งรายละเอียด ดังนี้</p>
+            <ul style="font-size:14px; color:#374151; line-height:1.9; padding-left:18px; margin:0; list-style-type:disc;">
+              <li>Account Number ของผู้จอง</li>
+              <li>จำนวนกี่คน</li>
+              <li>สาขา Co-Working</li>
+              <li>เวลาที่ต้องการใช้ห้อง <span style="color:#6b7280;">(เช่น 14.00 - 16.00 น.)</span></li>
+            </ul>
+          </div>
+          <div style="background:#f5f3ff; border-radius:10px; padding:14px 16px;">
+            <p style="font-size:14px; font-weight:600; color:#374151; margin:0 0 8px 0;">การใช้ห้องประชุม</p>
+            <ul style="font-size:14px; color:#374151; line-height:1.9; padding-left:18px; margin:0; list-style-type:disc;">
+              <li>ดูข้อมูลจองในแอป คลิกที่ปุ่ม "จองห้องประชุม"</li>
+              <li>แจ้งพนักงานที่เคาน์เตอร์เพื่อเปิดห้องให้ค่ะ</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <!-- Tab: WiFi -->
@@ -1069,18 +1093,25 @@ function toggleCheckinSteps() {
   function switchRegusTab(tab) {
     var emailPanel = document.getElementById('tab-panel-email');
     var wifiPanel = document.getElementById('tab-panel-wifi');
+    var meetingPanel = document.getElementById('tab-panel-meeting');
     var btnEmail = document.getElementById('tab-btn-email');
     var btnWifi = document.getElementById('tab-btn-wifi');
+    var btnMeeting = document.getElementById('tab-btn-meeting');
+    emailPanel.style.display = 'none';
+    wifiPanel.style.display = 'none';
+    meetingPanel.style.display = 'none';
+    btnEmail.style.background = '#f5f3ff'; btnEmail.style.color = '#7c3aed'; btnEmail.style.border = '1px solid #ddd6fe';
+    btnWifi.style.background = '#f5f3ff'; btnWifi.style.color = '#7c3aed'; btnWifi.style.border = '1px solid #ddd6fe';
+    btnMeeting.style.background = '#f5f3ff'; btnMeeting.style.color = '#7c3aed'; btnMeeting.style.border = '1px solid #ddd6fe';
     if (tab === 'email') {
       emailPanel.style.display = '';
-      wifiPanel.style.display = 'none';
       btnEmail.style.background = '#ec4899'; btnEmail.style.color = '#fff'; btnEmail.style.border = 'none';
-      btnWifi.style.background = '#f5f3ff'; btnWifi.style.color = '#7c3aed'; btnWifi.style.border = '1px solid #ddd6fe';
-    } else {
-      emailPanel.style.display = 'none';
+    } else if (tab === 'wifi') {
       wifiPanel.style.display = '';
-      btnWifi.style.background = '#7c3aed'; btnWifi.style.color = '#fff'; btnWifi.style.border = 'none';
-      btnEmail.style.background = '#fdf2f8'; btnEmail.style.color = '#ec4899'; btnEmail.style.border = '1px solid #fbcfe8';
+      btnWifi.style.background = '#ec4899'; btnWifi.style.color = '#fff'; btnWifi.style.border = 'none';
+    } else {
+      meetingPanel.style.display = '';
+      btnMeeting.style.background = '#ec4899'; btnMeeting.style.color = '#fff'; btnMeeting.style.border = 'none';
     }
   }
 
