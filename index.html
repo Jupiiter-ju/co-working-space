@@ -407,8 +407,9 @@
 
 
 <!-- Booking Success Modal -->
-<div id="modal-success" class="modal-overlay hidden">
-  <div class="modal-box">
+<div id="modal-success" class="modal-overlay hidden" onclick="if(event.target===this && isReviewingTicket) closeModal('modal-success')">
+  <div class="modal-box" style="position:relative;">
+    <button id="ticket-close-x" onclick="closeModal('modal-success')" style="display:none;position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:9999px;border:none;background:#f3f4f6;color:#6b7280;font-size:16px;line-height:1;cursor:pointer;align-items:center;justify-content:center;">&times;</button>
     <div id="ticket-content" class="success-bg rounded-2xl p-6 text-white mb-4">
       <!-- Ticket content here -->
     </div>
@@ -423,7 +424,7 @@
     <div class="text-center">
       <div class="text-5xl mb-3">🪑</div>
       <h2 class="text-lg font-bold text-gray-800 mb-2">การเข้าใช้งานพื้นที่</h2>
-      <p class="text-gray-600 text-sm leading-relaxed mb-6">เข้าไปนั่งที่โต๊ะได้เลย<br>ไม่ต้องถามพนักงาน</p>
+      <p class="text-gray-600 text-xl leading-relaxed mb-6">เข้าไปนั่งที่โต๊ะได้เลย ไม่ต้องถามพนักงาน<br>อ่านคู่มือการเข้าพื้นที่ได้จาก <button onclick="closeModal('modal-space-notice'); showGuidePage();" class="underline font-semibold text-purple-600 hover:text-purple-800">"คู่มือการใช้งาน"</button></p>
       <button onclick="closeModal('modal-space-notice')" class="w-full gradient-btn text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95">รับทราบ</button>
     </div>
   </div>
@@ -1065,6 +1066,7 @@ function switchTab(tab) {
 function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
 
 let currentTicketIsWaitlist = false;
+let isReviewingTicket = false;
 function finishTicketModal() {
   closeModal('modal-success');
   if (!currentTicketIsWaitlist) {
@@ -1375,6 +1377,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
     }
 
     updateSlotCounter(); updateFullCalendar();
+    isReviewingTicket = false;
     showTicket(newBooking);
   }, 50);
 }
@@ -1618,8 +1621,16 @@ function showTicket(booking) {
   const _acctText = document.getElementById('confirm-acct-text');
   if(_acctText){ _acctText.textContent='บันทึก Account Number แล้ว'; }
   const _cb = document.getElementById('confirm-acct-cb'); if(_cb){_cb.checked=false;}
-  const _lbl = document.getElementById('confirm-acct-label'); if(_lbl){_lbl.style.borderColor='#e5e7eb';_lbl.style.background='';_lbl.style.display=_acctNum?'flex':'none';}
-  const _btn = document.getElementById('btn-success'); if(_btn){ if(isWaitlist){_btn.disabled=false;_btn.style.background='linear-gradient(135deg,#e91e8c,#9c27b0)';_btn.style.cursor='pointer';}else{_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}}
+  const _lbl = document.getElementById('confirm-acct-label');
+  if(_lbl){_lbl.style.borderColor='#e5e7eb';_lbl.style.background='';_lbl.style.display=(_acctNum && !isReviewingTicket)?'flex':'none';}
+  const _btn = document.getElementById('btn-success');
+  if(_btn){
+    if(isWaitlist || isReviewingTicket){_btn.disabled=false;_btn.style.background='linear-gradient(135deg,#e91e8c,#9c27b0)';_btn.style.cursor='pointer';}
+    else{_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}
+  }
+  const _closeX = document.getElementById('ticket-close-x');
+  if(_closeX){ _closeX.style.display = isReviewingTicket ? 'flex' : 'none'; }
+  if(_btn){ _btn.textContent = isReviewingTicket ? 'ตกลง' : 'สำเร็จ'; }
 }
 
 // ============================================================
@@ -1628,6 +1639,7 @@ function showTicket(booking) {
 function viewTicketAgain(bookingId) {
   const b = getBookings().find(x => x.id === bookingId);
   if (!b) return;
+  isReviewingTicket = true;
   showTicket(b);
 }
 
@@ -2011,7 +2023,7 @@ function renderBookingRow(b, showDate, borderCls = 'border-l-green-400') {
 
   let btnHtml = '';
   if (b.status === 'confirmed') {
-    btnHtml = `<button onclick="viewTicketAgain('${escapeHtml(b.id)}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-purple-500 border border-purple-200 hover:bg-purple-50 transition-all whitespace-nowrap">ดูตั๋ว</button>`;
+    btnHtml = `<button onclick="viewTicketAgain('${escapeHtml(b.id)}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-purple-500 border border-purple-200 hover:bg-purple-50 transition-all whitespace-nowrap">Check Booking</button>`;
   }
   if (b.status !== 'cancelled') {
     btnHtml += `<button onclick="confirmCancel('${escapeHtml(b.id)}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 border border-red-200 hover:bg-red-50 transition-all whitespace-nowrap">ยกเลิก</button>`;
