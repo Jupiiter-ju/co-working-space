@@ -424,7 +424,8 @@
     <div class="text-center">
       <div class="text-5xl mb-3">🪑</div>
       <h2 class="text-lg font-bold text-gray-800 mb-2">การเข้าใช้งานพื้นที่</h2>
-      <p class="text-gray-600 text-xl leading-relaxed mb-6">เข้าไปนั่งที่โต๊ะได้เลย ไม่ต้องถามพนักงาน<br>อ่านคู่มือการเข้าพื้นที่ได้จาก <button onclick="closeModal('modal-space-notice'); showGuidePage();" class="underline font-semibold text-purple-600 hover:text-purple-800">"คู่มือการใช้งาน"</button></p>
+      <p class="text-gray-600 text-xl leading-relaxed mb-3">เข้าไปนั่งที่โต๊ะได้เลย ไม่ต้องถามพนักงาน</p>
+      <p class="text-gray-600 text-xl leading-relaxed mb-6">อ่านคู่มือการเข้าพื้นที่ได้จาก <button onclick="closeModal('modal-space-notice'); showGuidePage();" class="underline font-semibold text-purple-600 hover:text-purple-800">"คู่มือการใช้งาน"</button></p>
       <button onclick="closeModal('modal-space-notice')" class="w-full gradient-btn text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95">รับทราบ</button>
     </div>
   </div>
@@ -1617,7 +1618,7 @@ function showTicket(booking) {
   showModal('modal-success');
   const _acctNum = isWaitlist ? '' : (booking.accountNumber || '');
   const _acctDisp = document.getElementById('acct-display'); if(_acctDisp){_acctDisp.textContent=_acctNum;}
-  const _ticketWarn = document.getElementById('ticket-warning'); if(_ticketWarn){_ticketWarn.style.display=_acctNum?'block':'none';}
+  const _ticketWarn = document.getElementById('ticket-warning'); if(_ticketWarn){_ticketWarn.style.display=(_acctNum && !isReviewingTicket)?'block':'none';}
   const _acctText = document.getElementById('confirm-acct-text');
   if(_acctText){ _acctText.textContent='บันทึก Account Number แล้ว'; }
   const _cb = document.getElementById('confirm-acct-cb'); if(_cb){_cb.checked=false;}
