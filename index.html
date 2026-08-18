@@ -2301,7 +2301,7 @@ function qbPrevStep() {
 
 
 function getZones() {
-  return [...new Set(BRANCHES.map(b => b.zone))];
+  return [...new Set(BRANCHES.map(b => b.zone))].filter(z => z !== 'Coming soon');
 }
 
 function switchQbZone(idx) {
