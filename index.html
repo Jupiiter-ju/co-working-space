@@ -424,8 +424,14 @@
     <div class="text-center">
       <div class="text-5xl mb-3">🪑</div>
       <h2 class="text-lg font-bold text-gray-800 mb-2">การเข้าใช้งานพื้นที่</h2>
-      <p class="text-gray-600 text-xl leading-relaxed mb-3">เข้าไปนั่งที่โต๊ะได้เลย ไม่ต้องถามพนักงาน</p>
-      <p class="text-gray-600 text-xl leading-relaxed mb-6">อ่านคู่มือการเข้าพื้นที่ได้จาก <button onclick="closeModal('modal-space-notice'); showGuidePage();" class="underline font-semibold text-purple-600 hover:text-purple-800">"คู่มือการใช้งาน"</button></p>
+      <div class="flex items-start gap-2.5 text-left mb-3.5">
+        <span class="text-xl shrink-0">🪑</span>
+        <p class="text-gray-600 text-xl leading-relaxed">เข้าไปนั่งที่โต๊ะได้เลย<br><span class="underline">"ไม่ต้องถามพนักงาน"</span></p>
+      </div>
+      <div class="flex items-start gap-2.5 text-left mb-6">
+        <span class="text-xl shrink-0">📖</span>
+        <p class="text-gray-600 text-xl leading-relaxed">อ่านคู่มือการเข้าพื้นที่ได้จาก<br><button onclick="closeModal('modal-space-notice'); showGuidePage();" class="underline font-semibold text-purple-600 hover:text-purple-800">"คู่มือการใช้งาน"</button></p>
+      </div>
       <button onclick="closeModal('modal-space-notice')" class="w-full gradient-btn text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95">รับทราบ</button>
     </div>
   </div>
@@ -565,12 +571,25 @@
   <div class="max-w-2xl mx-auto w-full px-4 py-6">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
 
-      <!-- Intro -->
-      <div class="mb-6 bg-pink-50 border border-pink-100 rounded-2xl p-4">
-        <p class="font-bold text-pink-700 text-base mb-2">จองคิวเพื่อรับ Account Number สำหรับใช้เข้า Co-Working Space</p>
-        <div class="">
-          <ol class="text-sm text-gray-700 mb-4 list-decimal list-inside space-y-1"><li>เมื่อจองคิวสำเร็จจะได้รับ Account Number</li><li>นำไป Check-in ผ่านแอปพลิเคชัน สำหรับเข้า Co-Working <span class="sm:block sm:pl-4">(สามารถเลือก Account Number สำหรับการเข้าแต่ละรอบไว้ล่วงหน้าได้เลย)</span></li><li>กรุณาใช้ Account Number ที่ได้รับให้ตรงกับรอบจองนั้นๆ <span class="sm:block sm:pl-4">(หากใช้ไม่ตรงอาจทำให้เกิดปัญหาในภายหลัง)</span></li></ol>
-          <img loading="lazy" src="images/step-4-1.png" alt="step 4-1" class="w-[72%] mx-auto block rounded-xl object-contain max-h-[19.2rem]">
+      <!-- Step 2 -->
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+
+          <p class="font-bold text-gray-800 text-base">การเข้าพื้นที่ Co-Working Space (สำคัญ)</p>
+        </div>
+        <div class="ml-10">
+          <div class="mt-2 space-y-2">
+            <p class="text-sm text-gray-700">1. เปิดประตูเดินเข้าไปด้านใน และเลือกที่นั่งได้เลย นั่งได้เฉพาะโซน Co-Working เท่านั้น (ไม่สามารถเข้าไปนั่งในห้องส่วนตัวได้)</p>
+            <p class="text-sm text-gray-700">2. จำเป็นต้องล็อกอิน Account Number ตามที่ได้รับของรอบจองนั้นๆ เพื่อใช้รับรหัส Wi-Fi</p>
+
+            <p class="text-sm text-gray-700">3. ในกรณีเจ้าหน้าที่ขอเช็ค Member จะสามารถใช้ Account Number เพื่อยืนยันได้</p>
+            <p class="text-sm text-gray-500 mt-1 ml-3 font-semibold">หมายเหตุ ส่วนใหญ่เจ้าหน้าที่จะไม่เช็ค แต่ขอความร่วมมือทุกท่านล็อกอิน Account Number ที่ถูกต้องตามที่ได้รับในแต่ละรอบ เพื่อป้องกันการเกิดปัญหาในภายหลังค่ะ</p>
+            <p class="text-sm text-gray-700">4. หากต้องการใช้ห้องประชุมสามารถกดจองใน Application (มีค่าใช้จ่าย) หลังจากจองแล้วให้แจ้งที่ Reception เพื่อเปิดห้องประชุมให้ค่ะ</p>
+            <button onclick="goToAccountSteps()" style="display:inline-flex;align-items:center;gap:8px;background:none;border:none;padding:0;font-size:14px;font-weight:600;color:#db2777;cursor:pointer;margin-top:4px;">
+              <span class="text-xs">&#9658;</span>
+              วิธีเลือก Account Number
+            </button>
+          </div>
         </div>
       </div>
 
@@ -739,21 +758,12 @@
       </div>
       <div class="border-t border-gray-100 mb-8"></div>
 
-      <!-- Step 2 -->
-      <div class="mb-6">
-        <div class="flex items-center gap-3 mb-2">
-          
-          <p class="font-bold text-gray-800 text-base">การเข้าพื้นที่ Co-Working Space (สำคัญ)</p>
-        </div>
-        <div class="ml-10">
-          <div class="mt-2 space-y-2">
-            <p class="text-sm text-gray-700">1. เปิดประตูเดินเข้าไปด้านใน และเลือกที่นั่งได้เลย นั่งได้เฉพาะโซน Co-Working เท่านั้น (ไม่สามารถเข้าไปนั่งในห้องส่วนตัวได้)</p>
-            <p class="text-sm text-gray-700">2. จำเป็นต้องล็อกอิน Account Number ตามที่ได้รับของรอบจองนั้นๆ เพื่อใช้รับรหัส Wi-Fi</p>
-            
-            <p class="text-sm text-gray-700">3. ในกรณีเจ้าหน้าที่ขอเช็ค Member จะสามารถใช้ Account Number เพื่อยืนยันได้</p>
-            <p class="text-sm text-gray-500 mt-1 ml-3 font-semibold">หมายเหตุ ส่วนใหญ่เจ้าหน้าที่จะไม่เช็ค แต่ขอความร่วมมือทุกท่านล็อกอิน Account Number ที่ถูกต้องตามที่ได้รับในแต่ละรอบ เพื่อป้องกันการเกิดปัญหาในภายหลังค่ะ</p>
-            <p class="text-sm text-gray-700">4. หากต้องการใช้ห้องประชุมสามารถกดจองใน Application (มีค่าใช้จ่าย) หลังจากจองแล้วให้แจ้งที่ Reception เพื่อเปิดห้องประชุมให้ค่ะ</p>
-          </div>
+      <!-- Intro -->
+      <div class="mb-6 bg-pink-50 border border-pink-100 rounded-2xl p-4">
+        <p class="font-bold text-pink-700 text-base mb-2">จองคิวเพื่อรับ Account Number สำหรับใช้เข้า Co-Working Space</p>
+        <div class="">
+          <ol class="text-sm text-gray-700 mb-4 list-decimal list-inside space-y-1"><li>เมื่อจองคิวสำเร็จจะได้รับ Account Number</li><li>นำไป Check-in ผ่านแอปพลิเคชัน สำหรับเข้า Co-Working <span class="sm:block sm:pl-4">(สามารถเลือก Account Number สำหรับการเข้าแต่ละรอบไว้ล่วงหน้าได้เลย)</span></li><li>กรุณาใช้ Account Number ที่ได้รับให้ตรงกับรอบจองนั้นๆ <span class="sm:block sm:pl-4">(หากใช้ไม่ตรงอาจทำให้เกิดปัญหาในภายหลัง)</span></li></ol>
+          <img loading="lazy" src="images/step-4-1.png" alt="step 4-1" class="w-[72%] mx-auto block rounded-xl object-contain max-h-[19.2rem]">
         </div>
       </div>
 
@@ -1086,6 +1096,12 @@ function copyEmailManual(el) {
 }
 function showGuidePage() { document.getElementById('guide-page').classList.remove('hidden'); document.body.style.overflow = 'hidden'; var m=document.getElementById('modal-regus-img'); var g=document.getElementById('guide-regus-img'); if(m&&g) g.src=m.src; }
 function hideGuidePage() { document.getElementById('guide-page').classList.add('hidden'); document.body.style.overflow = ''; }
+function goToAccountSteps() {
+  var panel = document.getElementById('account-steps-panel');
+  var isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+  if (!isOpen) toggleAccountSteps();
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 function toggleAccountSteps() {
   var panel = document.getElementById('account-steps-panel');
   var chevron = document.getElementById('account-steps-chevron');
