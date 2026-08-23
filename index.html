@@ -203,30 +203,12 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 w-full">
       <h2 class="text-lg font-semibold text-gray-800 mb-4">📝 กรอกข้อมูลจอง</h2>
 
-      <!-- Row 1: ชื่อเล่น + บริษัท + ทีม + วันที่ -->
-      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
+      <!-- Row 1: ชื่อเล่น + ทีม + วันที่ -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ <span class="text-red-500">*</span></label>
           <input type="text" id="emp-name" placeholder="เช่น แพทตี้" maxlength="50"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
-          <select id="emp-company"
-            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
-            <option value="">-- เลือกบริษัท --</option>
-            <option value="AGX">AGX</option>
-            <option value="AIVN">AIVN</option>
-            <option value="AZT">AZT</option>
-            <option value="BIF">BIF</option>
-            <option value="CBSoft">CBSoft</option>
-            <option value="CDM">CDM</option>
-            <option value="CZS">CZS</option>
-            <option value="ECB">ECB</option>
-            <option value="EXE">EXE</option>
-            <option value="HOF">HOF</option>
-            <option value="WR">WR</option>
-          </select>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
@@ -282,10 +264,18 @@
 
     <!-- Full Calendar -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-      <div class="flex items-center justify-between mb-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
         <div>
           <h2 class="text-lg font-semibold text-gray-800" id="full-cal-title"></h2>
           <p class="text-xs text-gray-400 mt-0.5">คิวสูงสุด 15 คน/วัน</p>
+        </div>
+        <!-- Legend -->
+        <div class="flex flex-wrap gap-3">
+          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-green-50 border border-green-200 inline-block"></span>ว่าง</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-yellow-50 border border-yellow-200 inline-block"></span>ใกล้เต็ม</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-red-100 border border-red-200 inline-block"></span>เต็มแล้ว</div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-purple-100 border border-purple-200 inline-block"></span><span class="text-purple-600 font-medium">เต็ม+สำรอง</span></div>
+          <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-gray-100 border border-gray-200 inline-block"></span>ผ่านไปแล้ว</div>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="calNavMonth(-1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all text-gray-600 text-lg">‹</button>
@@ -293,14 +283,6 @@
         </div>
       </div>
       <div id="full-calendar" class="mt-4"></div>
-      <!-- Legend -->
-      <div class="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-100">
-        <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-green-50 border border-green-200 inline-block"></span>ว่าง</div>
-        <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-yellow-50 border border-yellow-200 inline-block"></span>ใกล้เต็ม</div>
-        <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-red-100 border border-red-200 inline-block"></span>เต็มแล้ว</div>
-        <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-purple-100 border border-purple-200 inline-block"></span><span class="text-purple-600 font-medium">เต็ม+สำรอง</span></div>
-        <div class="flex items-center gap-1.5 text-xs text-gray-600"><span class="w-4 h-4 rounded bg-gray-100 border border-gray-200 inline-block"></span>ผ่านไปแล้ว</div>
-      </div>
     </div>
   </div>
 
@@ -1277,13 +1259,11 @@ function submitBooking() {
   try {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
   const name = escapeHtml(document.getElementById('emp-name').value.trim());
-  const company = escapeHtml(document.getElementById('emp-company').value);
   const team = escapeHtml(document.getElementById('emp-team').value);
   const date = document.getElementById('book-date').value;
   const branchId = formSelectedBranchId;
 
   if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
-  if (!company) { showError('กรุณาเลือกบริษัท'); return; }
   if (!team) { showError('กรุณาเลือกทีม'); return; }
   if (!date) { showError('กรุณาเลือกวันที่จอง'); return; }
   if (!branchId) { showError('กรุณาเลือกสาขา'); return; }
@@ -1293,14 +1273,14 @@ function submitBooking() {
 
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
-    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, company, '');
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, '');
     return;
   }
-  doCreateBooking(name, date, branchId, 'form', team, company, '');
+  doCreateBooking(name, date, branchId, 'form', team, '');
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
-function doCreateBooking(name, date, branchId, source, team = '', company = '', email = '') {
+function doCreateBooking(name, date, branchId, source, team = '', email = '') {
   bookingLock = true;
   const lockTimestamp = Date.now();
 
@@ -1334,7 +1314,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
 
     const branch = BRANCHES.find(b => b.id === branchId);
     const newBooking = {
-      id: generateId(), name, team, company, email, date, slot: 'fullday',
+      id: generateId(), name, team, email, date, slot: 'fullday',
       slotLabel: SLOT_LABEL,
       timestamp: lockTimestamp,
       branch: branch ? branch.name : branchId, branchId,
@@ -1379,7 +1359,6 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
 
     if (source === 'form') {
       document.getElementById('emp-name').value = '';
-      document.getElementById('emp-company').value = '';
       document.getElementById('emp-team').value = '';
       document.getElementById('book-date').value = ''; if(window._bookDateFp) window._bookDateFp.clear();
       document.getElementById('slot-info')?.classList.add('hidden');
@@ -1402,7 +1381,7 @@ function doCreateBooking(name, date, branchId, source, team = '', company = '', 
 // ============================================================
 // WAITLIST CONFIRM DIALOG
 // ============================================================
-function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', company = '', email = '') {
+function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', email = '') {
   const wNum = wCount + 1;
   document.getElementById('wl-confirm-msg').innerHTML =
     `วันที่ <strong>${escapeHtml(formatDateTH(date))}</strong><br>` +
@@ -1421,7 +1400,7 @@ function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', co
     }
     errEl.classList.add('hidden');
     closeModal('modal-waitlist-confirm');
-    doCreateBooking(name, date, branchId, source, team, company, email);
+    doCreateBooking(name, date, branchId, source, team, email);
   };
   showModal('modal-waitlist-confirm');
 }
@@ -2152,7 +2131,7 @@ function refreshSchedulePanel() {
 // QUICK BOOK WIZARD — Step-by-Step
 // ============================================================
 let qbStep = 1;
-let qbData = { name: '', team: '', company: '', email: '', slot: null, branchId: null, date: '' };
+let qbData = { name: '', team: '', email: '', slot: null, branchId: null, date: '' };
 let qbCurrentZone = null;
 let qbSelectedBranchId = null;
 
@@ -2199,23 +2178,6 @@ function qbRenderStep() {
           <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่น <span class="text-red-500">*</span></label>
           <input type="text" id="qb-name" value="${escapeHtml(qbData.name)}" placeholder="เช่น แพทตี้" maxlength="50"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
-          <select id="qb-company" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
-            <option value="">-- เลือกบริษัท --</option>
-            <option value="AGX">AGX</option>
-            <option value="AIVN">AIVN</option>
-            <option value="AZT">AZT</option>
-            <option value="BIF">BIF</option>
-            <option value="CBSoft">CBSoft</option>
-            <option value="CDM">CDM</option>
-            <option value="CZS">CZS</option>
-            <option value="ECB">ECB</option>
-            <option value="EXE">EXE</option>
-            <option value="HOF">HOF</option>
-            <option value="WR">WR</option>
-          </select>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
@@ -2295,13 +2257,11 @@ function qbRenderStep() {
 function qbNextStep() {
   if (qbStep === 1) {
     const name = escapeHtml(document.getElementById('qb-name')?.value.trim());
-    const company = escapeHtml(document.getElementById('qb-company')?.value);
     const team = escapeHtml(document.getElementById('qb-team')?.value);
     const email = document.getElementById('qb-email')?.value.trim() || '';
     if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
-    if (!company) { showError('กรุณาเลือกบริษัท'); return; }
     if (!team) { showError('กรุณาเลือกทีม'); return; }
-    qbData.name = name; qbData.company = company; qbData.team = team; qbData.email = email; qbStep = 2;
+    qbData.name = name; qbData.team = team; qbData.email = email; qbStep = 2;
   } else if (qbStep === 2) {
     if (!qbSelectedBranchId) { showError('กรุณาเลือกสาขา'); return; }
     qbData.branchId = qbSelectedBranchId; qbStep = 3;
@@ -2360,16 +2320,16 @@ function selectQbBranch(branchId) {
 
 function submitQuickBooking() {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
-  const { name, team, company, email, date, branchId } = qbData;
+  const { name, team, email, date, branchId } = qbData;
   const validErr = validateBookingRules(name, date);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
     closeModal('modal-quick-book');
-    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team, company);
+    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team);
     return;
   }
-  doCreateBooking(name, date, branchId, 'modal', team, company, email);
+  doCreateBooking(name, date, branchId, 'modal', team, email);
 }
 
 function updateQbConfirmBtn() {}
