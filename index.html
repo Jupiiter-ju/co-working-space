@@ -212,7 +212,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
-          <select id="emp-team"
+          <select id="emp-team" onchange="toggleTeamOtherInput('emp-team', 'emp-team-other-row')"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
             <option value="">-- เลือกทีม --</option>
             <option value="BD">BD</option>
@@ -240,8 +240,15 @@
         </div>
       </div>
 
-      <!-- Row 1b: อีเมล -->
-      
+      <!-- Row 1b: ระบุชื่อทีม (โผล่เฉพาะเลือก Other) -->
+      <div id="emp-team-other-row" class="mb-4 hidden">
+        <label class="block text-sm font-medium text-gray-700 mb-1">ระบุชื่อทีม <span class="text-red-500">*</span></label>
+        <input type="text" id="emp-team-other" placeholder="เช่น Marketing" maxlength="50"
+          class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
+      </div>
+
+      <!-- Row 1c: อีเมล -->
+
 
       <!-- Row 2: เลือกสถานที่ Zone Tabs -->
       <div class="mb-3">
@@ -1058,6 +1065,13 @@ function switchTab(tab) {
 // ============================================================
 function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
 
+function toggleTeamOtherInput(selectId, rowId) {
+  const select = document.getElementById(selectId);
+  const row = document.getElementById(rowId);
+  if (!select || !row) return;
+  row.classList.toggle('hidden', select.value !== 'Other');
+}
+
 let currentTicketIsWaitlist = false;
 let isReviewingTicket = false;
 function finishTicketModal() {
@@ -1259,12 +1273,17 @@ function submitBooking() {
   try {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
   const name = escapeHtml(document.getElementById('emp-name').value.trim());
-  const team = escapeHtml(document.getElementById('emp-team').value);
+  let team = escapeHtml(document.getElementById('emp-team').value);
   const date = document.getElementById('book-date').value;
   const branchId = formSelectedBranchId;
 
   if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
   if (!team) { showError('กรุณาเลือกทีม'); return; }
+  if (team === 'Other') {
+    const teamOther = escapeHtml(document.getElementById('emp-team-other').value.trim());
+    if (!teamOther) { showError('กรุณาระบุชื่อทีม'); return; }
+    team = teamOther;
+  }
   if (!date) { showError('กรุณาเลือกวันที่จอง'); return; }
   if (!branchId) { showError('กรุณาเลือกสาขา'); return; }
 
@@ -1360,6 +1379,8 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '') {
     if (source === 'form') {
       document.getElementById('emp-name').value = '';
       document.getElementById('emp-team').value = '';
+      document.getElementById('emp-team-other').value = '';
+      document.getElementById('emp-team-other-row')?.classList.add('hidden');
       document.getElementById('book-date').value = ''; if(window._bookDateFp) window._bookDateFp.clear();
       document.getElementById('slot-info')?.classList.add('hidden');
       formSelectedBranchId = null; formZoneOpen = false;
@@ -1606,9 +1627,9 @@ function showTicket(booking) {
   document.getElementById('ticket-content').style.cssText = ticketBg + `; border-radius: 1rem; padding: 1.5rem; color: ${ticketColor}; margin-bottom: 1rem;`;
   document.getElementById('ticket-content').innerHTML = html;
 
-  // hide email section for waitlist tickets
+  // hide email section for waitlist tickets and when reviewing an existing ticket (Check Booking)
   const emailSection = document.getElementById('email-section');
-  if (emailSection) emailSection.classList.toggle('hidden', isWaitlist);
+  if (emailSection) emailSection.classList.toggle('hidden', isWaitlist || isReviewingTicket);
 
   showModal('modal-success');
   const _acctNum = isWaitlist ? '' : (booking.accountNumber || '');
@@ -2181,7 +2202,7 @@ function qbRenderStep() {
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
-          <select id="qb-team" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
+          <select id="qb-team" onchange="toggleTeamOtherInput('qb-team', 'qb-team-other-row')" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
             <option value="">-- เลือกทีม --</option>
             <option value="BD">BD</option>
             <option value="Commu">Commu</option>
@@ -2196,6 +2217,11 @@ function qbRenderStep() {
             <option value="Project">Project</option>
             <option value="Other">Other</option>
           </select>
+        </div>
+        <div id="qb-team-other-row" class="${qbData.team === 'Other' ? '' : 'hidden'}">
+          <label class="block text-sm font-medium text-gray-700 mb-1">ระบุชื่อทีม <span class="text-red-500">*</span></label>
+          <input type="text" id="qb-team-other" value="${escapeHtml(qbData.teamOther || '')}" placeholder="เช่น Marketing" maxlength="50"
+            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
         </div>
       </div>`;
     setTimeout(() => document.getElementById('qb-name')?.focus(), 50);
@@ -2257,10 +2283,18 @@ function qbRenderStep() {
 function qbNextStep() {
   if (qbStep === 1) {
     const name = escapeHtml(document.getElementById('qb-name')?.value.trim());
-    const team = escapeHtml(document.getElementById('qb-team')?.value);
+    let team = escapeHtml(document.getElementById('qb-team')?.value);
     const email = document.getElementById('qb-email')?.value.trim() || '';
     if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
     if (!team) { showError('กรุณาเลือกทีม'); return; }
+    if (team === 'Other') {
+      const teamOther = escapeHtml(document.getElementById('qb-team-other')?.value.trim());
+      if (!teamOther) { showError('กรุณาระบุชื่อทีม'); return; }
+      qbData.teamOther = teamOther;
+      team = teamOther;
+    } else {
+      qbData.teamOther = '';
+    }
     qbData.name = name; qbData.team = team; qbData.email = email; qbStep = 2;
   } else if (qbStep === 2) {
     if (!qbSelectedBranchId) { showError('กรุณาเลือกสาขา'); return; }
