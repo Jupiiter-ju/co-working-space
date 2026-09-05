@@ -471,6 +471,28 @@
 </div>
 
 
+<div id="modal-account-picker" class="modal-overlay hidden">
+  <div class="modal-box max-w-sm">
+    <div class="mb-3">
+      <p class="text-sm font-semibold text-gray-400 mb-1">เลือก Account Number</p>
+      <p id="acct-picker-date" class="text-xs text-gray-400"></p>
+    </div>
+    <div id="acct-picker-grid" class="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto"></div>
+    <p id="acct-picker-note" class="text-xs text-gray-400 mt-2 hidden"></p>
+    <div class="flex gap-3 mt-4">
+      <button onclick="cancelAccountPicker()"
+        class="flex-1 bg-gray-100 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-200 transition-all text-sm">
+        ยกเลิก
+      </button>
+      <button id="acct-picker-confirm-btn" onclick="confirmAccountPicker()" disabled
+        class="flex-1 gradient-btn text-white font-semibold py-3 rounded-xl transition-all text-sm active:scale-95 opacity-50 cursor-not-allowed">
+        ถัดไป →
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <div id="modal-guide" class="modal-overlay hidden">
   <div class="modal-box max-w-lg">
     <div class="flex items-center justify-between mb-1">
@@ -811,6 +833,23 @@ const ACCOUNT_NUMBERS = [
   '17310732', '17310741', '17310749', '17310756', '17310781',
   '17310807', '17310819', '17310859', '17310863', '17315632',
 ];
+const ACCOUNT_NAMES = {
+  '17310641': 'สันติ แคมเมร่า',
+  '17310719': 'ชลทัศน์ สว่างพร้อม',
+  '17310732': 'ธีชัย เจียรักสุวรรณ',
+  '17310741': 'วาทิศ อนันเดโชชัย',
+  '17310749': 'ณัฐพงศ์ รอดแก้ว',
+  '17310756': 'ศักรินทร์ บุญช่วย',
+  '17310859': 'ลัทธวัฒน์ ฉัตรกุลชัย',
+  '17310781': 'กฤษฎา นรสิงห์สาทร',
+  '17315722': 'ไพฑูรย์ ธนสารสุทธิพงษ์',
+  '17310807': 'ชณันวิชญ์ เชาว์นักษมศักดิ์',
+  '17310819': 'บัญชา แก้วเซ่ง',
+  '17315409': 'กฤษฎา แข็งขัน',
+  '17310863': 'จรัสแสง ราชวงษ์',
+  '17315632': 'ศิริพร จันทา',
+  '17315711': 'ชวินโรจน์ นิวัฒน์เอก',
+};
 const USER_KEYS = ACCOUNT_NUMBERS;
 const MAX_SLOTS = 15; // สูงสุดต่อ 1 ช่วงเวลา
 
@@ -1022,7 +1061,7 @@ async function syncBookingToSheet(booking) {
       body: JSON.stringify({ action: 'add', booking })
     });
     const json = await resp.json();
-    return json.accountNumber || null;
+    return json;
   } catch (e) {
     console.warn('บันทึกข้อมูลไปยัง Google Sheet ไม่ได้:', e.message);
     return null;
@@ -1274,11 +1313,12 @@ function submitBooking() {
   let team = escapeHtml(document.getElementById('emp-team').value);
   const date = document.getElementById('book-date').value;
   const branchId = formSelectedBranchId;
+  let teamOther = '';
 
   if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
   if (!team) { showError('กรุณาเลือกทีม'); return; }
   if (team === 'Other') {
-    const teamOther = escapeHtml(document.getElementById('emp-team-other').value.trim());
+    teamOther = escapeHtml(document.getElementById('emp-team-other').value.trim());
     if (!teamOther) { showError('กรุณาระบุชื่อทีม'); return; }
     team = teamOther;
   }
@@ -1290,14 +1330,14 @@ function submitBooking() {
 
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
-    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, '');
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, '', teamOther);
     return;
   }
-  doCreateBooking(name, date, branchId, 'form', team, '');
+  openAccountPicker(name, date, branchId, 'form', team, '', teamOther);
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
-function doCreateBooking(name, date, branchId, source, team = '', email = '') {
+function doCreateBooking(name, date, branchId, source, team = '', email = '', chosenAccountNumber = null, teamOther = '') {
   bookingLock = true;
   const lockTimestamp = Date.now();
 
@@ -1337,16 +1377,26 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '') {
       branch: branch ? branch.name : branchId, branchId,
       accountNumber: null,
       status: bookingStatus,
+      teamOther: teamOther || '',
     };
 
     if (bookingStatus === 'confirmed') {
-      // Server assigns account number atomically via LockService — prevents duplicates
-      const gasAccountNumber = await syncBookingToSheet(newBooking);
-      if (gasAccountNumber) {
-        newBooking.accountNumber = gasAccountNumber;
+      // ส่งเลขที่ผู้ใช้เลือกไปให้เซิร์ฟเวอร์ตรวจสอบซ้ำอีกที (กันชนกันกรณี 2 คนเลือกพร้อมกัน)
+      newBooking.accountNumber = chosenAccountNumber || null;
+      const gasResult = await syncBookingToSheet(newBooking);
+      if (gasResult && gasResult.success) {
+        newBooking.accountNumber = gasResult.accountNumber;
+      } else if (gasResult && gasResult.error === 'account_taken') {
+        bookingLock = false; _resetBookingBtn();
+        showError('เลขนี้เพิ่งถูกคนอื่นเลือกไปพอดี กรุณาเลือกเลขใหม่อีกครั้ง');
+        openAccountPicker(name, date, branchId, source, team, email, teamOther);
+        return;
       } else {
-        // GAS unavailable — fallback to local assignment
-        const local = assignUser(date);
+        // GAS ติดต่อไม่ได้ — fallback ใช้เลขที่เลือกไว้ถ้ายังว่าง ไม่งั้นสุ่มให้
+        const usedToday = new Set(
+          getBookings().filter(b => b.date === date && b.status === 'confirmed').map(b => String(b.accountNumber))
+        );
+        const local = (chosenAccountNumber && !usedToday.has(String(chosenAccountNumber))) ? chosenAccountNumber : assignUser(date);
         if (!local) { bookingLock = false; _resetBookingBtn(); showError('ไม่มี User ว่างสำหรับวันนี้'); return; }
         newBooking.accountNumber = local;
       }
@@ -1398,9 +1448,102 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '') {
 }
 
 // ============================================================
+// ACCOUNT NUMBER PICKER
+// ============================================================
+let acctPickerPending = null;
+let acctPickerSelected = null;
+
+function getAvailableAccountNumbers(date) {
+  const usedToday = new Set(
+    getBookings().filter(b => b.date === date && b.status === 'confirmed').map(b => String(b.accountNumber))
+  );
+  return ACCOUNT_NUMBERS.filter(n => !usedToday.has(String(n)));
+}
+
+function findOwnerAccountNumber(name) {
+  const target = String(name || '').trim().toLowerCase();
+  if (!target) return null;
+  const found = Object.entries(ACCOUNT_NAMES).find(([num, fullName]) =>
+    fullName.trim().toLowerCase() === target
+  );
+  return found ? found[0] : null;
+}
+
+function openAccountPicker(name, date, branchId, source, team = '', email = '', teamOther = '') {
+  acctPickerPending = { name, date, branchId, source, team, email, teamOther };
+  const available = getAvailableAccountNumbers(date);
+  const owner = findOwnerAccountNumber(name);
+  acctPickerSelected = (owner && available.includes(owner)) ? owner : null;
+
+  document.getElementById('acct-picker-date').textContent = formatDateTH(date) + ' · แสดงเฉพาะเลขที่ยังว่าง';
+  renderAccountPickerGrid(available);
+
+  const note = document.getElementById('acct-picker-note');
+  if (!available.length) {
+    note.textContent = 'ไม่มีเลขว่างสำหรับวันนี้แล้ว กรุณาติดต่อผู้ดูแลระบบ';
+    note.classList.remove('hidden');
+  } else {
+    note.classList.add('hidden');
+  }
+
+  showModal('modal-account-picker');
+}
+
+function renderAccountPickerGrid(available) {
+  const grid = document.getElementById('acct-picker-grid');
+  grid.innerHTML = available.map(num => {
+    const isSel = num === acctPickerSelected;
+    const fullName = escapeHtml(ACCOUNT_NAMES[num] || '');
+    return `<button type="button" onclick="selectAccountNumber('${num}')"
+      class="relative text-left rounded-xl px-3 py-2.5 transition-all"
+      style="border:${isSel ? '2px solid #9333EA' : '1px solid #F4C0D1'};background:${isSel ? 'linear-gradient(135deg,#FBEAF0,#EEEDFE)' : '#FDF2F8'};">
+      <div class="text-sm font-semibold" style="color:${isSel ? '#72243E' : '#9D174D'};">${num}</div>
+      <div class="text-xs mt-0.5" style="color:${isSel ? '#993556' : '#BE185D'};">${fullName}</div>
+      ${isSel ? '<div class="absolute top-1.5 right-2 text-xs" style="color:#9333EA;">✓</div>' : ''}
+    </button>`;
+  }).join('');
+
+  const confirmBtn = document.getElementById('acct-picker-confirm-btn');
+  if (acctPickerSelected) {
+    confirmBtn.disabled = false;
+    confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+  } else {
+    confirmBtn.disabled = true;
+    confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+  }
+}
+
+function selectAccountNumber(num) {
+  acctPickerSelected = num;
+  renderAccountPickerGrid(getAvailableAccountNumbers(acctPickerPending.date));
+}
+
+function confirmAccountPicker() {
+  if (!acctPickerSelected || !acctPickerPending) return;
+  const { name, date, branchId, source, team, email, teamOther } = acctPickerPending;
+  const chosen = acctPickerSelected;
+  closeModal('modal-account-picker');
+  acctPickerPending = null;
+  acctPickerSelected = null;
+  doCreateBooking(name, date, branchId, source, team, email, chosen, teamOther);
+}
+
+function cancelAccountPicker() {
+  const wasFromModal = acctPickerPending && acctPickerPending.source === 'modal';
+  closeModal('modal-account-picker');
+  acctPickerPending = null;
+  acctPickerSelected = null;
+  if (wasFromModal) {
+    qbStep = 3;
+    showModal('modal-quick-book');
+    qbRenderStep();
+  }
+}
+
+// ============================================================
 // WAITLIST CONFIRM DIALOG
 // ============================================================
-function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', email = '') {
+function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', email = '', teamOther = '') {
   const wNum = wCount + 1;
   document.getElementById('wl-confirm-msg').innerHTML =
     `วันที่ <strong>${escapeHtml(formatDateTH(date))}</strong><br>` +
@@ -1419,7 +1562,7 @@ function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', em
     }
     errEl.classList.add('hidden');
     closeModal('modal-waitlist-confirm');
-    doCreateBooking(name, date, branchId, source, team, email);
+    doCreateBooking(name, date, branchId, source, team, email, null, teamOther);
   };
   showModal('modal-waitlist-confirm');
 }
@@ -1597,6 +1740,10 @@ function showTicket(booking) {
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อ</span>
           <span class="font-semibold">${escapeHtml(booking.name)}</span>
         </div>
+        ${(!isWaitlist && ACCOUNT_NAMES[booking.accountNumber]) ? `<div class="flex justify-between text-sm">
+          <span class="text-blue-100">ชื่อเจ้าของเลข</span>
+          <span class="font-semibold text-right text-xs">${escapeHtml(ACCOUNT_NAMES[booking.accountNumber])}</span>
+        </div>` : ''}
         <div class="flex justify-between text-sm">
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">วันที่</span>
           <span class="font-semibold">${formatDateTH(booking.date)}</span>
@@ -2352,16 +2499,17 @@ function selectQbBranch(branchId) {
 
 function submitQuickBooking() {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
-  const { name, team, email, date, branchId } = qbData;
+  const { name, team, email, date, branchId, teamOther } = qbData;
   const validErr = validateBookingRules(name, date);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
     closeModal('modal-quick-book');
-    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team);
+    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team, '', teamOther);
     return;
   }
-  doCreateBooking(name, date, branchId, 'modal', team, email);
+  closeModal('modal-quick-book');
+  openAccountPicker(name, date, branchId, 'modal', team, email, teamOther);
 }
 
 function updateQbConfirmBtn() {}
