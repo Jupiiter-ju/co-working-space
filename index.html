@@ -477,7 +477,7 @@
       <p class="text-sm font-semibold text-gray-400 mb-1">เลือก Account Number</p>
       <p id="acct-picker-date" class="text-xs text-gray-400"></p>
     </div>
-    <div id="acct-picker-grid" class="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto"></div>
+    <div id="acct-picker-grid" class="grid grid-cols-2 gap-2"></div>
     <p id="acct-picker-note" class="text-xs text-gray-400 mt-2 hidden"></p>
     <div class="flex gap-3 mt-4">
       <button onclick="cancelAccountPicker()"
@@ -835,15 +835,15 @@ const ACCOUNT_NUMBERS = [
 ];
 const ACCOUNT_NAMES = {
   '17310641': 'สันติ แคมเมร่า',
-  '17310719': 'ชลทัศน์ สว่างพร้อม',
-  '17310732': 'ธีชัย เจียรักสุวรรณ',
-  '17310741': 'วาทิศ อนันเดโชชัย',
+  '17310719': 'ชลภัทธ์ สว่างพร้อม',
+  '17310732': 'ธีธัช เจียรักสุวรรณ',
+  '17310741': 'วาทิศ อนันตเดโชชัย',
   '17310749': 'ณัฐพงศ์ รอดแก้ว',
   '17310756': 'ศักรินทร์ บุญช่วย',
-  '17310859': 'ลัทธวัฒน์ ฉัตรกุลชัย',
+  '17310859': 'ลัทธวัฒน์ ฉัตรนุกูลชัย',
   '17310781': 'กฤษฎา นรสิงห์สาทร',
-  '17315722': 'ไพฑูรย์ ธนสารสุทธิพงษ์',
-  '17310807': 'ชณันวิชญ์ เชาว์นักษมศักดิ์',
+  '17315722': 'ไพฑูรย์ ธนะสารสุทธิพงษ์',
+  '17310807': 'ชณันวิชญ์ เชาวน์เกษมศักดิ์',
   '17310819': 'บัญชา แก้วเซ่ง',
   '17315409': 'กฤษฎา แข็งขัน',
   '17310863': 'จรัสแสง ราชวงษ์',
@@ -1737,12 +1737,12 @@ function showTicket(booking) {
       ${loginSection}
       <div class="${isWaitlist ? 'bg-gray-50 border border-gray-100' : 'bg-white bg-opacity-20'} rounded-xl p-4 space-y-2">
         <div class="flex justify-between text-sm">
-          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อ</span>
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อผู้จอง</span>
           <span class="font-semibold">${escapeHtml(booking.name)}</span>
         </div>
         ${(!isWaitlist && ACCOUNT_NAMES[booking.accountNumber]) ? `<div class="flex justify-between text-sm">
-          <span class="text-blue-100">ชื่อเจ้าของเลข</span>
-          <span class="font-semibold text-right text-xs">${escapeHtml(ACCOUNT_NAMES[booking.accountNumber])}</span>
+          <span class="text-blue-100">ชื่อ Account</span>
+          <span class="font-semibold">${escapeHtml(ACCOUNT_NAMES[booking.accountNumber])}</span>
         </div>` : ''}
         <div class="flex justify-between text-sm">
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">วันที่</span>
