@@ -1,1 +1,5 @@
 .claude/
+
+# Discord bot credentials — never commit (repo is public)
+coworking-booking-bot.json
+send-dm-intro-bot.json
