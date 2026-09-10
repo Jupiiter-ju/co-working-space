@@ -974,6 +974,9 @@ let bookingLock = false; // Anti-race condition
 // CONFIG — วาง URL ของ Google Apps Script Web App ที่นี่
 // ============================================================
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGsE_AxpJ2mANXp539Ho10cT_TyaVqUiA7dp4ybK3RWLRCxA8D3NG5fHcJdKmXnYnk/exec';
+// เช็คแค่ว่า request มาจากหน้าเว็บนี้จริง (ไม่ใช่ auth ที่แท้จริง — คนที่อ่าน source นี้เห็นค่าเดียวกัน)
+// กันบอท/สแกนที่สุ่มยิง URL ตรงๆ โดยไม่เปิดหน้าเว็บ ต้องตรงกับ SHARED_SECRET ฝั่ง Apps Script
+const API_KEY = '9D6MVrcE7hRuUHWOTArJBqyAYx8kPRa8';
 
 // ============================================================
 // LOCALSTORAGE HELPERS
@@ -1037,7 +1040,7 @@ function generateId() {
 async function loadBookingsFromSheet() {
   if (!APPS_SCRIPT_URL) return;
   try {
-    const res = await fetch(APPS_SCRIPT_URL, { redirect: 'follow' });
+    const res = await fetch(APPS_SCRIPT_URL + '?key=' + encodeURIComponent(API_KEY), { redirect: 'follow' });
     const data = await res.json();
     if (Array.isArray(data.bookings)) {
       // แปลง date ที่ Sheets ส่งมาเป็น ISO string กลับเป็น YYYY-MM-DD ตาม timezone ของเครื่อง
@@ -1082,7 +1085,7 @@ async function syncBookingToSheet(booking) {
     const resp = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       redirect: 'follow',
-      body: JSON.stringify({ action: 'add', booking })
+      body: JSON.stringify({ action: 'add', booking, key: API_KEY })
     });
     const json = await resp.json();
     return json;
@@ -1097,7 +1100,7 @@ async function updateBookingInSheet(id, fields) {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       redirect: 'follow',
-      body: JSON.stringify({ action: 'update', id, ...fields })
+      body: JSON.stringify({ action: 'update', id, ...fields, key: API_KEY })
     });
   } catch (e) {
     console.warn('อัปเดต Sheet ไม่ได้:', e.message);
