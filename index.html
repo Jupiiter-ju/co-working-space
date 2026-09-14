@@ -1916,7 +1916,7 @@ const FEEDBACK_CATEGORIES = [
 let fbState = { zoneIdx: 0, branchId: null, ratings: {} };
 
 function openFeedbackModal() {
-  fbState = { zoneIdx: 0, branchId: null, ratings: {} };
+  fbState = { zoneIdx: null, branchId: null, ratings: {} };
   document.getElementById('fb-comment').value = '';
   const statusEl = document.getElementById('fb-status');
   statusEl.textContent = ''; statusEl.classList.add('hidden');
@@ -1943,10 +1943,14 @@ function selectFbZone(idx) {
 }
 
 function renderFbBranchChecks() {
+  const container = document.getElementById('fb-branch-checks');
+  if (fbState.zoneIdx === null) {
+    container.innerHTML = '<p class="text-xs text-gray-400 col-span-full py-2">กรุณาเลือกโซนก่อน เพื่อดูสาขาในโซนนั้น</p>';
+    return;
+  }
   const zones = getZones();
   const zone = zones[fbState.zoneIdx];
   const branches = BRANCHES.filter(b => b.zone === zone);
-  const container = document.getElementById('fb-branch-checks');
   container.innerHTML = branches.map(b => {
     const checked = fbState.branchId === b.id;
     return `
