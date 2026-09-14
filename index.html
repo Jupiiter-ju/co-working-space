@@ -163,17 +163,20 @@
           <div class="text-xs sm:text-base font-semibold text-white text-opacity-90 mt-0.5 hidden xs:block sm:block">จองคิวเพื่อรับ Account Member เพื่อใช้งานบน Application</div>
         </div>
       </div>
-      <button onclick="showGuidePage()" class="shrink-0 flex items-center gap-1.5 bg-white text-purple-700 font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-lg hover:bg-purple-50 transition text-xs sm:text-sm ml-2">
-        📖 <span class="sm:hidden">คู่มือ</span><span class="hidden sm:inline">คู่มือการใช้ Member</span>
-      </button>
     </div>
-    <div class="flex flex-wrap gap-1.5 sm:gap-2">
+    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
       <div class="bg-white bg-opacity-20 rounded-lg px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
         📅 จองคิวล่วงหน้าได้ <strong>1 เดือน</strong>
       </div>
       <div class="bg-white bg-opacity-20 rounded-lg px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
         👥 คิวสูงสุด 15 คน/วัน
       </div>
+      <button onclick="showGuidePage()" class="flex items-center gap-1.5 bg-white text-purple-700 font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-lg hover:bg-purple-50 transition text-xs sm:text-sm ml-auto">
+        📖 <span class="sm:hidden">คู่มือ</span><span class="hidden sm:inline">คู่มือการใช้ Member</span>
+      </button>
+      <button onclick="openFeedbackModal()" class="flex items-center gap-1.5 bg-white text-pink-600 font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-lg hover:bg-pink-50 transition text-xs sm:text-sm">
+        📝 Feedback
+      </button>
     </div>
   </div>
 </nav>
@@ -876,6 +879,41 @@
       <button id="forgot-submit-btn" onclick="submitForgotBooking()"
         class="flex-1 gradient-btn text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all">
         ส่งข้อมูล
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div id="modal-feedback" class="modal-overlay hidden">
+  <div class="modal-box max-w-lg">
+    <div class="text-center mb-4">
+      <div class="text-4xl mb-2">📝</div>
+      <h2 class="text-lg font-bold text-gray-800 mb-1">แบบสอบถามความพึงพอใจ</h2>
+      <p class="text-gray-500 text-xs">ไม่ระบุตัวตน ใช้เวลาไม่ถึง 1 นาที ขอบคุณที่ช่วยให้ Feedback ค่ะ</p>
+    </div>
+    <div class="text-left space-y-4 mb-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">สาขาที่ไปใช้งาน <span class="text-red-500">*</span> <span class="text-gray-400 font-normal">(เลือกได้ 1 สาขาต่อ 1 แบบฟอร์ม)</span></label>
+        <div id="fb-zone-tabs" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3"></div>
+        <div id="fb-branch-checks" class="grid grid-cols-1 sm:grid-cols-2 gap-2" style="max-height:11rem;overflow-y:auto;"></div>
+      </div>
+      <div class="border-t border-gray-100 pt-4 space-y-3" id="fb-ratings"></div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">ความคิดเห็น / ข้อเสนอแนะเพิ่มเติม</label>
+        <textarea id="fb-comment" rows="3" maxlength="1000" placeholder="พิมพ์ความคิดเห็นของคุณ (ไม่บังคับ)"
+          class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all resize-none"></textarea>
+      </div>
+      <p id="fb-status" class="text-xs hidden"></p>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="closeModal('modal-feedback')"
+        class="flex-1 bg-gray-100 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-200 transition-all">
+        ยกเลิก
+      </button>
+      <button id="fb-submit-btn" onclick="submitFeedback()"
+        class="flex-1 gradient-btn text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all">
+        ส่ง Feedback
       </button>
     </div>
   </div>
@@ -1861,6 +1899,128 @@ async function submitForgotBooking() {
     showErr('ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
   } finally {
     btn.disabled = false; btn.textContent = 'ส่งข้อมูล';
+  }
+}
+
+// ============================================================
+// FEEDBACK — แบบสอบถามความพึงพอใจ (ไม่ระบุตัวตน)
+// หัวข้อคะแนนเป็น array เดี่ยว เผื่อเพิ่ม/แก้หัวข้อภายหลังได้ง่าย
+// ============================================================
+const FEEDBACK_CATEGORIES = [
+  { key: 'atmosphere', label: 'บรรยากาศโดยรวม' },
+  { key: 'seating', label: 'ความสะดวกสบายของที่นั่ง' },
+  { key: 'noise', label: 'ความเงียบสงบ (ไม่มีเสียงรบกวน)' },
+  { key: 'spaciousness', label: 'ความกว้างขวาง (ไม่รู้สึกอึดอัด)' },
+  { key: 'availability', label: 'ที่นั่งว่างเพียงพอ' },
+];
+let fbState = { zoneIdx: 0, branchId: null, ratings: {} };
+
+function openFeedbackModal() {
+  fbState = { zoneIdx: 0, branchId: null, ratings: {} };
+  document.getElementById('fb-comment').value = '';
+  const statusEl = document.getElementById('fb-status');
+  statusEl.textContent = ''; statusEl.classList.add('hidden');
+  renderFbZoneTabs();
+  renderFbBranchChecks();
+  renderFbRatings();
+  showModal('modal-feedback');
+}
+
+function renderFbZoneTabs() {
+  const zones = getZones();
+  const container = document.getElementById('fb-zone-tabs');
+  container.innerHTML = zones.map((z, i) => `
+    <button type="button" onclick="selectFbZone(${i})"
+      class="px-3 py-2 rounded-xl text-xs font-medium border-2 text-center transition-all ${i === fbState.zoneIdx ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'}">
+      ${escapeHtml(z)}
+    </button>`).join('');
+}
+
+function selectFbZone(idx) {
+  fbState.zoneIdx = idx;
+  renderFbZoneTabs();
+  renderFbBranchChecks();
+}
+
+function renderFbBranchChecks() {
+  const zones = getZones();
+  const zone = zones[fbState.zoneIdx];
+  const branches = BRANCHES.filter(b => b.zone === zone);
+  const container = document.getElementById('fb-branch-checks');
+  container.innerHTML = branches.map(b => {
+    const checked = fbState.branchId === b.id;
+    return `
+    <label class="flex items-center gap-2 border rounded-xl px-3 py-2 text-xs cursor-pointer transition-all ${checked ? 'border-pink-400 bg-pink-50 text-pink-700 font-semibold' : 'border-gray-200 text-gray-600 hover:border-pink-200'}">
+      <input type="radio" name="fb-branch" ${checked ? 'checked' : ''} onchange="selectFbBranch('${b.id}')" style="accent-color:#db2777;" />
+      ${escapeHtml(b.name)}
+    </label>`;
+  }).join('');
+}
+
+function selectFbBranch(branchId) {
+  fbState.branchId = branchId;
+  renderFbBranchChecks();
+}
+
+function renderFbRatings() {
+  const container = document.getElementById('fb-ratings');
+  container.innerHTML = FEEDBACK_CATEGORIES.map(c => `
+    <div>
+      <div class="text-sm text-gray-700 mb-1">${escapeHtml(c.label)}</div>
+      <div class="flex gap-1" id="fb-stars-${c.key}">
+        ${[1,2,3,4,5].map(n => `<button type="button" onclick="setFbRating('${c.key}',${n})" class="text-2xl leading-none transition-colors" style="color:${(fbState.ratings[c.key]||0) >= n ? '#f59e0b' : '#e5e7eb'};">★</button>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function setFbRating(key, value) {
+  // กดดาวดวงเดิมซ้ำ = ยกเลิกคะแนน (เผื่อกดผิด หรือไม่อยากให้คะแนนหัวข้อนี้)
+  fbState.ratings[key] = (fbState.ratings[key] === value) ? 0 : value;
+  renderFbRatings();
+}
+
+async function submitFeedback() {
+  const statusEl = document.getElementById('fb-status');
+  const showErr = (msg) => {
+    statusEl.textContent = msg;
+    statusEl.className = 'text-xs text-red-500';
+    statusEl.classList.remove('hidden');
+  };
+
+  if (!fbState.branchId) return showErr('กรุณาเลือกสาขาที่ไปใช้งาน');
+
+  const branchName = (BRANCHES.find(b => b.id === fbState.branchId) || {}).name || fbState.branchId;
+  const comment = document.getElementById('fb-comment').value.trim();
+
+  const btn = document.getElementById('fb-submit-btn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังส่ง...';
+  statusEl.textContent = ''; statusEl.classList.add('hidden');
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      body: JSON.stringify({
+        action: 'add_feedback',
+        key: API_KEY,
+        feedback: {
+          branches: branchName,
+          ratings: fbState.ratings,
+          comment,
+          timestamp: Date.now(),
+        },
+      }),
+    });
+    const json = await res.json();
+    if (!json || json.success !== true) throw new Error('server error');
+    statusEl.textContent = '✅ ขอบคุณสำหรับ Feedback ค่ะ';
+    statusEl.className = 'text-xs text-green-600';
+    statusEl.classList.remove('hidden');
+    setTimeout(() => closeModal('modal-feedback'), 1200);
+  } catch {
+    showErr('ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+  } finally {
+    btn.disabled = false; btn.textContent = 'ส่ง Feedback';
   }
 }
 
