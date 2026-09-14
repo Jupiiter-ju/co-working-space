@@ -564,8 +564,8 @@
       <div class="flex gap-3 items-start p-3 rounded-xl bg-pink-50 border border-pink-100">
         <span class="shrink-0 w-6 h-6 rounded-full bg-pink-500 text-white text-xs font-bold flex items-center justify-center mt-0.5">4</span>
         <div>
-          <p class="font-semibold text-gray-800 text-sm mb-1">จองคิวเพื่อรับ Account Number สำหรับ Check-in เข้า Co-Working Space</p>
-          <p class="text-xs text-gray-800">เมื่อจองคิวสำเร็จจะได้รับ Account Number สามารถนำไป Check-in ผ่านแอปพลิเคชันได้เลย (กรุณาเก็บ Account Number ในการจองแต่ละรอบไว้ด้วยค่ะ)</p>
+          <p class="font-semibold text-gray-800 text-sm mb-1">จองคิวเพื่อรับ Member Account สำหรับ Check-in เข้า Co-Working Space</p>
+          <p class="text-xs text-gray-800">เมื่อจองคิวสำเร็จจะได้รับ Member Account สามารถนำไป Check-in ผ่านแอปพลิเคชันได้เลย (กรุณาเก็บ Member Account ในการจองแต่ละรอบไว้ด้วยค่ะ)</p>
         </div>
       </div>
 
@@ -595,19 +595,19 @@
       <div class="mb-6">
         <div class="flex items-center gap-3 mb-2">
 
-          <p class="font-bold text-gray-800 text-base">การเข้าพื้นที่ Co-Working Space (สำคัญ)</p>
+          <p class="font-bold text-blue-600 text-lg">การเข้าพื้นที่ Co-Working Space (สำคัญ)</p>
         </div>
         <div class="ml-10">
           <div class="mt-2 space-y-2">
             <p class="text-sm text-gray-700">1. เปิดประตูเดินเข้าไปด้านใน และเลือกที่นั่งได้เลย นั่งได้เฉพาะโซน Co-Working เท่านั้น (ไม่สามารถเข้าไปนั่งในห้องส่วนตัวได้)</p>
-            <p class="text-sm text-gray-700">2. จำเป็นต้องล็อกอิน Account Number ตามที่ได้รับของรอบจองนั้นๆ เพื่อใช้รับรหัส Wi-Fi</p>
+            <p class="text-sm text-gray-700">2. จำเป็นต้องล็อกอิน แล้วเลือก "Account Member" ตามที่เลือกไว้ เพื่อให้ยืนยัน Member และรับรหัส Wi-Fi</p>
 
-            <p class="text-sm text-gray-700">3. ในกรณีเจ้าหน้าที่ขอเช็ค Member จะสามารถใช้ Account Number เพื่อยืนยันได้</p>
-            <p class="text-sm text-gray-500 mt-1 ml-3 font-semibold">หมายเหตุ ส่วนใหญ่เจ้าหน้าที่จะไม่เช็ค แต่ขอความร่วมมือทุกท่านล็อกอิน Account Number ที่ถูกต้องตามที่ได้รับในแต่ละรอบ เพื่อป้องกันการเกิดปัญหาในภายหลังค่ะ</p>
-            <p class="text-sm text-gray-700">4. หากต้องการใช้ห้องประชุมสามารถกดจองใน Application (มีค่าใช้จ่าย) หลังจากจองแล้วให้แจ้งที่ Reception เพื่อเปิดห้องประชุมให้ค่ะ</p>
+            <p class="text-sm text-gray-700">3. ในกรณีเจ้าหน้าที่ขอเช็ค Member สามารถเปิด Account Member ให้เจ้าหน้าที่ดูได้เลย (จำเป็นต้องเลือก Member ให้ตรงเพศ)</p>
+            <p class="text-sm text-gray-500 mt-1 ml-3 font-semibold">หมายเหตุ ส่วนใหญ่เจ้าหน้าที่จะไม่เช็ค แต่ขอความร่วมมือทุกท่านเลือก Account Member ให้ตรงเพศ เพื่อป้องกันการเกิดปัญหาในการเข้าใช้งานค่ะ</p>
+            <p class="text-sm text-gray-700">4. หากต้องการใช้ห้องประชุม (มีค่าใช้จ่าย) สามารถแจ้งทาง แอดมิน ให้ดำเนินการจองให้ค่ะ</p>
             <button onclick="goToAccountSteps()" style="display:inline-flex;align-items:center;gap:8px;background:none;border:none;padding:0;font-size:14px;font-weight:600;color:#db2777;cursor:pointer;margin-top:4px;">
               <span class="text-xs">&#9658;</span>
-              วิธีเลือก Account Number
+              วิธีเลือก Member Account
             </button>
           </div>
         </div>
@@ -708,12 +708,12 @@
       <div class="mb-6">
         <div class="flex items-center gap-3 mb-2">
           <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center">3</span>
-          <p class="font-bold text-gray-800 text-base">ขั้นตอนการเลือก Account Number เพื่อใช้งาน</p>
+          <p class="font-bold text-gray-800 text-base">ขั้นตอนการเลือก Member Account เพื่อใช้งาน</p>
         </div>
         <div class="ml-10">
           <button onclick="toggleAccountSteps()" style="display:inline-flex;align-items:center;gap:8px;background:none;border:none;padding:0;font-size:14px;font-weight:600;color:#db2777;cursor:pointer;margin-top:4px;margin-bottom:4px;">
             <span id="account-steps-chevron" class="transition-transform duration-300 text-xs">&#9658;</span>
-            วิธีเลือก Account Number
+            วิธีเลือก Member Account
           </button>
           <div id="account-steps-panel" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0">
             <div class="pt-1 pb-1 divide-y divide-gray-200">
@@ -726,7 +726,7 @@
                 <img loading="lazy" class="w-full mx-auto block rounded-xl object-contain max-h-96" alt="step 4-sub-2" src="images/step-4-sub-2.png">
               </div>
               <div class="py-2">
-                <p class="text-sm font-semibold text-gray-700 mb-2">3. เลือก Account Number ที่ตรงกับเลขที่ได้รับ แล้วเลือก "สลับบัญชี"</p>
+                <p class="text-sm font-semibold text-gray-700 mb-2">3. เลือก Member Account ที่ตรงกับเลขที่ได้รับ แล้วเลือก "สลับบัญชี"</p>
                 <img loading="lazy" class="w-full mx-auto block rounded-xl object-contain max-h-96" alt="step 4-sub-3" src="images/step-4-sub-3.png">
               </div>
             </div>
@@ -742,8 +742,8 @@
           <div style="background:#f5f3ff; border-radius:10px; padding:14px 16px;">
             <p style="font-size:14px; font-weight:600; color:#374151; margin:0 0 8px 0;">โดยแจ้งรายละเอียด ดังนี้</p>
             <ul style="font-size:14px; color:#374151; line-height:1.9; padding-left:18px; margin:0; list-style-type:disc;">
-              <li>Account Number ของผู้จอง</li>
-              <li>จำนวนกี่คน</li>
+              <li>Member Account ของผู้จอง</li>
+              <li>จำนวนคน</li>
               <li>สาขา Co-Working</li>
               <li>เวลาที่ต้องการใช้ห้อง <span style="color:#6b7280;">(เช่น 14.00 - 16.00 น.)</span></li>
             </ul>
@@ -779,9 +779,9 @@
 
       <!-- Intro -->
       <div class="mb-6 bg-pink-50 border border-pink-100 rounded-2xl p-4">
-        <p class="font-bold text-pink-700 text-base mb-2">จองคิวเพื่อรับ Account Number สำหรับใช้เข้า Co-Working Space</p>
+        <p class="font-bold text-pink-700 text-base mb-2">จองคิวเพื่อรับ Member Account สำหรับใช้เข้า Co-Working Space</p>
         <div class="">
-          <ol class="text-sm text-gray-700 mb-4 list-decimal list-inside space-y-1"><li>เมื่อจองคิวสำเร็จจะได้รับ Account Number</li><li>นำไป Check-in ผ่านแอปพลิเคชัน สำหรับเข้า Co-Working <span class="sm:block sm:pl-4">(สามารถเลือก Account Number สำหรับการเข้าแต่ละรอบไว้ล่วงหน้าได้เลย)</span></li><li>กรุณาใช้ Account Number ที่ได้รับให้ตรงกับรอบจองนั้นๆ <span class="sm:block sm:pl-4">(หากใช้ไม่ตรงอาจทำให้เกิดปัญหาในภายหลัง)</span></li></ol>
+          <ol class="text-sm text-gray-700 mb-4 list-decimal list-inside space-y-1"><li>สามารถเลือก Member Account ก่อนเข้าพื้นที่ได้เลยค่ะ หากเจ้าหน้าที่ขอดู Member จะสามารถเปิดให้ดูได้เลยค่ะ</li><li>กรุณาเลือกใช้ Member Account ให้ตรงกับที่เลือกในรอบจองนั้นๆ</li></ol>
           <img loading="lazy" src="images/step-4-1.png" alt="step 4-1" class="w-[72%] mx-auto block rounded-xl object-contain max-h-[19.2rem]">
         </div>
       </div>
