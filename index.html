@@ -203,11 +203,16 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 w-full">
       <h2 class="text-lg font-semibold text-gray-800 mb-4">📝 กรอกข้อมูลจอง</h2>
 
-      <!-- Row 1: ชื่อเล่น + ทีม + วันที่ -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <!-- Row 1: ชื่อเล่น + บริษัท + ทีม + วันที่ -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ <span class="text-red-500">*</span></label>
           <input type="text" id="emp-name" placeholder="เช่น แพทตี้" maxlength="50"
+            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
+          <input type="text" id="emp-company" placeholder="" maxlength="50"
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
         </div>
         <div>
@@ -1297,7 +1302,7 @@ function assignUserFromBookings(bookings, date) {
 }
 
 // ── Shared validation ──
-function validateBookingRules(name, date) {
+function validateBookingRules(name, date, team = '') {
   if (!name) return 'กรุณากรอกชื่อเล่น';
   if (!date) return 'กรุณาเลือกวันที่จอง';
 
@@ -1305,9 +1310,12 @@ function validateBookingRules(name, date) {
   if (date < today) return 'ไม่สามารถจองวันที่ผ่านมาแล้วได้';
   if (date > maxDateStr()) return 'ไม่สามารถจองล่วงหน้าเกิน 1 เดือนได้';
 
+  // ชื่อซ้ำกันได้ถ้าอยู่คนละทีม (ถือว่าเป็นคนละคน) — กันซ้ำเฉพาะชื่อ+ทีมเดียวกัน
   const nameLower = name.trim().toLowerCase();
+  const teamLower = (team || '').trim().toLowerCase();
   const dup = getBookings().find(b =>
     b.name.trim().toLowerCase() === nameLower &&
+    (b.team || '').trim().toLowerCase() === teamLower &&
     b.date === date &&
     (b.status === 'confirmed' || b.status === 'waitlist')
   );
@@ -1337,12 +1345,14 @@ function submitBooking() {
   try {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
   const name = escapeHtml(document.getElementById('emp-name').value.trim());
+  const company = escapeHtml(document.getElementById('emp-company').value.trim());
   let team = escapeHtml(document.getElementById('emp-team').value);
   const date = document.getElementById('book-date').value;
   const branchId = formSelectedBranchId;
   let teamOther = '';
 
   if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
+  if (!company) { showError('กรุณากรอกชื่อบริษัท'); return; }
   if (!team) { showError('กรุณาเลือกทีม'); return; }
   if (team === 'Other') {
     teamOther = escapeHtml(document.getElementById('emp-team-other').value.trim());
@@ -1352,19 +1362,19 @@ function submitBooking() {
   if (!date) { showError('กรุณาเลือกวันที่จอง'); return; }
   if (!branchId) { showError('กรุณาเลือกสาขา'); return; }
 
-  const validErr = validateBookingRules(name, date);
+  const validErr = validateBookingRules(name, date, team);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
 
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
-    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, '', teamOther);
+    showWaitlistConfirm(name, date, branchId, wCount, 'form', team, '', teamOther, company);
     return;
   }
-  openAccountPicker(name, date, branchId, 'form', team, '', teamOther);
+  openAccountPicker(name, date, branchId, 'form', team, '', teamOther, company);
   } catch(e) { showError('เกิดข้อผิดพลาด: ' + e.message); }
 }
 
-function doCreateBooking(name, date, branchId, source, team = '', email = '', chosenAccountNumber = null, teamOther = '') {
+function doCreateBooking(name, date, branchId, source, team = '', email = '', chosenAccountNumber = null, teamOther = '', company = '') {
   bookingLock = true;
   const lockTimestamp = Date.now();
 
@@ -1386,7 +1396,7 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '', ch
   };
 
   setTimeout(async () => {
-    const recheck = validateBookingRules(name, date);
+    const recheck = validateBookingRules(name, date, team);
     if (recheck) {
       bookingLock = false; _resetBookingBtn();
       typeof recheck === 'object' ? showError(recheck.msg, recheck.title) : showError(recheck);
@@ -1398,7 +1408,7 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '', ch
 
     const branch = BRANCHES.find(b => b.id === branchId);
     const newBooking = {
-      id: generateId(), name, team, email, date, slot: 'fullday',
+      id: generateId(), name, team, company, email, date, slot: 'fullday',
       slotLabel: SLOT_LABEL,
       timestamp: lockTimestamp,
       branch: branch ? branch.name : branchId, branchId,
@@ -1416,7 +1426,7 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '', ch
       } else if (gasResult && gasResult.error === 'account_taken') {
         bookingLock = false; _resetBookingBtn();
         showError('เลขนี้เพิ่งถูกคนอื่นเลือกไปพอดี กรุณาเลือกเลขใหม่อีกครั้ง');
-        openAccountPicker(name, date, branchId, source, team, email, teamOther);
+        openAccountPicker(name, date, branchId, source, team, email, teamOther, company);
         return;
       } else {
         // GAS ติดต่อไม่ได้ — fallback ใช้เลขที่เลือกไว้ถ้ายังว่าง ไม่งั้นสุ่มให้
@@ -1500,8 +1510,8 @@ function findOwnerAccountNumber(name) {
   return byFullName ? byFullName[0] : null;
 }
 
-function openAccountPicker(name, date, branchId, source, team = '', email = '', teamOther = '') {
-  acctPickerPending = { name, date, branchId, source, team, email, teamOther };
+function openAccountPicker(name, date, branchId, source, team = '', email = '', teamOther = '', company = '') {
+  acctPickerPending = { name, date, branchId, source, team, email, teamOther, company };
   const available = getAvailableAccountNumbers(date);
   const owner = findOwnerAccountNumber(name);
   acctPickerSelected = (owner && available.includes(owner)) ? owner : null;
@@ -1550,12 +1560,12 @@ function selectAccountNumber(num) {
 
 function confirmAccountPicker() {
   if (!acctPickerSelected || !acctPickerPending) return;
-  const { name, date, branchId, source, team, email, teamOther } = acctPickerPending;
+  const { name, date, branchId, source, team, email, teamOther, company } = acctPickerPending;
   const chosen = acctPickerSelected;
   closeModal('modal-account-picker');
   acctPickerPending = null;
   acctPickerSelected = null;
-  doCreateBooking(name, date, branchId, source, team, email, chosen, teamOther);
+  doCreateBooking(name, date, branchId, source, team, email, chosen, teamOther, company);
 }
 
 function cancelAccountPicker() {
@@ -1573,7 +1583,7 @@ function cancelAccountPicker() {
 // ============================================================
 // WAITLIST CONFIRM DIALOG
 // ============================================================
-function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', email = '', teamOther = '') {
+function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', email = '', teamOther = '', company = '') {
   const wNum = wCount + 1;
   document.getElementById('wl-confirm-msg').innerHTML =
     `วันที่ <strong>${escapeHtml(formatDateTH(date))}</strong><br>` +
@@ -1592,7 +1602,7 @@ function showWaitlistConfirm(name, date, branchId, wCount, source, team = '', em
     }
     errEl.classList.add('hidden');
     closeModal('modal-waitlist-confirm');
-    doCreateBooking(name, date, branchId, source, team, email, null, teamOther);
+    doCreateBooking(name, date, branchId, source, team, email, null, teamOther, company);
   };
   showModal('modal-waitlist-confirm');
 }
@@ -1770,6 +1780,10 @@ function showTicket(booking) {
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">ชื่อผู้จอง</span>
           <span class="font-semibold">${escapeHtml(booking.name)}</span>
         </div>
+        ${booking.company ? `<div class="flex justify-between text-sm">
+          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">บริษัท</span>
+          <span class="font-semibold">${escapeHtml(booking.company)}</span>
+        </div>` : ''}
         <div class="flex justify-between text-sm">
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">วันที่</span>
           <span class="font-semibold">${formatDateTH(booking.date)}</span>
@@ -2377,6 +2391,11 @@ function qbRenderStep() {
             class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
         </div>
         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
+          <input type="text" id="qb-company" value="${escapeHtml(qbData.company || '')}" placeholder="" maxlength="50"
+            class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all" />
+        </div>
+        <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">ทีม <span class="text-red-500">*</span></label>
           <select id="qb-team" onchange="toggleTeamOtherInput('qb-team', 'qb-team-other-row')" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all bg-white">
             <option value="">-- เลือกทีม --</option>
@@ -2459,9 +2478,11 @@ function qbRenderStep() {
 function qbNextStep() {
   if (qbStep === 1) {
     const name = escapeHtml(document.getElementById('qb-name')?.value.trim());
+    const company = escapeHtml(document.getElementById('qb-company')?.value.trim());
     let team = escapeHtml(document.getElementById('qb-team')?.value);
     const email = document.getElementById('qb-email')?.value.trim() || '';
     if (!name) { showError('กรุณากรอกชื่อเล่น'); return; }
+    if (!company) { showError('กรุณากรอกชื่อบริษัท'); return; }
     if (!team) { showError('กรุณาเลือกทีม'); return; }
     if (team === 'Other') {
       const teamOther = escapeHtml(document.getElementById('qb-team-other')?.value.trim());
@@ -2471,7 +2492,7 @@ function qbNextStep() {
     } else {
       qbData.teamOther = '';
     }
-    qbData.name = name; qbData.team = team; qbData.email = email; qbStep = 2;
+    qbData.name = name; qbData.company = company; qbData.team = team; qbData.email = email; qbStep = 2;
   } else if (qbStep === 2) {
     if (!qbSelectedBranchId) { showError('กรุณาเลือกสาขา'); return; }
     qbData.branchId = qbSelectedBranchId; qbStep = 3;
@@ -2530,17 +2551,17 @@ function selectQbBranch(branchId) {
 
 function submitQuickBooking() {
   if (bookingLock) { showError('กำลังประมวลผล กรุณารอสักครู่...'); return; }
-  const { name, team, email, date, branchId, teamOther } = qbData;
-  const validErr = validateBookingRules(name, date);
+  const { name, company, team, email, date, branchId, teamOther } = qbData;
+  const validErr = validateBookingRules(name, date, team);
   if (validErr) { typeof validErr === 'object' ? showError(validErr.msg, validErr.title) : showError(validErr); return; }
   if (isSlotFull(date)) {
     const wCount = getWaitlistCount(date);
     closeModal('modal-quick-book');
-    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team, '', teamOther);
+    showWaitlistConfirm(name, date, branchId, wCount, 'modal', team, '', teamOther, company);
     return;
   }
   closeModal('modal-quick-book');
-  openAccountPicker(name, date, branchId, 'modal', team, email, teamOther);
+  openAccountPicker(name, date, branchId, 'modal', team, email, teamOther, company);
 }
 
 function updateQbConfirmBtn() {}
