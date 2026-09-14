@@ -1988,6 +1988,13 @@ function updateFullCalendar() {
       else if (prevRemain <= 0) { prevStatusText = 'เต็มแล้ว'; prevStatusColor = 'text-red-300'; }
       else if (prevRemain <= 6) { prevStatusText = `ว่าง ${prevRemain}`; prevStatusColor = 'text-yellow-400'; }
       else { prevStatusText = `ว่าง ${prevRemain}`; prevStatusColor = 'text-green-400'; }
+    } else if (isPrevPast) {
+      const prevRemain = MAX_SLOTS - getSlotCount(prevDateStr);
+      const prevWCount = getWaitlistCount(prevDateStr);
+      if (prevRemain <= 0 && prevWCount > 0) prevStatusText = 'เต็ม+สำรอง';
+      else if (prevRemain <= 0) prevStatusText = 'เต็มแล้ว';
+      else prevStatusText = `ว่าง ${prevRemain}`;
+      prevStatusColor = 'text-gray-300';
     }
     html += `
     <div class="cal-day-wrap">
@@ -2012,7 +2019,13 @@ function updateFullCalendar() {
     let cellBg, textColor, statusText, statusColor;
     const wCount = getWaitlistCount(dateStr);
 
-    if (isPast || isFuture) {
+    if (isPast) {
+      cellBg = 'bg-gray-50'; textColor = 'text-gray-300';
+      if (totalRemain <= 0 && wCount > 0) statusText = 'เต็ม+สำรอง';
+      else if (totalRemain <= 0) statusText = 'เต็มแล้ว';
+      else statusText = `ว่าง ${totalRemain}`;
+      statusColor = 'text-gray-300';
+    } else if (isFuture) {
       cellBg = 'bg-gray-50'; textColor = 'text-gray-300';
       statusText = ''; statusColor = '';
     } else if (totalRemain <= 0 && wCount > 0) {
@@ -2136,7 +2149,13 @@ function renderScheduleCalendar() {
 
     let cellBg, textColor, statusText, statusColor;
 
-    if (isPast || isFuture) {
+    if (isPast) {
+      cellBg = 'bg-gray-50'; textColor = 'text-gray-300';
+      if (totalRemain <= 0 && wCount > 0) statusText = `เต็ม+${wCount}`;
+      else if (totalRemain <= 0) statusText = 'เต็ม';
+      else statusText = `${totalRemain}`;
+      statusColor = 'text-gray-300';
+    } else if (isFuture) {
       cellBg = 'bg-gray-50'; textColor = 'text-gray-300';
       statusText = ''; statusColor = '';
     } else if (totalRemain <= 0 && wCount > 0) {
