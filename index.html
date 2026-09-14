@@ -1929,9 +1929,10 @@ function openFeedbackModal() {
 function renderFbZoneTabs() {
   const zones = getZones();
   const container = document.getElementById('fb-zone-tabs');
+  const smallTextZones = ['BTS Central Area', 'ทองหล่อ-อ่อนนุช'];
   container.innerHTML = zones.map((z, i) => `
     <button type="button" onclick="selectFbZone(${i})"
-      class="px-3 py-2 rounded-xl text-xs font-medium border-2 text-center transition-all ${i === fbState.zoneIdx ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'}">
+      class="px-3 py-2 rounded-xl ${smallTextZones.includes(z) ? 'text-[10px]' : 'text-xs'} font-medium border-2 text-center transition-all ${i === fbState.zoneIdx ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'}">
       ${escapeHtml(z)}
     </button>`).join('');
 }
