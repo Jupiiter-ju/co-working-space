@@ -410,7 +410,7 @@
     <div id="ticket-content" class="success-bg rounded-2xl p-6 text-white mb-4">
       <!-- Ticket content here -->
     </div>
-    <div id="ticket-warning" style="background:linear-gradient(135deg,#fff0f6 0%,#f5f0ff 100%);border:2px solid #e879a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:13px;font-weight:700;letter-spacing:0.06em;background:linear-gradient(135deg,#be185d,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">ACCOUNT NUMBER</span><div style="display:flex;align-items:center;gap:8px;width:fit-content;"><span id="acct-display" style="font-size:28px;font-weight:700;background:linear-gradient(135deg,#9f1239,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;"></span><button id="acct-copy-btn" onclick="copyAcctFromBox()" style="background:linear-gradient(135deg,#fce7f3,#ede9fe);border:none;border-radius:8px;padding:7px 9px;cursor:pointer;color:#9333ea;display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div id="ticket-acct-name-row" style="display:none;align-items:center;justify-content:space-between;border-top:1px solid #f9a8d4;margin-top:10px;padding-top:8px;"><span style="font-size:12px;color:#993556;">ชื่อ Account</span><span id="ticket-acct-name" style="font-size:14px;font-weight:700;color:#72243e;"></span></div><hr style="border:none;border-top:1px solid #f9a8d4;margin:10px 0;"><label id="confirm-acct-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="confirm-acct-cb" style="width:16px;height:16px;flex-shrink:0;accent-color:#9333ea;cursor:pointer;" onchange="onConfirmAcct(this)"><span id="confirm-acct-text" style="font-size:13px;background:linear-gradient(to right,#be185d,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.4;">บันทึก Account Number แล้ว</span></label></div><div id="email-section" class="mb-3" style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 14px;"><p class="text-sm font-semibold mb-2" style="color:#166534;">✉️ รับ <span style="font-size:15px;">Account Number</span> ทางอีเมล <span style="font-weight:400;color:#16a34a;">(ไม่บังคับ)</span></p><div class="flex gap-2"><input id="email-input" type="email" placeholder="กรอกอีเมล" maxlength="200" class="flex-1 border rounded-xl px-3 py-2.5 text-sm focus:outline-none" style="border-color:#86efac;" /><button onclick="sendBookingEmail()" class="shrink-0 text-white text-sm font-semibold px-4 py-2.5 rounded-xl" style="background:#16a34a;">ส่ง</button></div><p id="email-status" class="text-xs mt-1.5 hidden"></p></div>
+    <div id="ticket-warning" style="background:linear-gradient(135deg,#fff0f6 0%,#f5f0ff 100%);border:2px solid #e879a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:13px;font-weight:700;letter-spacing:0.06em;background:linear-gradient(135deg,#be185d,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">ACCOUNT NUMBER</span><div style="display:flex;align-items:center;gap:8px;width:fit-content;"><span id="acct-display" style="font-size:28px;font-weight:700;background:linear-gradient(135deg,#9f1239,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;"></span><button id="acct-copy-btn" onclick="copyAcctFromBox()" style="background:linear-gradient(135deg,#fce7f3,#ede9fe);border:none;border-radius:8px;padding:7px 9px;cursor:pointer;color:#9333ea;display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div id="ticket-acct-name-row" style="display:none;align-items:center;justify-content:space-between;border-top:1px solid #f9a8d4;margin-top:10px;padding-top:8px;"><span style="font-size:12px;color:#993556;">ชื่อ Account</span><span id="ticket-acct-name" style="font-size:14px;font-weight:700;color:#72243e;"></span></div><hr style="border:none;border-top:1px solid #f9a8d4;margin:10px 0;"><label id="confirm-acct-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="confirm-acct-cb" style="width:16px;height:16px;flex-shrink:0;accent-color:#9333ea;cursor:pointer;" onchange="onConfirmAcct(this)"><span id="confirm-acct-text" style="font-size:13px;background:linear-gradient(to right,#be185d,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.4;">บันทึก Account Number แล้ว</span></label></div><div id="cancel-code-box" style="background:linear-gradient(135deg,#fff0f6 0%,#f5f0ff 100%);border:2px solid #e879a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:13px;font-weight:700;letter-spacing:0.06em;background:linear-gradient(135deg,#be185d,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">รหัสยกเลิก</span><span id="cancelcode-display" style="font-size:24px;font-weight:700;background:linear-gradient(135deg,#9f1239,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;letter-spacing:2px;"></span></div><p style="font-size:11px;color:#993556;margin-top:6px;margin-bottom:0;">เก็บรหัสนี้ไว้สำหรับยกเลิกการจองภายหลัง (จะไม่แสดงซ้ำอีก)</p></div><div id="email-section" class="mb-3" style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 14px;"><p class="text-sm font-semibold mb-2" style="color:#166534;">✉️ รับ <span style="font-size:15px;">Account Number</span> ทางอีเมล <span style="font-weight:400;color:#16a34a;">(ไม่บังคับ)</span></p><div class="flex gap-2"><input id="email-input" type="email" placeholder="กรอกอีเมล" maxlength="200" class="flex-1 border rounded-xl px-3 py-2.5 text-sm focus:outline-none" style="border-color:#86efac;" /><button onclick="sendBookingEmail()" class="shrink-0 text-white text-sm font-semibold px-4 py-2.5 rounded-xl" style="background:#16a34a;">ส่ง</button></div><p id="email-status" class="text-xs mt-1.5 hidden"></p></div>
     <button id="btn-success" onclick="finishTicketModal()" disabled class="w-full text-white font-semibold py-3 rounded-xl transition-all" style="background:#d1d5db;cursor:not-allowed;">สำเร็จ</button>
   </div>
 </div>
@@ -807,8 +807,8 @@
       <h2 class="text-xl font-bold text-gray-800 mb-2">ยืนยันการยกเลิก</h2>
       <p id="cancel-detail" class="text-gray-600 text-sm mb-4" style="white-space: pre-line"></p>
       <div class="text-left mb-4">
-        <label class="text-sm font-medium text-gray-700 mb-1 block text-center">กรอก Account Number ที่ได้รับ</label>
-        <input id="cancel-code-input" type="text" placeholder="กรอก Account Number"
+        <label class="text-sm font-medium text-gray-700 mb-1 block text-center">กรอกรหัสยกเลิกที่ได้รับตอนจอง</label>
+        <input id="cancel-code-input" type="text" placeholder="กรอกรหัสยกเลิก"
           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-300 tracking-widest text-center font-bold text-lg" />
         <p id="cancel-code-error" class="text-red-500 text-xs mt-1.5 hidden"></p>
       </div>
@@ -1134,6 +1134,12 @@ function saveBookings(data) {
 function generateId() {
   return 'BK' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
 }
+function generateCancelCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // ตัดตัวที่สับสนง่าย (0/O, 1/I/L) ออก
+  let out = '';
+  for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
 
 // ============================================================
 // GOOGLE SHEET SYNC HELPERS (ทำงานในพื้นหลัง — ไม่บล็อก UI)
@@ -1196,15 +1202,17 @@ async function syncBookingToSheet(booking) {
   }
 }
 async function updateBookingInSheet(id, fields) {
-  if (!APPS_SCRIPT_URL) return;
+  if (!APPS_SCRIPT_URL) return null;
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    const resp = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       redirect: 'follow',
       body: JSON.stringify({ action: 'update', id, ...fields, key: API_KEY })
     });
+    return await resp.json();
   } catch (e) {
     console.warn('อัปเดต Sheet ไม่ได้:', e.message);
+    return null;
   }
 }
 
@@ -1511,6 +1519,7 @@ function doCreateBooking(name, date, branchId, source, team = '', email = '', ch
       accountNumber: null,
       status: bookingStatus,
       teamOther: teamOther || '',
+      cancelCode: generateCancelCode(),
     };
 
     if (bookingStatus === 'confirmed') {
@@ -2137,6 +2146,10 @@ function showTicket(booking) {
     if(isWaitlist || isReviewingTicket){_btn.disabled=false;_btn.style.background='linear-gradient(135deg,#e91e8c,#9c27b0)';_btn.style.cursor='pointer';}
     else{_btn.disabled=true;_btn.style.background='#d1d5db';_btn.style.cursor='not-allowed';}
   }
+  const _cancelCodeBox = document.getElementById('cancel-code-box');
+  const _cancelCodeDisp = document.getElementById('cancelcode-display');
+  if (_cancelCodeDisp) { _cancelCodeDisp.textContent = booking.cancelCode || ''; }
+  if (_cancelCodeBox) { _cancelCodeBox.style.display = (booking.cancelCode && !isReviewingTicket) ? 'block' : 'none'; }
   const _closeX = document.getElementById('ticket-close-x');
   if(_closeX){ _closeX.style.display = isReviewingTicket ? 'flex' : 'none'; }
   if(_btn){ _btn.textContent = isReviewingTicket ? 'ตกลง' : 'สำเร็จ'; }
@@ -2169,25 +2182,26 @@ async function doCancel(bookingId) {
   const input = document.getElementById('cancel-code-input').value.trim();
   const errEl = document.getElementById('cancel-code-error');
   if (!input) {
-    errEl.textContent = 'กรุณากรอก Account Number';
-    errEl.classList.remove('hidden');
-    return;
-  }
-  if (String(input) !== String(b.accountNumber)) {
-    errEl.textContent = '❌ Account Number ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+    errEl.textContent = 'กรุณากรอกรหัสยกเลิก';
     errEl.classList.remove('hidden');
     return;
   }
   const _cancelBtn = document.getElementById('confirm-cancel-btn');
   if (_cancelBtn) { _cancelBtn.disabled = true; _cancelBtn.textContent = '⏳ กำลังส่ง...'; }
 
+  // เซิร์ฟเวอร์เป็นคนตรวจรหัสยกเลิกจริง (เทียบกับค่าที่เก็บไว้ในชีท) — ฝั่งหน้าเว็บไม่มีค่าที่ถูกต้องให้เทียบเอง
+  const cancelResult = await updateBookingInSheet(bookingId, { status: 'cancelled', cancelCode: input });
+  if (!cancelResult || !cancelResult.success) {
+    errEl.textContent = '❌ รหัสไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+    errEl.classList.remove('hidden');
+    if (_cancelBtn) { _cancelBtn.disabled = false; _cancelBtn.textContent = 'ยกเลิกการจอง'; }
+    return;
+  }
+
   let bookings = getBookings().map(x => {
     if (x.id === bookingId) return { ...x, status: 'cancelled' };
     return x;
   });
-
-  // sync cancelled status to Sheet first, then promote waitlist (sequential to avoid LockService timeout)
-  await updateBookingInSheet(bookingId, { status: 'cancelled' });
 
   // auto-promote first waitlist booking for this date
   const cancelledDate = b.date;
@@ -2562,6 +2576,7 @@ function renderBookingRow(b, showDate, borderCls = 'border-l-green-400') {
       <div class="min-w-0 flex-1">
         <div class="font-semibold text-gray-800 text-sm truncate mb-1">${escapeHtml(b.name)} <span class="text-gray-400 font-normal text-xs">· ${escapeHtml(b.team) || '-'}</span></div>
         <div class="flex items-center gap-2 flex-wrap text-xs">
+          <span class="text-gray-300 font-mono text-[10px]">${escapeHtml(b.id)}</span>
           ${showDate ? `<span class="text-gray-500 font-medium">${formatDateTH(b.date)}</span>` : ''}
           <span class="font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${st.cls}">${st.label}</span>
           ${b.branch ? `<span class="text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="#e91e8c" style="display:inline;vertical-align:-1px;margin-right:2px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${escapeHtml(b.branch)}</span>` : ''}
