@@ -1923,10 +1923,10 @@ const FEEDBACK_CATEGORIES = [
   { key: 'spaciousness', label: 'ความกว้างขวาง (ไม่รู้สึกอึดอัด)' },
   { key: 'availability', label: 'ที่นั่งว่างเพียงพอ' },
 ];
-let fbState = { zoneIdx: 0, branchId: null, ratings: {} };
+let fbState = { zoneIdx: 0, branchId: null, ratings: {}, recommend: null };
 
 function openFeedbackModal() {
-  fbState = { zoneIdx: null, branchId: null, ratings: {} };
+  fbState = { zoneIdx: null, branchId: null, ratings: {}, recommend: null };
   document.getElementById('fb-comment').value = '';
   const statusEl = document.getElementById('fb-status');
   statusEl.textContent = ''; statusEl.classList.add('hidden');
@@ -1985,12 +1985,24 @@ function renderFbRatings() {
       <div class="flex gap-1" id="fb-stars-${c.key}">
         ${[1,2,3,4,5].map(n => `<button type="button" onclick="setFbRating('${c.key}',${n})" class="text-2xl leading-none transition-colors" style="color:${(fbState.ratings[c.key]||0) >= n ? '#f59e0b' : '#e5e7eb'};">★</button>`).join('')}
       </div>
-    </div>`).join('');
+    </div>`).join('') + `
+    <div>
+      <div class="text-sm text-gray-700 mb-2">คุณจะแนะนำสาขานี้ให้เพื่อนร่วมงานไหม <span class="text-red-500">*</span></div>
+      <div class="flex gap-2">
+        <button type="button" onclick="setFbRecommend(true)" class="flex-1 px-3 py-2 rounded-xl text-sm font-medium border-2 text-center transition-all ${fbState.recommend === true ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'}">แนะนำ</button>
+        <button type="button" onclick="setFbRecommend(false)" class="flex-1 px-3 py-2 rounded-xl text-sm font-medium border-2 text-center transition-all ${fbState.recommend === false ? 'gradient-btn text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'}">ไม่แนะนำ</button>
+      </div>
+    </div>`;
 }
 
 function setFbRating(key, value) {
   // กดดาวดวงเดิมซ้ำ = ยกเลิกคะแนน (เผื่อกดผิด หรือไม่อยากให้คะแนนหัวข้อนี้)
   fbState.ratings[key] = (fbState.ratings[key] === value) ? 0 : value;
+  renderFbRatings();
+}
+
+function setFbRecommend(val) {
+  fbState.recommend = val;
   renderFbRatings();
 }
 
@@ -2003,6 +2015,7 @@ async function submitFeedback() {
   };
 
   if (!fbState.branchId) return showErr('กรุณาเลือกสาขาที่ไปใช้งาน');
+  if (fbState.recommend === null || fbState.recommend === undefined) return showErr('กรุณาเลือกว่าจะแนะนำสาขานี้หรือไม่');
 
   const branchName = (BRANCHES.find(b => b.id === fbState.branchId) || {}).name || fbState.branchId;
   const comment = document.getElementById('fb-comment').value.trim();
@@ -2021,6 +2034,7 @@ async function submitFeedback() {
         feedback: {
           branches: branchName,
           ratings: fbState.ratings,
+          recommend: fbState.recommend ? 'แนะนำ' : 'ไม่แนะนำ',
           comment,
           timestamp: Date.now(),
         },
@@ -2102,21 +2116,20 @@ function showTicket(booking) {
         </div>
         <div class="flex justify-between text-sm">
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">เวลา</span>
-          <span class="font-semibold">${(booking.slotLabel || '—').replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span>
+          <span class="font-semibold">${(booking.slotLabel || SLOT_LABEL).replace('เต็มวัน ', '').replace(/^\(|\)$/g, '')}</span>
         </div>
         <div class="flex justify-between text-sm">
           <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สถานที่</span>
           <span class="font-semibold text-right text-xs whitespace-nowrap">${escapeHtml(booking.branch)}</span>
         </div>
-        <div class="flex justify-between text-sm">
-          <span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">สถานะ</span>
-          <span class="font-bold ${isWaitlist ? 'text-amber-500' : 'text-green-200'}">
-            ${isWaitlist ? `⏳ คิวสำรอง #${waitlistPos}` : '✅ ยืนยันแล้ว'}
+        ${isWaitlist ? `<div class="flex justify-between text-sm">
+          <span class="text-gray-500">สถานะ</span>
+          <span class="font-bold text-amber-500">
+            ⏳ คิวสำรอง #${waitlistPos}
           </span>
-        </div>
+        </div>` : ''}
         ${booking.email ? `<div class="flex justify-between text-sm"><span class="${isWaitlist ? 'text-gray-500' : 'text-blue-100'}">อีเมล</span><span class="font-semibold text-right text-xs">${escapeHtml(booking.email)}</span></div>` : ''}
       </div>
-      <div class="text-center text-xs ${isWaitlist ? 'text-gray-400' : 'text-blue-200'}">จองเมื่อ: ${new Date(booking.timestamp).toLocaleString('th-TH')}</div>
     </div>
   `;
 
