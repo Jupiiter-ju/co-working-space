@@ -2551,7 +2551,6 @@ function renderBookingRow(b, showDate, borderCls = 'border-l-green-400') {
       <div class="min-w-0 flex-1">
         <div class="font-semibold text-gray-800 text-sm truncate mb-1">${escapeHtml(b.name)} <span class="text-gray-400 font-normal text-xs">· ${escapeHtml(b.team) || '-'}</span></div>
         <div class="flex items-center gap-2 flex-wrap text-xs">
-          <span class="text-gray-300 font-mono text-[10px]">${escapeHtml(b.id)}</span>
           ${showDate ? `<span class="text-gray-500 font-medium">${formatDateTH(b.date)}</span>` : ''}
           <span class="font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${st.cls}">${st.label}</span>
           ${b.branch ? `<span class="text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="#e91e8c" style="display:inline;vertical-align:-1px;margin-right:2px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${escapeHtml(b.branch)}</span>` : ''}
