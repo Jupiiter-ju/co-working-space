@@ -2539,9 +2539,6 @@ function renderBookingRow(b, showDate, borderCls = 'border-l-green-400') {
   const st = STATUS_CONFIG[b.status] || STATUS_CONFIG.confirmed;
 
   let btnHtml = '';
-  if (b.status === 'confirmed') {
-    btnHtml = `<button onclick="viewTicketAgain('${escapeHtml(b.id)}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-purple-500 border border-purple-200 hover:bg-purple-50 transition-all whitespace-nowrap">Check Booking</button>`;
-  }
   if (b.status !== 'cancelled') {
     btnHtml += `<button onclick="confirmCancel('${escapeHtml(b.id)}')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 border border-red-200 hover:bg-red-50 transition-all whitespace-nowrap">ยกเลิก</button>`;
   }
