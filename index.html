@@ -943,12 +943,12 @@ const ACCOUNT_NAMES = {
   '17310732': 'ธีธัช เจียรักสุวรรณ',
   '17310741': 'วาทิศ อนันตเดโชชัย',
   '17310749': 'ณัฐพงศ์ รอดแก้ว',
-  '17310756': 'ศักรินทร์ บุญช่วย',
+  '17310756': 'ไขชนก วัฏฏราช',
   '17310859': 'ลัทธวัฒน์ ฉัตรนุกูลชัย',
   '17310781': 'กฤษฎา นรสิงห์สาทร',
   '17315722': 'พลากร ศรีเจริญ',
   '17310807': 'ธนาวุฒิ เอมสอาด',
-  '17310819': 'บัญชา แก้วเซ่ง',
+  '17310819': 'กัญญณัช คุณากรวรพงศ์',
   '17315409': 'กฤษฎา แข็งขัน',
   '17310863': 'ฑิตฐิตา ลวณะมาลย์',
   '17315632': 'ศิริพร จันทา',
@@ -962,12 +962,12 @@ const ACCOUNT_NICKNAMES = {
   '17310732': ['Moo', 'หมู'],
   '17310741': ['Sai', 'ไทร'],
   '17310749': [],
-  '17310756': ['Ben', 'เบน'],
+  '17310756': [],
   '17310859': ['Win', 'วิน'],
   '17310781': ['Nueng', 'หนึ่ง'],
   '17315722': ['ไผ่'],
   '17310807': ['Ball', 'บอล'],
-  '17310819': ['Ban', 'บัญ'],
+  '17310819': [],
   '17315409': ['M', 'เอ็ม'],
   '17310863': ['Dear', 'เดียร์'],
   '17315632': ['Mod', 'มด'],
@@ -2203,13 +2203,6 @@ async function doCancel(bookingId) {
   }
 
   saveBookings(bookings);
-
-  fetch('https://script.google.com/macros/s/AKfycbyBSJDDPrHqxiRtwRQmdxwWdc38-lGOC0ggmDlsjkWg3T9z-n4tvdjXAlAnJrfQVOFU/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'cancel_request', id: b.id }),
-  }).catch(() => {});
 
   if (_cancelBtn) { _cancelBtn.disabled = false; _cancelBtn.textContent = 'ยกเลิกการจอง'; }
   closeModal('modal-cancel');
