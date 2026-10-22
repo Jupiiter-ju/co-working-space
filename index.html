@@ -1268,7 +1268,10 @@ function copyEmailManual(el) {
   });
 }
 function showGuidePage() { document.getElementById('guide-page').classList.remove('hidden'); document.body.style.overflow = 'hidden'; var m=document.getElementById('modal-regus-img'); var g=document.getElementById('guide-regus-img'); if(m&&g) g.src=m.src; }
-function hideGuidePage() { document.getElementById('guide-page').classList.add('hidden'); document.body.style.overflow = ''; }
+function hideGuidePage() { document.getElementById('guide-page').classList.add('hidden'); document.body.style.overflow = ''; if (location.hash === '#guide') history.replaceState(null, '', location.pathname + location.search); }
+// Shareable link: opening the page with #guide shows the Member guide directly
+function openGuideFromHash() { if (location.hash === '#guide') { showGuidePage(); document.getElementById('guide-page').scrollTop = 0; } }
+window.addEventListener('hashchange', openGuideFromHash);
 function goToAccountSteps() {
   var panel = document.getElementById('account-steps-panel');
   var isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
@@ -3202,6 +3205,7 @@ function seedDemoData() {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
+  openGuideFromHash();
   if (APPS_SCRIPT_URL) {
     await loadBookingsFromSheet();
   } else {
